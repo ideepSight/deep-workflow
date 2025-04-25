@@ -1,8 +1,9 @@
 import { Input, Select, Space } from '@arco-design/web-react';
 import React, { useEffect, useState } from 'react';
-import { DPVarType } from '../../lib';
+import { DPVarType, EnableVar } from '../../lib';
 import { Icon } from '../../../workflow/components/Icon';
 import { getDPVarTypeOptions } from '../../utils';
+import { SelectVar } from './SelectVar';
 
 type ValueType = { key?: string; type?: DPVarType };
 export const InputVar: React.FC<{
@@ -10,7 +11,8 @@ export const InputVar: React.FC<{
 	readonlyKey?: boolean;
 	disabled?: boolean;
 	onChange: (value: ValueType) => void;
-}> = ({ value, onChange, readonlyKey, disabled }) => {
+	enableVars?: EnableVar[];
+}> = ({ value, onChange, readonlyKey, disabled, enableVars }) => {
 	const [localValue, setLocalValue] = useState<ValueType>(value);
 
 	const handleChange = (v: ValueType) => {
@@ -18,12 +20,13 @@ export const InputVar: React.FC<{
 		onChange && onChange(v);
 	};
 	return (
-		<div className="var-item input-item">
+		<div className="var-item-block input-item">
 			<Space size={4}>
 				<Input
 					prefix={<Icon className="var-fx" name="huanjingbianliang" />}
 					size="small"
 					disabled={disabled}
+					style={{ width: 80 }}
 					readOnly={readonlyKey}
 					defaultValue={localValue.key}
 					onChange={(v) => {
@@ -32,15 +35,20 @@ export const InputVar: React.FC<{
 				/>
 			</Space>
 			<Space className="var-type" size={2}>
-				<Select
-					size="small"
-					disabled={disabled}
-					value={localValue.type}
-					onChange={(v) => {
-						handleChange({ ...localValue, type: v });
-					}}
-					options={getDPVarTypeOptions()}
-				></Select>
+				{enableVars ? (
+					<SelectVar enableVars={enableVars} style={{ flex: 1 }} size='small' />
+				) : (
+					<Select
+						size="small"
+						style={{ flex: 1 }}
+						disabled={disabled}
+						value={localValue.type}
+						onChange={(v) => {
+							handleChange({ ...localValue, type: v });
+						}}
+						options={getDPVarTypeOptions()}
+					/>
+				)}
 			</Space>
 		</div>
 	);

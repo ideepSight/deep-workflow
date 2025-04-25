@@ -10,6 +10,7 @@ import './Icon/index.less';
 import '@arco-themes/react-deep/index.less';
 import '@xyflow/react/dist/style.css';
 import './index.less';
+import { Icon } from './Icon';
 
 type SelfProps = { dpWorkflow: DPWorkflow; onSave: (v: DPWorkflowData) => void; autoSave?: boolean; autoSaveInterval?: number };
 
@@ -74,6 +75,12 @@ export const Workflow: React.FC<SelfProps> = (props) => {
 							defaultEdgeOptions={{ zIndex: 1002 }}
 							minZoom={0.25}
 						>
+							<div className="copyright">
+								<a href="https://github.com/ideepSight/deep-workflow.git" target="_blank" rel="noreferrer">
+									<Icon name="logo" symbol />
+									deep-workflow
+								</a>
+							</div>
 							<DPControls />
 							<MiniMap position="bottom-left" style={{ width: 100, height: 60, bottom: 40, background: '#f8f8f8' }} className="workflow-map" />
 							<Background gap={15} color="#ccc" />

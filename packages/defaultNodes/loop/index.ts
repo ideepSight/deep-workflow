@@ -1,4 +1,4 @@
-import { DPBaseNode, BlockEnum, DPNodeInnerData, DPVar, DPVarType } from '../../workflow';
+import { DPBaseNode, BlockEnum, DPNodeInnerData, DPVar, DPVarType, EnableVar } from '../../workflow';
 import { Loop, LoopIcon, LoopSet } from './Loop';
 import { observe } from '../../base';
 
@@ -43,7 +43,22 @@ export class LoopNode extends DPBaseNode<LoopNodeInnerData> {
 	}
 
 	get childNodes() {
-		return this.owner.dpNodes.filter((node) => node.nodeData.parentId === this.id);
+		return this.owner.dpNodes.filter((node) => node.nodeData.parentId === this.id && node.nodeConfig.type !== BlockEnum.LoopStart);
+	}
+
+	get childEnableVars() {
+		// 先找到最后一个连线的节点
+		// 可能是end节点
+		let maybe = this.childNodes.find((node) => node.nextNodes.length === 0 && node.prevNodes.length !== 0);
+		if (!maybe) return [];
+		if (maybe.nodeConfig.type === BlockEnum.End) {
+			// 取到上一个节点
+			maybe = maybe.prevNodes[0];
+		}
+		// 去掉start节点的
+		const enableVars = maybe.enableVars.filter(({ node }) => node.nodeConfig.type !== BlockEnum.LoopStart);
+		enableVars.push({ id: maybe.id, node: maybe, vars: maybe.vars });
+		return enableVars;
 	}
 
 	init(data: LoopNodeInnerData) {

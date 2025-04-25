@@ -56,10 +56,10 @@ export const StartSet: React.FC<NodeComponentProps<DPStartNode>> = observer(({ n
 					<Button type="default" shape="round" size="mini" onClick={handleAdd} icon={<IconPlus className="btn-gray-icon" />} />
 				</Tooltip>
 			</Space>
-			<div className="var-list">
+			<div className="out-var-list">
 				{node.inputs.map(({ input }) => {
 					return (
-						<div key={input.fieldName} className="var-item input-item">
+						<div key={input.fieldName} className="var-item-block input-item">
 							<Space size={4}>
 								<Icon className="var-fx" name="huanjingbianliang" />
 								<Tooltip

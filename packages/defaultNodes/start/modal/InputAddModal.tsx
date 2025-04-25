@@ -108,7 +108,7 @@ export const InputAddModal = async (editValue?: InputVarData) => {
 	};
 	return new Promise<InputVarData>((resolve) => {
 		DPModalRender({
-			width: 480,
+			width: 500,
 			title: editValue ? '编辑输入字段' : '添加输入字段',
 			onOk: resolve,
 			onCancel: () => resolve(null),

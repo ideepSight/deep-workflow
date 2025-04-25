@@ -114,12 +114,13 @@ export const LoopSet: React.FC<NodeComponentProps<LoopNode>> = observer(({ node 
 				<br />
 				<Divider className="light-border" />
 				<div>
-					<b>循环体中变量</b>
-					<div className="var-list">
+					<b>输出</b>
+					<div className="out-var-list">
 						{node.outputs.map((outVar, index) => {
 							return (
 								<div key={outVar.key} className="var-item-wrap">
 									<InputVar
+										enableVars={node.childEnableVars}
 										value={{ key: outVar.key, type: outVar.type }}
 										onChange={(v) => {
 											outVar.key = v.key;
