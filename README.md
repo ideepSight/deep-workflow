@@ -1,6 +1,10 @@
 # starter with Vite.js, React.js, Typescript
 
-预览：[在线演示](https://ideepsight.github.io/deep-workflow/)
+[在线演示](https://ideepsight.github.io/deep-workflow/)
+
+## 预览
+
+![工作流预览](./ex.png)
 
 ## 使用
 
