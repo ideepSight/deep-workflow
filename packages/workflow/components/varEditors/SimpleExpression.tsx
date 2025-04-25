@@ -205,7 +205,7 @@ export const SimpleExpression: React.FC<SelfProps> = observer((props) => {
 				>
 					<Space className="var-item-home" size={4}>
 						<Space size={2}>
-							<Icon name={dpNode.nodeConfig.icon} />
+							{dpNode.nodeConfig.icon && dpNode.nodeConfig.icon({})}
 							{dpNode.title}
 						</Space>
 						<b>/</b>

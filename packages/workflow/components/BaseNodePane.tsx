@@ -35,7 +35,7 @@ export const BaseNodePane: React.FC = observer(() => {
 			<div className="top">
 				<Space className="node-name">
 					<div className="node-icon-wrap" style={{ background: baseInfo.iconColor }}>
-						<Icon name={baseInfo.icon} />
+						{baseInfo.icon && baseInfo.icon({})}
 					</div>
 					<Input
 						className="title-edite-input"

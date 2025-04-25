@@ -17,12 +17,15 @@
 	"scripts": {
 		"dev": "vite",
 		"build": "vite build",
+		"build:lib": "vite build --target=packages",
 		"serve": "vite preview",
 		"lint": "npx eslint src",
 		"lint:fix": "npm run lint -- --fix",
 		"prettier": "npx prettier src --check",
 		"prettier:fix": "npm run prettier -- --write",
-		"format": "npm run prettier:fix && npm run lint:fix"
+		"format": "npm run prettier:fix && npm run lint:fix",
+		"predeploy": "npm run build",
+		"deploy": "gh-pages -d dist"
 	},
 	"peerDependencies": {
 		"@arco-design/web-react": "^2.66.1",
@@ -66,6 +69,7 @@
 		"eslint-plugin-prettier": "^4.0.0",
 		"eslint-plugin-react": "^7.27.1",
 		"eslint-plugin-react-hooks": "^4.3.0",
+		"gh-pages": "^6.3.0",
 		"less": "^4.1.2",
 		"prettier": "^2.4.1",
 		"request": "^2.88.2",
