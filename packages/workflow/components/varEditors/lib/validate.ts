@@ -1,0 +1,163 @@
+import * as acorn from 'acorn';
+import * as walk from 'acorn-walk';
+import type { EnableVar } from '../../../index';
+
+const innerKeywords = [
+	'true',
+	'false',
+	'null',
+	'undefined',
+	'NaN',
+	'Infinity',
+	'console',
+	'Math',
+	'Date',
+	'Array',
+	'Object',
+	'String',
+	'Number',
+	'Boolean',
+	'RegExp',
+	'JSON'
+];
+
+export const validateExpression = (expr: string, enableVars: EnableVar[]) => {
+	// 使用 acorn 解析表达式
+	const ast = acorn.parse(`(${expr})`, {
+		ecmaVersion: 2020,
+		sourceType: 'script'
+	});
+
+	// 检查是否包含赋值语句
+	let hasAssignment = false;
+	walk.simple(ast, {
+		AssignmentExpression() {
+			hasAssignment = true;
+		},
+		UpdateExpression() {
+			hasAssignment = true;
+		}
+	});
+
+	if (hasAssignment) {
+		throw '表达式不能包含赋值操作';
+	}
+
+	// 检查未定义的变量
+	const definedVars = new Map<string, Set<string>>();
+	enableVars.forEach(({ node, vars }) => {
+		definedVars.set(node.title, new Set(vars.map((v) => v.key)));
+	});
+
+	let undefinedVar = '';
+	walk.simple(ast, {
+		MemberExpression(node) {
+			if (node.object.type === 'Identifier' && node.property.type === 'Identifier') {
+				const objectName = node.object.name;
+				const propertyName = node.property.name;
+				const validVars = definedVars.get(objectName);
+				if (!validVars || !validVars.has(propertyName)) {
+					undefinedVar = `${objectName}.${propertyName}`;
+				}
+			}
+		},
+		Identifier(node) {
+			// 排除内置对象和关键字
+			if (!definedVars.has(node.name) && !innerKeywords.includes(node.name)) {
+				undefinedVar = node.name;
+			}
+		}
+	});
+
+	if (undefinedVar) {
+		throw `未定义的变量: ${undefinedVar}`;
+	}
+};
+
+export const validateCode = (code: string, enableVars: EnableVar[]) => {
+	// 使用 acorn 解析表达式
+	const ast = acorn.parse(`(${code})`, {
+		ecmaVersion: 2020,
+		sourceType: 'script'
+	});
+
+	// 检查是否存在 main 方法并返回对象
+	let mainNode = null;
+	walk.simple(
+		ast,
+		{
+			FunctionExpression(node) {
+				if (node.id && node.id.name === 'main') {
+					mainNode = node;
+				}
+			}
+		},
+		walk.base
+	);
+	if (!mainNode) {
+		throw '代码中必须包含 main 方法';
+	}
+
+	// 检查函数体中的 return 语句
+	let returnKeys: { key: string }[] = [];
+	walk.simple(mainNode, {
+		ReturnStatement(returnNode) {
+			if (returnNode.argument && returnNode.argument.type === 'ObjectExpression') {
+				returnKeys = returnNode.argument.properties
+					.filter((prop): prop is acorn.Property => prop.type === 'Property')
+					.map((prop) => {
+						if (prop.key.type === 'Identifier') {
+							return {
+								key: prop.key.name
+							};
+						}
+						return {
+							key: ''
+						};
+					})
+					.filter((item) => item.key !== '');
+			}
+		}
+	});
+	if (!returnKeys.length) {
+		throw 'main 方法必须返回一个对象';
+	}
+	// 如果returnKeys中存在相同的key，则抛出错误
+	const uniqueKeys = new Set();
+	returnKeys.forEach((item) => {
+		if (uniqueKeys.has(item.key)) {
+			throw `返回重复的key: ${item.key}`;
+		}
+		uniqueKeys.add(item.key);
+	});
+
+	// 检查未定义的变量
+	const definedVars = new Map<string, Set<string>>();
+	enableVars.forEach(({ node, vars }) => {
+		definedVars.set(node.title, new Set(vars.map((v) => v.key)));
+	});
+
+	let undefinedVar = '';
+	walk.simple(ast, {
+		MemberExpression(node) {
+			if (node.object.type === 'Identifier' && node.property.type === 'Identifier') {
+				const objectName = node.object.name;
+				const propertyName = node.property.name;
+				const validVars = definedVars.get(objectName);
+				if (!validVars || !validVars.has(propertyName)) {
+					undefinedVar = `${objectName}.${propertyName}`;
+				}
+			}
+		},
+		Identifier(node) {
+			// 排除内置对象和关键字
+			if (!definedVars.has(node.name) && !innerKeywords.includes(node.name)) {
+				undefinedVar = node.name;
+			}
+		}
+	});
+
+	if (undefinedVar) {
+		throw `未定义的变量: ${undefinedVar}`;
+	}
+};
