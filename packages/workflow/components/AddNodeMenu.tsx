@@ -3,7 +3,6 @@ import { WorkfowContext } from './context';
 import { Tooltip, Space } from '@arco-design/web-react';
 import { uuid } from 'short-uuid';
 import { BlockEnum, DPBaseNode, DPRegisterNode } from '../lib';
-import { Icon } from '../../workflow/components/Icon';
 
 export const AddNodeMenu: React.FC<{ blackList?: string[]; parentNode?: DPBaseNode }> = ({ blackList = [], parentNode }) => {
 	const { workflowIns } = useContext(WorkfowContext);
@@ -70,7 +69,7 @@ export const AddNodeMenu: React.FC<{ blackList?: string[]; parentNode?: DPBaseNo
 									content={
 										<>
 											<div className="node-icon-wrap" style={{ background: node.iconColor }}>
-												<Icon name={node.icon} />
+												{node.icon && node.icon({})}
 											</div>
 											{node.label}
 											<p>{node.desc}</p>
@@ -80,7 +79,7 @@ export const AddNodeMenu: React.FC<{ blackList?: string[]; parentNode?: DPBaseNo
 									<div className="item" key={node.type} onClick={() => handleAdd(node)}>
 										<Space className="node-name">
 											<div className="node-icon-wrap" style={{ background: node.iconColor }}>
-												<Icon name={node.icon} />
+												{node.icon && node.icon({})}
 											</div>
 											{node.label}
 										</Space>
