@@ -8,6 +8,7 @@
 		"type": "git",
 		"url": "https://github.com/ideepSight/deep-workflow.git"
 	},
+	"homepage": "https://github.com/ideepSight/deep-workflow.git",
 	"types": "dist/workflow/index.d.ts",
 	"main": "dist/deep-workflow.umd.js",
 	"module": "dist/deep-workflow.es.js",
