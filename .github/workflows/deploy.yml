@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main # 或者你的默认分支名称
+      - master # 改为实际的默认分支名称
 
 permissions:
   contents: write
