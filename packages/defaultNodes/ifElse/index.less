@@ -1,0 +1,75 @@
+.if-node-wrap {
+	.condition-list {
+		margin-right: -10px;
+	}
+	.cond-name {
+		height: 50px;
+		position: relative;
+		text-align: right;
+		span {
+			padding: 11px;
+			display: block;
+		}
+	}
+}
+.if-else-node {
+	.condition-if {
+		display: flex;
+		gap: 10px;
+		margin-bottom: 18px;
+
+		.handle-name {
+			width: 28px;
+			display: inline-block;
+			line-height: 32px;
+		}
+		&:hover {
+			.del-btn {
+				visibility: visible;
+			}
+		}
+	}
+	.add-btn {
+		margin: 10px 0 0 5px;
+	}
+	.del-btn {
+		margin: auto;
+		visibility: hidden;
+	}
+}
+
+.exp-wrap {
+	display: flex;
+	gap: 2px;
+	flex: 1;
+	overflow: hidden;
+	.condition-wrap {
+		display: flex;
+		flex: 1;
+		gap: 5px;
+		flex-direction: column;
+		width: 100%;
+		overflow: hidden;
+		.condition-left {
+			overflow: hidden;
+			display: flex;
+			gap: 5px;
+			flex: 1;
+			> .arco-space-item:first-child {
+				flex: 1;
+			}
+		}
+		.condition-select {
+			width: 120px;
+		}
+		.condition-right {
+			overflow: hidden;
+			.expression-input {
+				overflow: hidden;
+			}
+		}
+	}
+	.change-mode {
+		margin-top: 5px;
+	}
+}
