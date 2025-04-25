@@ -51,7 +51,7 @@ export const SelectVar: React.FC<SelfProps> = observer((props) => {
 					return (
 						<Space className="var-item-home" size={4}>
 							<Space size={2}>
-								<Icon name={dpNode.nodeConfig.icon} />
+								{dpNode.nodeConfig.icon && dpNode.nodeConfig.icon({})}
 								{dpNode.title}
 							</Space>
 							<b>/</b>
