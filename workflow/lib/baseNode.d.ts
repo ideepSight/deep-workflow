@@ -86,6 +86,8 @@ export declare abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInner
     get vars(): DPVar[];
     set vars(val: DPVar[]);
     get nodeData(): DPNodeData<T>;
+    get parentId(): string;
+    get parentNode(): DPBaseNode<DPNodeInnerData>;
     get data(): T;
     get id(): string;
     get title(): string;
