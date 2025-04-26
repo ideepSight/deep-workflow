@@ -1,4 +1,4 @@
-import { DPBaseNode, BlockEnum, DPNodeInnerData, DPVar, DPVarType, EnableVar } from '../../workflow';
+import { DPBaseNode, BlockEnum, DPNodeInnerData, DPVar, DPVarType, EnableVar, NodeRunningStatus } from '../../workflow';
 import { Loop, LoopIcon, LoopSet } from './Loop';
 import { observe } from '../../base';
 
@@ -86,7 +86,57 @@ export class LoopNode extends DPBaseNode<LoopNodeInnerData> {
 		this.data.outputs.splice(index, 1);
 		this._outputs.splice(index, 1);
 	}
-	async runSelf(): Promise<void> {}
+	async runSelf(): Promise<void> {
+		if (this.isByVar) {
+			const loopVar = this.loopVar;
+			if (!loopVar) {
+				throw new Error('循环变量不存在');
+			}
+			const loopCount = loopVar.value.length;
+			// 找到loopStart节点
+			const loopStartNode = this.owner.dpNodes.find((node) => node.nodeConfig.type === BlockEnum.LoopStart && node.parentId === this.id);
+			for (let i = 0; i < loopCount; i++) {
+				const startVarIndex = loopStartNode.vars.find((v) => v.key === 'index');
+				const startVarItem = loopStartNode.vars.find((v) => v.key === 'item');
+				startVarIndex.value = i;
+				startVarItem.value = loopVar.value[i];
+				await loopStartNode.run(); // 自然会往下运行
+			}
+		} else {
+			// 找到loopStart节点
+			const loopStartNode = this.owner.dpNodes.find((node) => node.nodeConfig.type === BlockEnum.LoopStart && node.parentId === this.id);
+			for (let i = 0; i < this.loopCount; i++) {
+				const startVarIndex = loopStartNode.vars.find((v) => v.key === 'index');
+				startVarIndex.value = i;
+				await loopStartNode.run(); // 自然会往下运行
+			}
+		}
+		// 给输出变量赋值
+		const outputs = this.outputs;
+		for (let i = 0; i < outputs.length; i++) {
+			const output = outputs[i];
+			output.value = this.runExpression(output.expression);
+		}
+		this.runningStatus = NodeRunningStatus.Succeeded;
+	}
+
+	private runExpression(expression: string): boolean {
+		try {
+			// 创建一个沙盒运行环境 并提供变量上下文
+			const context = this.childEnableVars.reduce((acc, { node, vars }) => {
+				acc[node.title] = vars.reduce((varAcc, v) => {
+					varAcc[v.key] = v.value;
+					return varAcc;
+				}, {});
+				return acc;
+			}, {});
+			const res = new Function('context', `return ${expression}`)(context);
+			return res;
+		} catch (error) {
+			console.error('表达式执行错误:', error);
+			throw new Error(`表达式执行失败: ${error.message}`);
+		}
+	}
 }
 DPBaseNode.registerType({
 	type: BlockEnum.Loop,

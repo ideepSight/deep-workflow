@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite';
 import React, { useEffect } from 'react';
 import { Background, Handle, NodeResizeControl, Position, ResizeParams, useViewport } from '@xyflow/react';
-import { AddNodeMenu, BlockEnum, DPVar, DPVarType, InputVar, NodeComponentProps, SelectVar } from '../../workflow';
+import { AddNodeMenu, BlockEnum, DefineVar, DPVar, DPVarType, NodeComponentProps, SelectVar } from '../../workflow';
 import { LoopNode } from '.';
 import { Button, Divider, Empty, InputNumber, Popover, Radio, Space, Tag } from '@arco-design/web-react';
 import './index.less';
@@ -114,17 +114,18 @@ export const LoopSet: React.FC<NodeComponentProps<LoopNode>> = observer(({ node 
 				<br />
 				<Divider className="light-border" />
 				<div>
-					<b>输出</b>
+					<b>输出变量</b>
 					<div className="out-var-list">
 						{node.outputs.map((outVar, index) => {
 							return (
 								<div key={outVar.key} className="var-item-wrap">
-									<InputVar
+									<DefineVar
 										enableVars={node.childEnableVars}
-										value={{ key: outVar.key, type: outVar.type }}
+										value={outVar}
 										onChange={(v) => {
 											outVar.key = v.key;
 											outVar.type = v.type;
+											outVar.expression = v.expression;
 										}}
 									/>
 									<Button

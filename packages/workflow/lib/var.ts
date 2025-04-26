@@ -15,7 +15,7 @@ export enum DPVarType {
 }
 export type DPVarData = {
 	key: string;
-	value?: unknown;
+	value?: any;
 	defaultValue?: string;
 	type: DPVarType;
 	expression?: string;
@@ -30,6 +30,9 @@ export class DPVar extends DPEvent {
 	}
 	set data(val) {
 		this._data = val;
+	}
+	get fullKey() {
+		return `${this.owner.title}.${this.key}`;
 	}
 	get key() {
 		return this._data.key;
@@ -49,10 +52,15 @@ export class DPVar extends DPEvent {
 	set type(val) {
 		this._data.type = val;
 	}
+	get expression() {
+		return this._data.expression;
+	}
+	set expression(val) {
+		this._data.expression = val;
+	}
 	get owner() {
 		return this._owner;
 	}
-
 	constructor(data: DPVarData, owner: DPBaseNode | DPWorkflow) {
 		super();
 		this._data = data;

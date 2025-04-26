@@ -66,7 +66,7 @@ export class DPStartNode extends DPBaseNode<DPStartNodeInnerData> {
 		if (this.inputs.length) {
 			const res = await RunInputModal(this.inputs.map((item) => item.input));
 			if (res) {
-				// 给下一个node传递参数
+				// 给后面node用到的变量赋值
 				this.vars.forEach((item) => {
 					item.value = res[item.key];
 				});
