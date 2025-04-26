@@ -2,11 +2,12 @@ import { observer } from 'mobx-react-lite';
 import React, { useState, useCallback, Fragment } from 'react';
 import { Empty, Tooltip } from '@arco-design/web-react';
 import { Handle, Position } from '@xyflow/react';
-import { CodeEditor, InputVar, NodeComponentProps } from '../../workflow';
+import { CodeEditor, NodeComponentProps } from '../../workflow';
 import { CodeNode } from '.';
 import _ from 'lodash';
 import { IconInfoCircleFill } from '@arco-design/web-react/icon';
 import { Icon } from '../../workflow/components/Icon';
+import { InputVar } from './InputVar';
 
 export const CodeIcon = () => {
 	return <Icon name="code" />;

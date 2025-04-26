@@ -95,6 +95,13 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 		return this._nodeData;
 	}
 
+	get parentId() {
+		return this.nodeData.parentId;
+	}
+	get parentNode() {
+		return this.owner.dpNodes.find((node) => node.id === this.nodeData.parentId);
+	}
+
 	get data() {
 		return this.nodeData.data;
 	}
