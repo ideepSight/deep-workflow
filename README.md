@@ -10,6 +10,11 @@
 
 ```Bash
 npm install @deep-sight/workflow
+
+
+import { DPWorkflow, Workflow } from '@deep-sight/workflow';
+import '@deep-sight/workflow/dist/style.css'
+
 ```
 
 ## 例子
@@ -18,7 +23,9 @@ npm install @deep-sight/workflow
 import React from 'react';
 import { Card, Button } from '@arco-design/web-react';
 import { createRoot } from 'react-dom/client';
+
 import { DPWorkflow, Workflow } from '@deep-sight/workflow';
+import '@deep-sight/workflow/dist/style.css'
 
 const App: React.FC = () => {
 	const workflow = new DPWorkflow(JSON.parse(localStorage.getItem('wf') || '{}'));

@@ -1,0 +1,15 @@
+.github/
+.vscode/
+packages
+public
+src/
+.eslintignore
+.eslintrc
+.gitignore
+.prettierignore
+.prettierrc
+ex.png
+get-iconfont.js
+index.html
+tsconfig.json
+vite.config.ts
