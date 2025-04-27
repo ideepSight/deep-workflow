@@ -1,19 +1,19 @@
 import React, { memo, cloneElement, ReactElement, useContext, useEffect, useRef, Fragment } from 'react';
 import { BlockEnum, DPBaseNode, DPNodeInnerData } from '../lib/baseNode';
-import { Button, Popconfirm, Space, Tooltip } from '@arco-design/web-react';
+import { Button, Popconfirm, Space, Spin, Tooltip } from '@arco-design/web-react';
 import { IconDelete, IconPlayCircle } from '@arco-design/web-react/icon';
 import './index.less';
 import { WorkfowContext } from './context';
 import { observer } from 'mobx-react-lite';
-import { Icon } from '../../workflow/components/Icon';
 import { Node } from '@xyflow/react';
-import { DPWorkflow } from '../lib';
+import { DPWorkflow, NodeRunningStatus } from '../lib';
+import classNames from 'classnames';
 
-export type WorkflowRetryConfig = {
-	maxRetries: number;
-	retryInterval: number;
-	retryEnabled: boolean;
-};
+// export type WorkflowRetryConfig = {
+// 	maxRetries: number;
+// 	retryInterval: number;
+// 	retryEnabled: boolean;
+// };
 
 const BaseNodeInner: React.FC<
 	Node<DPNodeInnerData> & { children: ReactElement; node: DPBaseNode<DPNodeInnerData>; nodeRef: React.RefObject<HTMLDivElement>; workflowIns: DPWorkflow }
@@ -22,7 +22,15 @@ const BaseNodeInner: React.FC<
 	const baseInfo = DPBaseNode.types[data.dpNodeType];
 
 	return (
-		<div ref={nodeRef} className={`${baseInfo.type} base-node-wrap${workflowIns.dpNodes.find((node) => node.id === id)?.active ? ' active' : ''}`}>
+		<div
+			ref={nodeRef}
+			className={classNames(
+				'base-node-wrap',
+				baseInfo.type,
+				{ active: workflowIns.dpNodes.find((node) => node.id === id)?.active },
+				{ [node.runningStatus]: true }
+			)}
+		>
 			<div className="node-toolbar">
 				{baseInfo.type !== BlockEnum.Start && baseInfo.type !== BlockEnum.End && baseInfo.group !== 'hide' && (
 					<>
@@ -41,7 +49,7 @@ const BaseNodeInner: React.FC<
 				<div className="base-node-inner">
 					<Space className="node-name">
 						<div className="node-icon-wrap" style={{ background: baseInfo.iconColor }}>
-							{baseInfo.icon && baseInfo.icon({})}
+							{node.runningStatus === NodeRunningStatus.Running ? <Spin size={14} loading /> : baseInfo.icon({})}
 						</div>
 						{baseInfo.group !== 'hide' && <b>{node.title}</b>}
 					</Space>
@@ -60,20 +68,11 @@ const BaseNode = (props: Node<DPNodeInnerData>) => {
 	const nodeRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
-		// let height = props.height;
-		// if (!height) {
-		// 	height = nodeRef?.current?.clientHeight;
-		// }
-		// let width = props.width;
-		// if (!width) {
-		// 	width = nodeRef?.current?.clientWidth;
-		// 	width = width < 200 ? 200 : width;
-		// }
-
 		const height = nodeRef?.current?.clientHeight;
 		const width = nodeRef?.current?.clientWidth;
 
 		Object.assign(node.nodeData, { width, height, parentId: props.parentId });
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [props.height, props.width, props.position]);
 
 	if (!node) {

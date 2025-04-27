@@ -17,7 +17,7 @@ export class CodeNode extends DPBaseNode<CodeNodeInnerData> {
 	}
 
 	get outputs() {
-		return this.data.outputs;
+		return this.data.outputs.map(({ key }) => this.vars.find((v) => v.key === key));
 	}
 
 	init(data: CodeNodeInnerData) {
@@ -26,11 +26,11 @@ export class CodeNode extends DPBaseNode<CodeNodeInnerData> {
 // 可以直接使用前面节点的变量
 function main() {
 
-	// 输出变量
-	return {
-		output1: '输出1来自代码运行',
-		output2: '输出2来自代码运行'
-	}
+  // 输出变量
+  return {
+    output1: '输出1来自代码运行',
+    output2: '输出2来自代码运行'
+  }
 }
 `;
 		}

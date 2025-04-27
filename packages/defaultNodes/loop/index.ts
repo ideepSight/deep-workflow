@@ -130,7 +130,7 @@ export class LoopNode extends DPBaseNode<LoopNodeInnerData> {
 				}, {});
 				return acc;
 			}, {});
-			const res = new Function('context', `return ${expression}`)(context);
+			const res = new Function(`{${Object.keys(context).join(', ')}}`, `return ${expression}`)(context);
 			return res;
 		} catch (error) {
 			console.error('表达式执行错误:', error);
