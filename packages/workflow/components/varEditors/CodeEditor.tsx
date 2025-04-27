@@ -1,8 +1,8 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import type { EnableVar } from '../../../workflow';
 import CodeMirror from '@uiw/react-codemirror';
-import { javascript } from '@codemirror/lang-javascript';
-import { autocompletion, CompletionContext } from '@codemirror/autocomplete';
+import { javascript, javascriptLanguage } from '@codemirror/lang-javascript';
+import { autocompletion, CompletionContext, completeFromList } from '@codemirror/autocomplete';
 import { validateCode } from './lib/validate';
 
 interface CodeEditorProps {
@@ -29,19 +29,14 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({ enableVars, value = '', 
 		[onChange, enableVars]
 	);
 
-	const getCompletions = useCallback(
+	// 合并自定义补全函数
+	const customAutocomplete = useCallback(
 		(context: CompletionContext) => {
-			// 获取当前光标位置之前的文本
+			// 先尝试对象属性补全
 			const textBefore = context.state.doc.sliceString(0, context.pos);
-
-			// 检查是否在字符串中
-			const inString = /["'].*$/.test(textBefore);
-			if (inString) return null;
-
-			// 检查是否在对象属性访问位置（对象名.）
 			const dotMatch = textBefore.match(/[a-zA-Z_\u4e00-\u9fa5$][a-zA-Z0-9_\u4e00-\u9fa5$]*\.$/);
 			if (dotMatch) {
-				const objectName = dotMatch[0].slice(0, -1); // 去掉最后的点
+				const objectName = dotMatch[0].slice(0, -1);
 				const parent = enableVars.find((v) => v.node.title === objectName);
 				if (parent) {
 					return {
@@ -50,48 +45,46 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({ enableVars, value = '', 
 							label: varItem.key,
 							type: 'variable',
 							detail: '',
-							apply: varItem.key // 直接应用变量名
+							apply: varItem.key
 						}))
 					};
 				}
 				return null;
 			}
 
-			// 检查是否在变量名位置
+			// 再尝试变量名补全
 			const match = textBefore.match(/^[a-zA-Z_\u4e00-\u9fa5$][a-zA-Z0-9_\u4e00-\u9fa5$]*$/);
-			if (!match) return null;
+			if (match) {
+				const prefix = match[0];
+				return {
+					from: context.pos - prefix.length,
+					options: enableVars.flatMap(({ node, vars }) =>
+						vars.map((varItem) => ({
+							label: varItem.key,
+							type: 'variable',
+							detail: `${node.title}.${varItem.key}`,
+							apply: `${node.title}.${varItem.key}`
+						}))
+					)
+				};
+			}
 
-			const prefix = match[0];
-			return {
-				from: context.pos - prefix.length,
-				options: enableVars.flatMap(({ node, vars }) =>
-					vars.map((varItem) => ({
-						label: varItem.key,
+			// 再尝试父对象补全
+			const parentMatch = textBefore.match(/^[a-zA-Z_\u4e00-\u9fa5$][a-zA-Z0-9_\u4e00-\u9fa5$]*$/);
+			if (parentMatch) {
+				const prefix = parentMatch[0];
+				return {
+					from: context.pos - prefix.length,
+					options: enableVars.map(({ node }) => ({
+						label: node.title,
 						type: 'variable',
-						detail: `${node.title}.${varItem.key}`,
-						apply: `${node.title}.${varItem.key}` // 自动补全对象名
+						detail: '',
+						apply: node.title
 					}))
-				)
-			};
-		},
-		[enableVars]
-	);
+				};
+			}
 
-	const getVarParentCompletions = useCallback(
-		(context: CompletionContext) => {
-			const textBefore = context.state.doc.sliceString(0, context.pos);
-			const match = textBefore.match(/^[a-zA-Z_\u4e00-\u9fa5$][a-zA-Z0-9_\u4e00-\u9fa5$]*$/);
-			if (!match) return null;
-			const prefix = match[0];
-			return {
-				from: context.pos - prefix.length,
-				options: enableVars.map(({ node }) => ({
-					label: node.title,
-					type: 'variable',
-					detail: '',
-					apply: node.title // 直接应用对象名
-				}))
-			};
+			return null;
 		},
 		[enableVars]
 	);
@@ -108,9 +101,10 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({ enableVars, value = '', 
 									value={expression}
 									extensions={[
 										javascript(),
-										autocompletion({
-											override: [getVarParentCompletions, getCompletions]
-										})
+										javascriptLanguage.data.of({
+											autocomplete: customAutocomplete
+										}),
+										autocompletion()
 									]}
 									onChange={handleInputChange}
 									className="dp-auto-complete"

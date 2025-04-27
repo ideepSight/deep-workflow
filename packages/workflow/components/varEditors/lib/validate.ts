@@ -21,6 +21,8 @@ const innerKeywords = [
 	'JSON'
 ];
 
+const globalIdentifiers = typeof window !== 'undefined' ? Object.getOwnPropertyNames(window) : Object.getOwnPropertyNames(globalThis);
+
 export const validateExpression = (expr: string, enableVars: EnableVar[]) => {
 	// 使用 acorn 解析表达式
 	const ast = acorn.parse(`(${expr})`, {
@@ -50,6 +52,7 @@ export const validateExpression = (expr: string, enableVars: EnableVar[]) => {
 	});
 
 	let undefinedVar = '';
+
 	walk.simple(ast, {
 		MemberExpression(node) {
 			if (node.object.type === 'Identifier' && node.property.type === 'Identifier') {
@@ -63,7 +66,7 @@ export const validateExpression = (expr: string, enableVars: EnableVar[]) => {
 		},
 		Identifier(node) {
 			// 排除内置对象和关键字
-			if (!definedVars.has(node.name) && !innerKeywords.includes(node.name)) {
+			if (!definedVars.has(node.name) && !innerKeywords.includes(node.name) && !globalIdentifiers.includes(node.name)) {
 				undefinedVar = node.name;
 			}
 		}
@@ -143,6 +146,10 @@ export const validateCode = (code: string, enableVars: EnableVar[]) => {
 			if (node.object.type === 'Identifier' && node.property.type === 'Identifier') {
 				const objectName = node.object.name;
 				const propertyName = node.property.name;
+				// 如果 objectName 是全局变量或内置关键字，则跳过校验
+				if (globalIdentifiers.includes(objectName) || innerKeywords.includes(objectName)) {
+					return;
+				}
 				const validVars = definedVars.get(objectName);
 				if (!validVars || !validVars.has(propertyName)) {
 					undefinedVar = `${objectName}.${propertyName}`;
@@ -151,13 +158,13 @@ export const validateCode = (code: string, enableVars: EnableVar[]) => {
 		},
 		Identifier(node) {
 			// 排除内置对象和关键字
-			if (!definedVars.has(node.name) && !innerKeywords.includes(node.name)) {
+			if (!definedVars.has(node.name) && !innerKeywords.includes(node.name) && !globalIdentifiers.includes(node.name)) {
 				undefinedVar = node.name;
 			}
 		}
 	});
 
 	if (undefinedVar) {
-		throw `未定义的变量: ${undefinedVar}`;
+		throw `含有未定义的变量: ${undefinedVar}`;
 	}
 };
