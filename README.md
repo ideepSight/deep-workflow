@@ -98,8 +98,12 @@ export const EndSet: React.FC<NodeComponentProps<EndNode>> = observer(({node}) =
 -   [ ] 运行日志功能
 -   [ ] 暂停运行、中途停止运行
 -   [ ] 运行错误时自动聚焦到错误节点
+-   [ ] 历史记录、上一步、下一步
 -   [ ] 国际化
 -   [ ] 支持颜色主题更换
+-   [ ] 完善文档
+-   [ ] 第三方节点插件机制、节点市场
+-   [ ] 工作流市场
 
 ## 贡献
 
