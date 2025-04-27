@@ -183,10 +183,9 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 		const id = typeof idOrItem === 'string' ? idOrItem : idOrItem.nodeData.id;
 		const node = this._dpNodes.find((node) => node.id === id);
 		let childNodeIds = [];
-		if (node.nodeConfig.type === BlockEnum.Loop) {
+		if (node instanceof LoopNode) {
 			// 循环节点下的子节点要同步删除
-			const loopNode = node as LoopNode;
-			childNodeIds = loopNode.childNodes.map((node) => node.id);
+			childNodeIds = node.childNodes.map((node) => node.id);
 			// 删除 子节点的连线
 			this._dpEdges = this._dpEdges.filter((edge) => !childNodeIds.includes(edge.source) && !childNodeIds.includes(edge.target));
 		}
