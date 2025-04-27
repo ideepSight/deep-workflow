@@ -1,6 +1,6 @@
 import { DPEvent } from '../../base';
 import { Connection, ReactFlowInstance } from '@xyflow/react';
-import { DPBaseNode, DPNodeData } from './baseNode';
+import { DPBaseNode, DPNodeData, LogData } from './baseNode';
 import { DPBaseEdge, DPEdgeData } from './baseEdge';
 import { DPVarData, DPVar } from './var';
 export declare enum ControlMode {
@@ -16,6 +16,7 @@ export type DPWorkflowData = {
 };
 type DPWorkflowEvent = {
     save: (data: DPWorkflowData) => void;
+    running: () => void;
 };
 export declare class DPWorkflow extends DPEvent<DPWorkflowEvent> {
     id: string;
@@ -25,11 +26,15 @@ export declare class DPWorkflow extends DPEvent<DPWorkflowEvent> {
     private _vars;
     controlMode: 'pointer' | 'hand';
     running: boolean;
+    private _runlogs;
     private _prevData;
     autoSaveInterval: number;
     private _autoSave;
     private _autoSaveIng;
     reactFlowIns: ReactFlowInstance;
+    get runlogs(): (LogData & {
+        node: DPBaseNode;
+    })[];
     get autoSave(): boolean;
     set autoSave(val: boolean);
     get data(): {

@@ -1,7 +1,8 @@
 import { ModalProps } from '@arco-design/web-react';
 import { ReactNode, Ref } from 'react';
-type ModalElement = Omit<ModalProps, 'onOk'> & {
+export type ModalElement = Omit<ModalProps, 'onOk'> & {
     width?: number;
+    height?: number;
     title?: string;
     className?: string;
     footer?: ReactNode;

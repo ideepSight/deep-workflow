@@ -53,6 +53,11 @@ export type DPRegisterNode = {
     width?: number;
     height?: number;
 };
+export type LogData = {
+    time: number;
+    msg: string;
+    type: 'info' | 'error';
+};
 export type EnableVar = {
     id: string;
     node: DPBaseNode;
@@ -76,13 +81,12 @@ export declare abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInner
     active: boolean;
     runningStatus: NodeRunningStatus;
     errorHandleMode: ErrorHandleMode;
-    runLog: {
-        time: number;
-        msg: string;
-        type: 'info' | 'error';
-    }[];
+    private _runlogs;
     private _vars;
     _nextRunNode: DPBaseNode;
+    set runlog(val: LogData);
+    get runlogs(): LogData[];
+    set runlogs(val: LogData[]);
     get vars(): DPVar[];
     set vars(val: DPVar[]);
     get nodeData(): DPNodeData<T>;
