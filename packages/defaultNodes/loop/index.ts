@@ -43,13 +43,13 @@ export class LoopNode extends DPBaseNode<LoopNodeInnerData> {
 	}
 
 	get childNodes() {
-		return this.owner.dpNodes.filter((node) => node.nodeData.parentId === this.id && node.nodeConfig.type !== BlockEnum.LoopStart);
+		return this.owner.dpNodes.filter((node) => node.nodeData.parentId === this.id);
 	}
 
 	get childEnableVars() {
 		// 先找到最后一个连线的节点
 		// 可能是end节点
-		let maybe = this.childNodes.find((node) => node.nextNodes.length === 0 && node.prevNodes.length !== 0);
+		let maybe = this.childNodes.find((node) => node.nodeConfig.type !== BlockEnum.LoopStart && node.nextNodes.length === 0 && node.prevNodes.length !== 0);
 		if (!maybe) return [];
 		if (maybe.nodeConfig.type === BlockEnum.End) {
 			// 取到上一个节点
