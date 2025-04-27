@@ -20,7 +20,7 @@ export const Loop: React.FC<NodeComponentProps<LoopNode>> = observer(({ node }) 
 				position: { x: 50, y: 80 },
 				width: 44,
 				height: 44,
-				data: { dpNodeType: BlockEnum.LoopStart, title: 'start' },
+				data: { dpNodeType: BlockEnum.LoopStart, title: 'loop' },
 				draggable: false,
 				selectable: false,
 				parentId: node.id,

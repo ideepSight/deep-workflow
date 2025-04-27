@@ -37,7 +37,7 @@ export class IfElseNode extends DPBaseNode<DPIfElseNodeInnerData> {
 			if (c.type === 'if') {
 				let expression = c.expValue.expression; // "Start.one === Start.two"
 				if (c.expValue.mode === 'simple') {
-					expression = `${c.expValue.left} ${c.expValue.operator} ${c.expValue.right}`;
+					expression = c.expValue.operator.replace('x', `${c.expValue.left}`).replace('y', `${c.expValue.right}`);
 				}
 				// 执行表达式 创建一个沙盒运行环境
 				const res = this.runExpression(expression);
@@ -65,7 +65,7 @@ export class IfElseNode extends DPBaseNode<DPIfElseNodeInnerData> {
 				}, {});
 				return acc;
 			}, {});
-			const res = new Function('context', `return ${expression}`)(context);
+			const res = new Function(`{${Object.keys(context).join(', ')}}`, `return ${expression}`)(context);
 			return res;
 		} catch (error) {
 			console.error('表达式执行错误:', error);

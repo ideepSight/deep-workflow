@@ -31,7 +31,7 @@ export const BaseNodePane: React.FC = observer(() => {
 	const SetComponent = baseInfo.SetComponent || (() => <Empty description="无需配置" />);
 
 	return (
-		<div className="base-node-pane">
+		<div className="base-node-pane" key={activeNode?.id}>
 			<div className="top">
 				<Space className="node-name">
 					<div className="node-icon-wrap" style={{ background: baseInfo.iconColor }}>

@@ -1,6 +1,6 @@
 import { DPEvent, observe } from '../../base';
 import type { Connection, ReactFlowInstance } from '@xyflow/react';
-import { BlockEnum, DPBaseNode, DPNodeData } from './baseNode';
+import { BlockEnum, DPBaseNode, DPNodeData, NodeRunningStatus } from './baseNode';
 import { uuid } from 'short-uuid';
 import { DPBaseEdge, DPEdgeData } from './baseEdge';
 import { Message } from '@arco-design/web-react';
@@ -134,6 +134,8 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 
 	async run() {
 		this.running = true;
+		// 清除所有节点运行状态
+		this._dpNodes.forEach((node) => (node.runningStatus = NodeRunningStatus.NotStart));
 		// 从start节点开始运行
 		const startNode = this._dpNodes.find((node) => node.data.dpNodeType === BlockEnum.Start);
 		if (!startNode) {

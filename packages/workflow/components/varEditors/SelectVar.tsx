@@ -72,7 +72,7 @@ export const SelectVar: React.FC<SelfProps> = observer((props) => {
 				return (
 					<Select.OptGroup key={id} label={node.title}>
 						{vars.map((varItem) => {
-							const disabled = varItem.type !== DPVarType.String && varItem.type !== DPVarType.Number;
+							const disabled = filterType?.length && !filterType.includes(varItem.type);
 							return (
 								<Select.Option key={varItem.key} value={varItem.key} extra={node} disabled={disabled}>
 									<Space className="option-inner">
