@@ -3,7 +3,8 @@ import react from '@vitejs/plugin-react-refresh';
 import dts from 'vite-plugin-dts';
 
 // https://vitejs.dev/config/
-export default defineConfig(({ command, mode, ...env }: ConfigEnv & { target?: string }): UserConfig => {
+export default defineConfig((params: ConfigEnv): UserConfig => {
+	const { command, mode, ...env } = params;
 	const baseConfig = {
 		base: './',
 		resolve: {
@@ -15,8 +16,9 @@ export default defineConfig(({ command, mode, ...env }: ConfigEnv & { target?: s
 		}
 	};
 
+	console.log('build package', params);
 	// 当目标为 packages 时，使用库构建配置
-	if (env.target === 'packages') {
+	if (params.mode === 'lib') {
 		return {
 			...baseConfig,
 			build: {
