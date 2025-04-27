@@ -37,6 +37,9 @@ export class IfElseNode extends DPBaseNode<DPIfElseNodeInnerData> {
 			if (c.type === 'if') {
 				let expression = c.expValue.expression; // "Start.one === Start.two"
 				if (c.expValue.mode === 'simple') {
+					if (!c.expValue.operator || !c.expValue.left || !c.expValue.right) {
+						throw new Error('表达式配置错误');
+					}
 					expression = c.expValue.operator.replace('x', `${c.expValue.left}`).replace('y', `${c.expValue.right}`);
 				}
 				// 执行表达式 创建一个沙盒运行环境

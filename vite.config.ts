@@ -38,7 +38,8 @@ export default defineConfig((params: ConfigEnv): UserConfig => {
 						'lodash',
 						'classnames',
 						'acorn',
-						'acorn-walk'
+						'acorn-walk',
+						'dayjs'
 					],
 					output: {
 						globals: {
@@ -51,7 +52,8 @@ export default defineConfig((params: ConfigEnv): UserConfig => {
 							lodash: '_',
 							classnames: 'classNames',
 							acorn: 'acorn',
-							'acorn-walk': 'acornWalk'
+							'acorn-walk': 'acornWalk',
+							dayjs: 'dayjs'
 						}
 					}
 				}

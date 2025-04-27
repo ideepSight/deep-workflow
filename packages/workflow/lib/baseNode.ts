@@ -58,6 +58,8 @@ export type DPRegisterNode = {
 	height?: number;
 };
 
+export type LogData = { time: number; msg: string; type: 'info' | 'error' };
+
 export type EnableVar = { id: string; node: DPBaseNode; vars: DPVar[] };
 export type DPNodeInnerData = { dpNodeType: BlockEnum; title?: string; desc?: string };
 
@@ -79,12 +81,23 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 	@observe
 	public errorHandleMode: ErrorHandleMode = ErrorHandleMode.Terminated;
 	@observe
-	public runLog: { time: number; msg: string; type: 'info' | 'error' }[] = [];
+	private _runlogs: LogData[] = [];
 	@observe
 	private _vars: DPVar[] = [];
 	@observe
 	public _nextRunNode: DPBaseNode = null;
 
+	set runlog(val: LogData) {
+		this._runlogs.push(val);
+		this.owner.runlogs.push({ ...val, node: this });
+	}
+
+	get runlogs() {
+		return this._runlogs;
+	}
+	set runlogs(val: LogData[]) {
+		this._runlogs = val;
+	}
 	get vars() {
 		return this._vars;
 	}
@@ -152,19 +165,19 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 
 	async run() {
 		this.runningStatus = NodeRunningStatus.Running;
-		const label = this.nodeConfig.label;
-		this.runLog.push({ time: Date.now(), msg: `运行节点 - ${label}`, type: 'info' });
+		this.runlog = { time: Date.now(), msg: `开始运行`, type: 'info' };
 		try {
 			await this.runSelf();
 			this.runningStatus = NodeRunningStatus.Succeeded;
-			this.runLog.push({ time: Date.now(), msg: `运行节点 - ${label} 成功`, type: 'info' });
+			this.runlog = { time: Date.now(), msg: `运行成功`, type: 'info' };
 		} catch (error) {
+			this.toCenter();
 			this.runningStatus = NodeRunningStatus.Failed;
-			this.runLog.push({
+			this.runlog = {
 				time: Date.now(),
-				msg: `运行节点 - ${label} 失败，${error?.message ? `错误信息：${error.message}` : ''}`,
+				msg: `运行失败，${error?.message ? `错误信息：${error.message}` : ''}`,
 				type: 'error'
-			});
+			};
 			if (this.errorHandleMode === ErrorHandleMode.Terminated) {
 				return;
 			}
