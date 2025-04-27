@@ -1,9 +1,10 @@
 import { Modal, ModalProps } from '@arco-design/web-react';
 import React, { ReactNode, Ref, isValidElement, useRef, useState } from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 
-type ModalElement = Omit<ModalProps, 'onOk'> & {
+export type ModalElement = Omit<ModalProps, 'onOk'> & {
 	width?: number;
+	height?: number;
 	title?: string;
 	className?: string;
 	footer?: ReactNode;
@@ -27,8 +28,8 @@ function cloneElement(element: React.ReactNode, props?: any): React.ReactElement
 	return React.cloneElement(element, typeof props === 'function' ? props(element.props || {}) : props);
 }
 
-const DPModalElement: React.FC<ModalElement & { afterClose?: () => void, children }> = (props) => {
-	const { width, title, onOk, onCancel, children, className, footer, afterClose } = props;
+const DPModalElement: React.FC<ModalElement & { children; afterClose?: () => void }> = (props) => {
+	const { width, height, title, onOk, onCancel, children, className, footer, afterClose } = props;
 	const [isModalVisible, setIsModalVisible] = useState<boolean>(true);
 
 	const originModalRef = useRef<OriginModalRef>();
@@ -72,10 +73,10 @@ const DPModalElement: React.FC<ModalElement & { afterClose?: () => void, childre
 			className={`dp-modal${className ? '' : ' ' + className}`}
 			visible={isModalVisible}
 			footer={footer}
-			title={title || ' '}
+			title={title === null ? null : title || ' '}
 			onOk={handleOk || null}
 			onCancel={handleCancel || null}
-			style={{ width }}
+			style={{ width, height, overflow: 'auto' }}
 			afterClose={onAfterClose}
 		>
 			{cloneChildren}
@@ -90,14 +91,15 @@ export const DPModalRender = (props: ModalRender) => {
 	const div = document.createElement('div');
 	document.body.appendChild(div);
 
+	const root = createRoot(div);
 	const afterClose = () => {
-		const unmountResult = ReactDOM.unmountComponentAtNode(div);
-		if (unmountResult && div.parentNode) {
-			div.parentNode.removeChild(div);
-		}
+		setTimeout(() => {
+			root.unmount();
+			div.parentNode && div.parentNode.removeChild(div);
+		}, 0);
 	};
 
-	ReactDOM.render(
+	root.render(
 		<DPModalElement
 			{...props}
 			width={width}
@@ -109,8 +111,7 @@ export const DPModalRender = (props: ModalRender) => {
 			afterClose={afterClose}
 		>
 			{content}
-		</DPModalElement>,
-		div
+		</DPModalElement>
 	);
 	return afterClose;
 };

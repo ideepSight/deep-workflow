@@ -20,7 +20,7 @@ const BaseEdge = observer((props: EdgeProps<DPEdgeData>) => {
 		curvature: 0.16
 	});
 
-	const stroke = selected || data.hovering ? '#3cbdc6' : '#aaa';
+	const stroke = selected || data.hovering ? 'rgb(var(--primary-6))' : '#aaa';
 
 	return (
 		<Fragment key={id}>

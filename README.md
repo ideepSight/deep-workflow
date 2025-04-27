@@ -95,8 +95,8 @@ export const EndSet: React.FC<NodeComponentProps<EndNode>> = observer(({node}) =
 
 ## 计划
 
--   [ ] 运行日志功能
--   [ ] 运行错误时自动聚焦到错误节点
+-   [x] 运行日志功能
+-   [x] 运行错误时自动聚焦到错误节点
 -   [ ] 暂停运行、中途停止运行
 -   [ ] 节点独立测试运行、重试运行
 -   [ ] 全局变量

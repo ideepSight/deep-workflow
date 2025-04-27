@@ -1,13 +1,14 @@
 import React, { memo, cloneElement, ReactElement, useContext, useEffect, useRef, Fragment } from 'react';
 import { BlockEnum, DPBaseNode, DPNodeInnerData } from '../lib/baseNode';
 import { Button, Popconfirm, Space, Spin, Tooltip } from '@arco-design/web-react';
-import { IconDelete, IconPlayCircle } from '@arco-design/web-react/icon';
+import { IconDelete, IconExclamationCircle, IconInfo, IconPlayCircle } from '@arco-design/web-react/icon';
 import './index.less';
 import { WorkfowContext } from './context';
 import { observer } from 'mobx-react-lite';
 import { Node } from '@xyflow/react';
 import { DPWorkflow, NodeRunningStatus } from '../lib';
 import classNames from 'classnames';
+import dayjs from 'dayjs';
 
 // export type WorkflowRetryConfig = {
 // 	maxRetries: number;
@@ -34,17 +35,35 @@ const BaseNodeInner: React.FC<
 			<div className="node-toolbar">
 				{baseInfo.type !== BlockEnum.Start && baseInfo.type !== BlockEnum.End && baseInfo.group !== 'hide' && (
 					<>
-						{baseInfo.group !== 'sys' && (
+						{/* {baseInfo.group !== 'sys' && (
 							<Tooltip content="运行此步骤">
 								<Button type="secondary" shape="circle" size="mini" icon={<IconPlayCircle />} />
 							</Tooltip>
-						)}
+						)} */}
 						<Popconfirm blurToHide title="确定删除此节点吗？" onOk={() => workflowIns.delNode(id)}>
 							<Button type="secondary" shape="circle" size="mini" icon={<IconDelete />} />
 						</Popconfirm>
 					</>
 				)}
 			</div>
+			{node.runningStatus === NodeRunningStatus.Failed && (
+				<div className="error-info">
+					<Tooltip
+						getPopupContainer={() => document.querySelector('.workflow-wrap')}
+						content={
+							<div className="error-info-p">
+								{node.runlogs.map((log, i) => (
+									<p key={log.time + log.msg + i} className={classNames({ [log.type]: true })}>
+										<span>{dayjs(log.time).format('MM-DD HH:mm:ss')}</span> {log.msg}
+									</p>
+								))}
+							</div>
+						}
+					>
+						<IconExclamationCircle />
+					</Tooltip>
+				</div>
+			)}
 			<div className="base-node-bg">
 				<div className="base-node-inner">
 					<Space className="node-name">

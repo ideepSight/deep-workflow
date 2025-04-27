@@ -115,7 +115,7 @@ export const DPControls: React.FC = () => {
 					<Button
 						size="mini"
 						type="text"
-						style={{ color: workflowIns.controlMode === 'pointer' ? '#3cbdc6' : 'unset' }}
+						style={{ color: workflowIns.controlMode === 'pointer' ? 'rgb(var(--primary-6))' : 'unset' }}
 						className="big-icon"
 						onClick={() => (workflowIns.controlMode = 'pointer')}
 						icon={<RiCursorLine className="arco-icon" />}
@@ -125,7 +125,7 @@ export const DPControls: React.FC = () => {
 					<Button
 						size="mini"
 						type="text"
-						style={{ color: workflowIns.controlMode === 'hand' ? '#3cbdc6' : 'unset' }}
+						style={{ color: workflowIns.controlMode === 'hand' ? 'rgb(var(--primary-6))' : 'unset' }}
 						className="big-icon"
 						onClick={() => (workflowIns.controlMode = 'hand')}
 						icon={<RiHand className="arco-icon" />}

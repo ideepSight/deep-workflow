@@ -1,6 +1,6 @@
 import { DPEvent, observe } from '../../base';
 import type { Connection, ReactFlowInstance } from '@xyflow/react';
-import { BlockEnum, DPBaseNode, DPNodeData, NodeRunningStatus } from './baseNode';
+import { BlockEnum, DPBaseNode, DPNodeData, LogData, NodeRunningStatus } from './baseNode';
 import { uuid } from 'short-uuid';
 import { DPBaseEdge, DPEdgeData } from './baseEdge';
 import { Message } from '@arco-design/web-react';
@@ -23,6 +23,7 @@ export type DPWorkflowData = {
 
 type DPWorkflowEvent = {
 	save: (data: DPWorkflowData) => void;
+	running: () => void;
 };
 export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 	id: string;
@@ -38,6 +39,8 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 	controlMode: 'pointer' | 'hand' = 'hand';
 	@observe
 	running = false;
+	@observe
+	private _runlogs: (LogData & { node: DPBaseNode })[] = [];
 
 	private _prevData: DPWorkflowData;
 
@@ -45,6 +48,11 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 	private _autoSave = false;
 	private _autoSaveIng = false;
 	public reactFlowIns: ReactFlowInstance;
+
+	get runlogs() {
+		return this._runlogs;
+	}
+
 	get autoSave() {
 		return this._autoSave;
 	}
@@ -136,6 +144,11 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 		this.running = true;
 		// 清除所有节点运行状态
 		this._dpNodes.forEach((node) => (node.runningStatus = NodeRunningStatus.NotStart));
+		// 清除所有节点运行日志
+		this._dpNodes.forEach((node) => (node.runlogs = []));
+		this._runlogs = [];
+		this.emit('running');
+
 		// 从start节点开始运行
 		const startNode = this._dpNodes.find((node) => node.data.dpNodeType === BlockEnum.Start);
 		if (!startNode) {

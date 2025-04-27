@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Observer } from 'mobx-react-lite';
 import { Background, MiniMap, ReactFlow, SelectionMode, useEdgesState, useNodesState, Node, NodeTypes, useReactFlow } from '@xyflow/react';
-import { nodeTypes, DPWorkfowContext, WorkfowContext, edgeTypes, DPControls } from '../components';
+import { nodeTypes, DPWorkfowContext, WorkfowContext, edgeTypes, DPControls, DPRunLog } from '../components';
 import { DPWorkflow, DPWorkflowData } from '../lib';
 import { BaseNodePane } from './BaseNodePane';
 import { Delete } from './varEditors/lib/getHotkeyHandler';
@@ -88,6 +88,7 @@ export const Workflow: React.FC<SelfProps> = (props) => {
 					)}
 				</Observer>
 				<BaseNodePane />
+				<DPRunLog />
 			</WorkfowContext.Provider>
 		</div>
 	);
