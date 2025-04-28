@@ -1,6 +1,6 @@
 {
 	"name": "@deep-sight/workflow",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"description": "类dify、coze流程图，包含变量、判断、代码块、循环等，支持自由扩展节点，适用大模型、AI Agent等场景。",
 	"author": "deep-sight",
 	"license": "Apache-2.0",

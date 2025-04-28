@@ -4,6 +4,9 @@ import type { LoopNode } from '..';
 import { StartIcon } from '../../start/Start';
 
 export class LoopStartNode extends DPBaseNode {
+	get singleRunAble() {
+		return false;
+	}
 	private _tmpVars: DPVar[];
 
 	get parentNode() {

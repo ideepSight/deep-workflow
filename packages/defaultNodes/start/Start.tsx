@@ -6,8 +6,8 @@ import { InputAddModal } from './modal/InputAddModal';
 import './index.less';
 import { Icon } from '../../workflow/components/Icon';
 import { IconDelete, IconEdit, IconPlus } from '@arco-design/web-react/icon';
-import { DPStartNode, InputFieldData } from '.';
-import { NodeComponentProps } from '../../workflow';
+import { DPStartNode } from '.';
+import { InputFieldData, NodeComponentProps } from '../../workflow';
 
 export const StartIcon = () => {
 	return <Icon name="huojian" />;
@@ -103,7 +103,14 @@ export const StartSet: React.FC<NodeComponentProps<DPStartNode>> = observer(({ n
 							</Space>
 							<Space className="btns" size={2}>
 								<Button type="text" shape="round" size="mini" onClick={() => handleEdit(input)} icon={<IconEdit />} />
-								<Button type="text" shape="round" status="danger" size="mini" onClick={() => node.removeInputFields(input)} icon={<IconDelete />} />
+								<Button
+									type="text"
+									shape="round"
+									status="danger"
+									size="mini"
+									onClick={() => node.removeInputFields(input)}
+									icon={<IconDelete />}
+								/>
 							</Space>
 						</div>
 					);
