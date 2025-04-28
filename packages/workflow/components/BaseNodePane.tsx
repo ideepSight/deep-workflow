@@ -1,15 +1,15 @@
 import React, { useContext, useEffect, useMemo } from 'react';
 import './index.less';
 import { observer } from 'mobx-react-lite';
-import { Divider, Empty, Input, Space } from '@arco-design/web-react';
+import { Button, Divider, Empty, Input, Space, Spin, Tooltip } from '@arco-design/web-react';
 import { DPBaseNode } from '../lib';
 import { WorkfowContext } from './context';
 import { Icon } from '../../workflow/components/Icon';
+import { IconClose, IconPlayCircle, IconRecordStop } from '@arco-design/web-react/icon';
 
 export const BaseNodePane: React.FC = observer(() => {
 	const { workflowIns } = useContext(WorkfowContext);
 	const activeNode = workflowIns.dpNodes.find((n) => n.active);
-	const [editTitle, setEditTitle] = React.useState(false);
 	const [title, setTitle] = React.useState('');
 	const [errorTitle, setErrorTitle] = React.useState('');
 
@@ -42,6 +42,9 @@ export const BaseNodePane: React.FC = observer(() => {
 						maxLength={20}
 						status={errorTitle ? 'error' : null}
 						onBlur={() => {
+							if (title === '') {
+								return;
+							}
 							setErrorTitle('');
 							if (errorTitle) return;
 							activeNode.data.title = title;
@@ -49,7 +52,9 @@ export const BaseNodePane: React.FC = observer(() => {
 						value={title}
 						onChange={(v) => {
 							if (v === '') {
-								return setErrorTitle('标题不能为空');
+								setErrorTitle('标题不能为空');
+								setTitle(v);
+								return;
 							}
 							if (!/^[a-zA-Z_\u4e00-\u9fa5$][a-zA-Z0-9_\u4e00-\u9fa5$]*$/.test(v)) {
 								return setErrorTitle('需以字母、中文、_或$开头');
@@ -59,7 +64,24 @@ export const BaseNodePane: React.FC = observer(() => {
 						}}
 					/>
 				</Space>
-				<Icon name="close" style={{ cursor: 'pointer' }} onClick={() => (activeNode.active = false)} />
+				<div className="btns">
+					{activeNode.singleRunAble && (
+						<Tooltip content={activeNode.singleRunning ? '运行中' : '运行此步骤'}>
+							{activeNode.singleRunning ? (
+								<Button type="text" className="big-icon" icon={<Spin />} onClick={() => activeNode.runSingle()} />
+							) : (
+								<Button type="text" className="big-icon" icon={<IconPlayCircle />} />
+							)}
+						</Tooltip>
+					)}
+					{activeNode.singleRunning && (
+						<Tooltip content="停止此步骤">
+							<Button type="text" className="big-icon" icon={<IconRecordStop />} onClick={() => activeNode.stop()} />
+						</Tooltip>
+					)}
+					<Divider type="vertical" />
+					<Button type="text" className="big-icon" icon={<IconClose />} onClick={() => (activeNode.active = false)} />
+				</div>
 			</div>
 			<div className="error-title">{errorTitle}</div>
 			<div className="content-wrap">

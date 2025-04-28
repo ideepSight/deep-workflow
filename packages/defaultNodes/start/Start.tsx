@@ -6,7 +6,7 @@ import { InputAddModal } from './modal/InputAddModal';
 import './index.less';
 import { Icon } from '../../workflow/components/Icon';
 import { IconDelete, IconEdit, IconPlus } from '@arco-design/web-react/icon';
-import { DPStartNode, InputVarData } from '.';
+import { DPStartNode, InputFieldData } from '.';
 import { NodeComponentProps } from '../../workflow';
 
 export const StartIcon = () => {
@@ -17,9 +17,9 @@ export const Start: React.FC<NodeComponentProps<DPStartNode>> = observer(({ node
 	return (
 		<div className="start-node-wrap">
 			<Handle type="source" id="start" className="base-handle" position={Position.Right} />
-			{!!node.inputs.length && (
+			{!!node.inputFields.length && (
 				<div className="var-list">
-					{node.inputs.map(({ input }) => {
+					{node.inputFields.map(({ input }) => {
 						return (
 							<div key={input.fieldName} className="var-item input-item">
 								<Space size={4}>
@@ -39,10 +39,10 @@ export const StartSet: React.FC<NodeComponentProps<DPStartNode>> = observer(({ n
 	const handleAdd = async () => {
 		const res = await InputAddModal();
 		if (res) {
-			node.addInput(res);
+			node.addInputFields(res);
 		}
 	};
-	const handleEdit = async (item: InputVarData) => {
+	const handleEdit = async (item: InputFieldData) => {
 		const res = await InputAddModal(item);
 		if (res) {
 			node.updateInput(item, res);
@@ -54,7 +54,7 @@ export const StartSet: React.FC<NodeComponentProps<DPStartNode>> = observer(({ n
 				<b>输入字段</b>
 			</Space>
 			<div className="out-var-list">
-				{node.inputs.map(({ input }) => {
+				{node.inputFields.map(({ input }) => {
 					return (
 						<div key={input.fieldName} className="var-item-block input-item">
 							<Space size={4}>
@@ -103,12 +103,12 @@ export const StartSet: React.FC<NodeComponentProps<DPStartNode>> = observer(({ n
 							</Space>
 							<Space className="btns" size={2}>
 								<Button type="text" shape="round" size="mini" onClick={() => handleEdit(input)} icon={<IconEdit />} />
-								<Button type="text" shape="round" status="danger" size="mini" onClick={() => node.removeInput(input)} icon={<IconDelete />} />
+								<Button type="text" shape="round" status="danger" size="mini" onClick={() => node.removeInputFields(input)} icon={<IconDelete />} />
 							</Space>
 						</div>
 					);
 				})}
-				{node.inputs.length === 0 ? (
+				{node.inputFields.length === 0 ? (
 					<Empty
 						description={
 							<Button onClick={handleAdd} icon={<IconPlus className="btn-gray-icon" />}>

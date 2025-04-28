@@ -6,6 +6,9 @@ import { uuid } from 'short-uuid';
 export type DPIfElseNodeInnerData = DPNodeInnerData & { conditions: { type: 'if' | 'else'; id: string; expValue?: ExpValue }[] };
 
 export class IfElseNode extends DPBaseNode<DPIfElseNodeInnerData> {
+	get singleRunAble() {
+		return false;
+	}
 	get conditions() {
 		return this.data.conditions;
 	}

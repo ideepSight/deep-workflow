@@ -6,12 +6,12 @@ export type LoopNodeInnerData = DPNodeInnerData & {
 	isByVar: boolean;
 	loopVar: { varFullkey?: string; value?: unknown };
 	loopCount: number;
-	outputs: { key: string; type: DPVarType }[];
 };
 
 export class LoopNode extends DPBaseNode<LoopNodeInnerData> {
-	@observe
-	private _outputs: DPVar[];
+	get singleRunAble() {
+		return true;
+	}
 	get isByVar() {
 		return this.data.isByVar;
 	}
@@ -38,8 +38,8 @@ export class LoopNode extends DPBaseNode<LoopNodeInnerData> {
 		this.data.loopVar.varFullkey = varItem ? `${varItem.owner.title}.${varItem.key}` : '';
 	}
 
-	get outputs() {
-		return this._outputs;
+	get runSingleNeedAssignVars() {
+		return [this.loopVar];
 	}
 
 	get childNodes() {
@@ -71,21 +71,8 @@ export class LoopNode extends DPBaseNode<LoopNodeInnerData> {
 		if (!data.isByVar) {
 			data.isByVar = false;
 		}
-		if (!data.outputs) {
-			data.outputs = [];
-		}
-		this._outputs = data.outputs.map((v) => new DPVar(v, this));
 	}
 
-	addOutput() {
-		this.data.outputs.push({ key: `var${this.data.outputs.length + 1}`, type: DPVarType.String });
-		this._outputs.push(new DPVar(this.data.outputs[this.data.outputs.length - 1], this));
-	}
-
-	removeOutput(index: number) {
-		this.data.outputs.splice(index, 1);
-		this._outputs.splice(index, 1);
-	}
 	async runSelf(): Promise<void> {
 		if (this.isByVar) {
 			const loopVar = this.loopVar;
