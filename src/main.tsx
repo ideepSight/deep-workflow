@@ -3,6 +3,9 @@ import { Card, Button } from '@arco-design/web-react';
 import { createRoot } from 'react-dom/client';
 import { DPWorkflow, Workflow } from '@deep-sight/workflow';
 
+import '@arco-themes/react-deep/index.less';
+import '@xyflow/react/dist/style.css';
+
 const App: React.FC = () => {
 	const workflow = new DPWorkflow(JSON.parse(localStorage.getItem('wf') || '{}'));
 

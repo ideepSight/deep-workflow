@@ -22,6 +22,8 @@ const SelectInputVar: React.FC<{ value?: FormItemType; onChange?: (v: FormItemTy
 		if (value) {
 			setType(value);
 			onChange && onChange(value);
+		} else {
+			onChange && onChange(FormItemType.textInput);
 		}
 	}, [onChange, value]);
 

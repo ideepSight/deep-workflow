@@ -1,5 +1,5 @@
 import React, { CSSProperties } from 'react';
-import { IconType } from './fonts/iconfont-main-type';
+import type { IconType } from './fonts/iconfont-main-type';
 import './index.less';
 
 type SelfProps = {

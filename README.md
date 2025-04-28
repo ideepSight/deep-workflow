@@ -14,6 +14,8 @@ npm install @deep-sight/workflow
 
 import { DPWorkflow, Workflow } from '@deep-sight/workflow';
 import '@deep-sight/workflow/dist/style.css'
+import '@arco-themes/react-deep/index.less'; // 可自行去 https://arco.design/themes 更换arcoDesign主题
+import '@xyflow/react/dist/style.css'; // 依赖reactFlow
 
 ```
 
@@ -26,6 +28,8 @@ import { createRoot } from 'react-dom/client';
 
 import { DPWorkflow, Workflow } from '@deep-sight/workflow';
 import '@deep-sight/workflow/dist/style.css'
+import '@arco-themes/react-deep/index.less';
+import '@xyflow/react/dist/style.css';
 
 const App: React.FC = () => {
 	const workflow = new DPWorkflow(JSON.parse(localStorage.getItem('wf') || '{}'));
@@ -98,12 +102,11 @@ export const EndSet: React.FC<NodeComponentProps<EndNode>> = observer(({node}) =
 -   [x] 运行日志功能
 -   [x] 运行错误时自动聚焦到错误节点
 -   [ ] 暂停运行、中途停止运行
--   [ ] 节点独立测试运行、重试运行
--   [ ] 全局变量
+-   [ ] 节点单独测试运行、重试运行
 -   [ ] 历史记录、上一步、下一步
--   [ ] 国际化
--   [ ] 完善文档
 -   [ ] 第三方节点插件机制、节点市场
+-   [ ] 完善文档
+-   [ ] 国际化
 
 ## 贡献
 

@@ -1,7 +1,6 @@
 import type { FC, ReactNode } from 'react';
 import { DPEvent, observe } from '../../base';
 import { Node } from '@xyflow/react';
-import { IconType } from '../../workflow/components/Icon/fonts/iconfont-main-type';
 import { DPVar } from './var';
 import type { DPWorkflow } from './workflow';
 

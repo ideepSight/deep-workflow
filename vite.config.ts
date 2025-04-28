@@ -39,7 +39,18 @@ export default defineConfig((params: ConfigEnv): UserConfig => {
 						'classnames',
 						'acorn',
 						'acorn-walk',
-						'dayjs'
+						'dayjs',
+						'short-uuid',
+						'@remixicon/react',
+						'@codemirror/autocomplete',
+						'@codemirror/lang-javascript',
+						'@codemirror/lang-json',
+						'@codemirror/language',
+						'@codemirror/search',
+						'@codemirror/state',
+						'@codemirror/view',
+						'@dagrejs/dagre',
+						'@uiw/react-codemirror',
 					],
 					output: {
 						globals: {
@@ -53,7 +64,18 @@ export default defineConfig((params: ConfigEnv): UserConfig => {
 							classnames: 'classNames',
 							acorn: 'acorn',
 							'acorn-walk': 'acornWalk',
-							dayjs: 'dayjs'
+							dayjs: 'dayjs',
+							'short-uuid': 'shortUuid',
+							'@remixicon/react': 'RemixIcon',
+							'@codemirror/autocomplete': 'Autocomplete',
+							'@codemirror/lang-javascript': 'LangJavascript',
+							'@codemirror/lang-json': 'LangJson',
+							'@codemirror/language': 'Language',
+							'@codemirror/search': 'Search',
+							'@codemirror/state': 'State',
+							'@codemirror/view': 'View',
+							'@dagrejs/dagre': 'Dagre',
+							'@uiw/react-codemirror': 'ReactCodemirror'
 						}
 					}
 				}

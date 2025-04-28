@@ -5,12 +5,10 @@ import { nodeTypes, DPWorkfowContext, WorkfowContext, edgeTypes, DPControls, DPR
 import { DPWorkflow, DPWorkflowData } from '../lib';
 import { BaseNodePane } from './BaseNodePane';
 import { Delete } from './varEditors/lib/getHotkeyHandler';
+import { Icon } from './Icon';
 
 import './Icon/index.less';
-import '@arco-themes/react-deep/index.less';
-import '@xyflow/react/dist/style.css';
 import './index.less';
-import { Icon } from './Icon';
 
 type SelfProps = { dpWorkflow: DPWorkflow; onSave: (v: DPWorkflowData) => void; autoSave?: boolean; autoSaveInterval?: number };
 
