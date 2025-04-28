@@ -26,6 +26,7 @@ export declare class DPWorkflow extends DPEvent<DPWorkflowEvent> {
     private _vars;
     controlMode: 'pointer' | 'hand';
     running: boolean;
+    stoping: boolean;
     private _runlogs;
     private _prevData;
     autoSaveInterval: number;
@@ -35,6 +36,9 @@ export declare class DPWorkflow extends DPEvent<DPWorkflowEvent> {
     get runlogs(): (LogData & {
         node: DPBaseNode;
     })[];
+    set runlogs(val: (LogData & {
+        node: DPBaseNode;
+    })[]);
     get autoSave(): boolean;
     set autoSave(val: boolean);
     get data(): {
@@ -55,6 +59,7 @@ export declare class DPWorkflow extends DPEvent<DPWorkflowEvent> {
     private autoSaveFunc;
     save(): void;
     run(): Promise<void>;
+    stop(): Promise<void>;
     addVar(varData: DPVarData): void;
     delVar(key: string): void;
     addNode(nodeData: DPNodeData): DPBaseNode<import('./baseNode').DPNodeInnerData>;

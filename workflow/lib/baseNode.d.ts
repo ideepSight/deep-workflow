@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { DPEvent } from '../../base';
 import { Node } from '@xyflow/react';
-import { DPVar } from './var';
+import { DPVar, DPVarType } from './var';
 import { DPWorkflow } from './workflow';
 export declare enum BlockEnum {
     Start = "start",
@@ -56,7 +56,7 @@ export type DPRegisterNode = {
 export type LogData = {
     time: number;
     msg: string;
-    type: 'info' | 'error';
+    type: 'info' | 'warning' | 'error';
 };
 export type EnableVar = {
     id: string;
@@ -67,11 +67,25 @@ export type DPNodeInnerData = {
     dpNodeType: BlockEnum;
     title?: string;
     desc?: string;
+    inputs?: {
+        key: string;
+        type: DPVarType;
+    }[];
+    outputs?: {
+        key: string;
+        type: DPVarType;
+    }[];
+    failRetryEnable?: boolean;
+    retryInterval?: number;
+    maxRetryTimes?: number;
 };
 export type DPNodeData<T extends DPNodeInnerData = DPNodeInnerData> = Omit<Node<T>, 'id'> & {
     id?: string;
 };
-export declare abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> extends DPEvent {
+type DPBaseNodeEvent = {
+    stoping: () => void;
+};
+export declare abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> extends DPEvent<DPBaseNodeEvent> {
     static types: {
         [type: string]: DPRegisterNode;
     };
@@ -84,6 +98,11 @@ export declare abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInner
     private _runlogs;
     private _vars;
     _nextRunNode: DPBaseNode;
+    singleRunning: boolean;
+    private _outputs;
+    private _inputs;
+    get outputs(): DPVar[];
+    get inputs(): DPVar[];
     set runlog(val: LogData);
     get runlogs(): LogData[];
     set runlogs(val: LogData[]);
@@ -100,10 +119,21 @@ export declare abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInner
     get nextNodes(): DPBaseNode<DPNodeInnerData>[];
     get nextRunNode(): DPBaseNode<DPNodeInnerData>;
     get enableVars(): EnableVar[];
+    abstract get singleRunAble(): boolean;
+    getContext(): Promise<{}>;
+    get runSingleNeedAssignVars(): DPVar[];
     constructor(owner: DPWorkflow, nodeData: DPNodeData<T>);
     init?(data: T): void;
+    addInput(): void;
+    removeInput(index: number): void;
+    addOutput(): void;
+    removeOutput(index: number): void;
     toCenter(): void;
-    run(): Promise<void>;
+    runSingle(): Promise<void>;
+    stop(): Promise<void>;
+    run(params?: {
+        runMode: 'single';
+    }): Promise<void>;
     abstract runSelf(): Promise<void>;
-    stop?(): void;
 }
+export {};
