@@ -1,5 +1,5 @@
 import { Button, Divider, Dropdown, Menu, Popover, Space, Tooltip } from '@arco-design/web-react';
-import { IconApps, IconPlusCircleFill, IconZoomIn, IconZoomOut } from '@arco-design/web-react/icon';
+import { IconApps, IconPlusCircleFill, IconRedo, IconUndo, IconZoomIn, IconZoomOut } from '@arco-design/web-react/icon';
 import { useReactFlow, useViewport } from '@xyflow/react';
 import React, { useCallback, useContext, useEffect } from 'react';
 import { WorkfowContext } from './context';
@@ -60,6 +60,14 @@ export const DPControls: React.FC = () => {
 		});
 	}, [setViewport, workflowIns]);
 
+	const handleUndo = useCallback(() => {
+		// workflowIns.undo();
+	}, [workflowIns]);
+
+	const handleRedo = useCallback(() => {
+		// workflowIns.redo();
+	}, [workflowIns]);
+
 	return (
 		<Space className="control-wrap">
 			<Button.Group className="control-group">
@@ -77,7 +85,6 @@ export const DPControls: React.FC = () => {
 
 				<Dropdown
 					position={'top'}
-					// trigger={['click']}
 					droplist={
 						<Menu style={{ width: 100 }} onClickMenuItem={(key) => zoomTo(Number(key))}>
 							<Menu.Item key="2">200%</Menu.Item>
@@ -106,6 +113,14 @@ export const DPControls: React.FC = () => {
 						zoomIn();
 					}}
 				/>
+			</Button.Group>
+			<Button.Group className="control-group">
+				<Tooltip content="撤销">
+					<Button size="mini" type="text" className="big-icon" onClick={handleUndo} icon={<IconUndo />} />
+				</Tooltip>
+				<Tooltip content="重做">
+					<Button size="mini" type="text" className="big-icon" onClick={handleRedo} icon={<IconRedo />} />
+				</Tooltip>
 			</Button.Group>
 			<Button.Group className="control-group">
 				<Tooltip content="整理布局">

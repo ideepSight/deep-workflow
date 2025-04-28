@@ -109,6 +109,9 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 	get outputs() {
 		return this._outputs;
 	}
+	set outputs(val) {
+		this._outputs = val;
+	}
 
 	get inputs() {
 		return this._inputs;
@@ -249,16 +252,24 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 	}
 	init?(data: T): void;
 
-	addInput() {
-		this.data.inputs.push({ key: `var${this.data.inputs.length + 1}`, type: DPVarType.String });
+	addInput(params?: { key?: string; type?: DPVarType }) {
+		if (params?.key) {
+			this.data.inputs.push({ key: params.key, type: params.type || DPVarType.String });
+		} else {
+			this.data.inputs.push({ key: `var${this.data.inputs.length + 1}`, type: DPVarType.String });
+		}
 		this._inputs.push(new DPVar(this.data.inputs[this.data.inputs.length - 1], this));
 	}
 	removeInput(index: number) {
 		this.data.inputs.splice(index, 1);
 		this._inputs.splice(index, 1);
 	}
-	addOutput() {
-		this.data.outputs.push({ key: `var${this.data.outputs.length + 1}`, type: DPVarType.String });
+	addOutput(params?: { key?: string; type?: DPVarType }) {
+		if (params?.key) {
+			this.data.outputs.push({ key: params.key, type: params.type || DPVarType.String });
+		} else {
+			this.data.outputs.push({ key: `var${this.data.outputs.length + 1}`, type: DPVarType.String });
+		}
 		this._outputs.push(new DPVar(this.data.outputs[this.data.outputs.length - 1], this));
 	}
 	removeOutput(index: number) {

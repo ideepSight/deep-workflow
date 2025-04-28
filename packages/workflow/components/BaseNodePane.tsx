@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useMemo } from 'react';
 import './index.less';
 import { observer } from 'mobx-react-lite';
 import { Button, Divider, Empty, Input, InputNumber, Popconfirm, Space, Spin, Switch, Tooltip } from '@arco-design/web-react';
-import { DPBaseNode } from '../lib';
+import { BlockEnum, DPBaseNode } from '../lib';
 import { WorkfowContext } from './context';
 import { Icon } from '../../workflow/components/Icon';
 import { IconClose, IconDelete, IconPlayCircle, IconRecordStop } from '@arco-design/web-react/icon';
@@ -100,9 +100,18 @@ export const BaseNodePane: React.FC = observer(() => {
 				/>
 				<Divider />
 				<SetComponent node={activeNode} />
-				<Divider />
-				<b className="handle-name">失败时重试</b>
-				<Switch className="switch" size="small" checked={activeNode.data.failRetryEnable} onChange={(v) => (activeNode.data.failRetryEnable = v)} />
+				{(activeNode.nodeConfig.group !== 'sys' || activeNode.nodeConfig.type === BlockEnum.Code) && (
+					<>
+						<Divider />
+						<b className="handle-name">失败时重试</b>
+						<Switch
+							className="switch"
+							size="small"
+							checked={activeNode.data.failRetryEnable}
+							onChange={(v) => (activeNode.data.failRetryEnable = v)}
+						/>
+					</>
+				)}
 				{activeNode.data.failRetryEnable && (
 					<>
 						<div className="handle-item">

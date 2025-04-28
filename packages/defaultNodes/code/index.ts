@@ -4,7 +4,6 @@ import * as acorn from 'acorn';
 import * as walk from 'acorn-walk';
 
 export type CodeNodeInnerData = DPNodeInnerData & {
-	outputs: { key: string; type: DPVarType }[];
 	code: string;
 };
 
@@ -19,9 +18,9 @@ export class CodeNode extends DPBaseNode<CodeNodeInnerData> {
 		this.data.code = val;
 	}
 
-	get outputs() {
-		return this.data.outputs.map(({ key }) => this.vars.find((v) => v.key === key));
-	}
+	// get outputs() {
+	// 	return this.data.outputs.map(({ key }) => this.vars.find((v) => v.key === key));
+	// }
 
 	init(data: CodeNodeInnerData) {
 		if (!data.code) {
@@ -36,16 +35,9 @@ function main() {
   }
 }
 `;
+			this.addOutput({ key: 'output1', type: DPVarType.String });
+			this.addOutput({ key: 'output2', type: DPVarType.String });
 		}
-		if (!data.outputs) {
-			data.outputs = [
-				{ key: 'output1', type: DPVarType.String },
-				{ key: 'output2', type: DPVarType.String }
-			];
-		}
-		data.outputs.forEach((v) => {
-			new DPVar(v, this);
-		});
 	}
 
 	setCodeOutputVars(val: string) {
@@ -94,7 +86,7 @@ function main() {
 
 		// 更新 outputVars
 		if (returnKeys.length > 0) {
-			this.vars = returnKeys.map(({ key, type }) => new DPVar({ key, type }, this));
+			this.outputs = returnKeys.map(({ key, type }) => new DPVar({ key, type }, this));
 			this.data.outputs = returnKeys;
 		}
 	}
