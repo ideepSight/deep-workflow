@@ -24,6 +24,7 @@ export type DPWorkflowData = {
 type DPWorkflowEvent = {
 	save: (data: DPWorkflowData) => void;
 	running: () => void;
+	stoping: () => void;
 };
 export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 	id: string;
@@ -39,6 +40,8 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 	controlMode: 'pointer' | 'hand' = 'hand';
 	@observe
 	running = false;
+	@observe
+	stoping = false;
 	@observe
 	private _runlogs: (LogData & { node: DPBaseNode })[] = [];
 
@@ -157,6 +160,17 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 		}
 		await startNode.run();
 		this.running = false;
+		this.stoping = false;
+	}
+
+	// 停止
+	async stop() {
+		if (!this.running) {
+			Message.warning('未运行');
+			return;
+		}
+		this.stoping = true;
+		this.emit('stoping'); // 自定义节点其他运行进程可监听该事件中途停止
 	}
 
 	addVar(varData: DPVarData) {
