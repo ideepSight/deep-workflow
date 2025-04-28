@@ -25,6 +25,7 @@
 	position: relative;
 	width: 100%;
 	height: 100%;
+	overflow: hidden;
 	.react-flow__node-custom {
 		z-index: 0 !important;
 	}
@@ -55,9 +56,11 @@
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
-			.btns{
+			.btns {
 				display: flex;
 				align-items: center;
+				gap: 4px;
+				padding-left: 4px;
 			}
 			.big-icon {
 				color: var(--color-text-3);
@@ -94,9 +97,23 @@
 		.content-wrap {
 			height: calc(100% - 40px);
 			overflow-y: auto;
+			.handle-name {
+				margin-bottom: 6px;
+				display: inline-block;
+				margin-right: 10px;
+			}
 			.node-desc {
 				background: var(--color-bg-2);
 				resize: none;
+			}
+			.handle-item {
+				display: flex;
+				align-items: center;
+				margin-bottom: 6px;
+				span.name {
+					width: 300px;
+					font-size: 12px;
+				}
 			}
 		}
 	}
@@ -632,7 +649,7 @@
 		gap: 6px;
 		flex-direction: column;
 		justify-content: start;
-		transform: translateY(200%);
+		transform: translateY(220px);
 		transition: all 0.3s;
 		&.open {
 			transform: translateY(0);

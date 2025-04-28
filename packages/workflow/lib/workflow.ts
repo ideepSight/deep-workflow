@@ -54,6 +54,9 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 	get runlogs() {
 		return this._runlogs;
 	}
+	set runlogs(val) {
+		this._runlogs = val;
+	}
 
 	get autoSave() {
 		return this._autoSave;

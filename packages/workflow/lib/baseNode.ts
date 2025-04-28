@@ -68,6 +68,9 @@ export type DPNodeInnerData = {
 	desc?: string;
 	inputs?: { key: string; type: DPVarType }[];
 	outputs?: { key: string; type: DPVarType }[];
+	failRetryEnable?: boolean;
+	retryInterval?: number;
+	maxRetryTimes?: number;
 };
 
 export type DPNodeData<T extends DPNodeInnerData = DPNodeInnerData> = Omit<Node<T>, 'id'> & { id?: string };
@@ -228,6 +231,12 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 		super();
 		this._nodeData = nodeData;
 		this.owner = owner;
+		if (!this.data.retryInterval) {
+			this.data.retryInterval = 1000;
+		}
+		if (!this.data.maxRetryTimes) {
+			this.data.maxRetryTimes = 3;
+		}
 		if (!this.data.inputs) {
 			this.data.inputs = [];
 		}
@@ -258,14 +267,29 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 	}
 
 	toCenter() {
-		this.owner.reactFlowIns.setCenter(this.nodeData.position.x, this.nodeData.position.y, { duration: 500, zoom: this.owner.reactFlowIns.getZoom() });
+		this.owner.reactFlowIns.setCenter(this.nodeData.position.x + 100, this.nodeData.position.y + 200, {
+			duration: 500,
+			zoom: this.owner.reactFlowIns.getZoom()
+		});
 	}
 
 	async runSingle() {
+		if (this.singleRunning) {
+			return;
+		}
 		if (!this.singleRunAble) {
 			throw new Error('节点不能独立运行');
 		}
 		this.singleRunning = true;
+		this.runlogs = [];
+		this.owner.runlogs = [];
+		console.log(this.owner.runlogs);
+
+		await new Promise((resolve) => {
+			setTimeout(() => {
+				resolve(true);
+			}, 1000);
+		});
 		await this.run({ runMode: 'single' });
 		this.singleRunning = false;
 	}
@@ -276,30 +300,54 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 	async run(params?: { runMode: 'single' }) {
 		this.runningStatus = NodeRunningStatus.Running;
 		this.runlog = { time: Date.now(), msg: `开始运行`, type: 'info' };
-		let retryCount = 0;
-		const maxRetries = 1;
 
-		while (retryCount < maxRetries) {
+		if (!this.data.failRetryEnable) {
 			try {
 				await this.runSelf();
 				this.runningStatus = NodeRunningStatus.Succeeded;
 				this.runlog = { time: Date.now(), msg: `运行成功`, type: 'info' };
-				break;
 			} catch (error) {
-				retryCount++;
 				this.toCenter();
-				if (retryCount < maxRetries) {
-					this.runlog = {
-						time: Date.now(),
-						msg: `运行失败，正在重试第${retryCount}次,${error?.message ? `错误信息：${error.message}` : ''}`,
-						type: 'warning'
-					};
-					continue;
-				}
 				this.runningStatus = NodeRunningStatus.Failed;
-				this.runlog = { time: Date.now(), msg: `重试${maxRetries}次后运行失败,${error?.message ? `错误信息：${error.message}` : ''}`, type: 'error' };
+				this.runlog = {
+					time: Date.now(),
+					msg: `运行失败，${error?.message ? `错误信息：${error.message}` : ''}`,
+					type: 'error'
+				};
 				if (this.errorHandleMode === ErrorHandleMode.Terminated) {
 					return;
+				}
+			}
+		} else {
+			let retryCount = 0;
+			const maxRetries = this.data.maxRetryTimes;
+
+			while (retryCount < maxRetries) {
+				try {
+					await this.runSelf();
+					this.runningStatus = NodeRunningStatus.Succeeded;
+					this.runlog = { time: Date.now(), msg: `运行成功`, type: 'info' };
+					break;
+				} catch (error) {
+					retryCount++;
+					if (retryCount < maxRetries) {
+						this.runlog = {
+							time: Date.now(),
+							msg: `运行失败，正在重试第${retryCount}次,${error?.message ? `错误信息：${error?.message}` : ''}`,
+							type: 'warning'
+						};
+						continue;
+					}
+					this.runningStatus = NodeRunningStatus.Failed;
+					this.toCenter();
+					this.runlog = {
+						time: Date.now(),
+						msg: `重试${maxRetries}次后运行失败,${error?.message ? `错误信息：${error?.message}` : ''}`,
+						type: 'error'
+					};
+					if (this.errorHandleMode === ErrorHandleMode.Terminated) {
+						return;
+					}
 				}
 			}
 		}
@@ -307,7 +355,7 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 			this.runlog = { time: Date.now(), msg: '中途停止', type: 'info' };
 			return;
 		}
-		if (params.runMode === 'single') {
+		if (params?.runMode === 'single') {
 			return;
 		}
 		await this.nextRunNode?.run();
