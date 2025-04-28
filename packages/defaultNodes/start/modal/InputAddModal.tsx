@@ -1,45 +1,12 @@
-import React, { memo, useCallback, useEffect, useImperativeHandle, useState } from 'react';
+import React, { useEffect, useImperativeHandle } from 'react';
 import { DPModalRender, DPModalWrapType } from '../../../workflow/components/DPModal';
-import InputVarTypeIcon from './InputTypeIcon';
-import { Checkbox, Form, Input } from '@arco-design/web-react';
+import { Checkbox, Form, Input, Select } from '@arco-design/web-react';
 import style from './InputAddModal.module.less';
-import classNames from 'classnames';
 import { FormItemType, InputVarData } from '..';
 import { DPVarType } from '../../../workflow';
+import { SelectOptionSet } from './SelectOptionSet';
+import { SelectInputType } from './SelectInputType';
 
-const SelectInputVar: React.FC<{ value?: FormItemType; onChange?: (v: FormItemType) => void }> = memo(({ value, onChange }) => {
-	const [type, setType] = useState<FormItemType>(FormItemType.textInput);
-
-	const handleChange = useCallback(
-		(type: FormItemType) => {
-			setType(type);
-			onChange && onChange(type);
-		},
-		[onChange]
-	);
-
-	useEffect(() => {
-		if (value) {
-			setType(value);
-			onChange && onChange(value);
-		} else {
-			onChange && onChange(FormItemType.textInput);
-		}
-	}, [onChange, value]);
-
-	const inputTypes: FormItemType[] = [FormItemType.textInput, FormItemType.paragraph, FormItemType.select, FormItemType.number];
-
-	return (
-		<div className={style['select-field-var-wrap']}>
-			{inputTypes.map((inputType) => (
-				<div key={inputType} className={classNames({ [style['selected']]: type === inputType }, style['item'])} onClick={() => handleChange(inputType)}>
-					<InputVarTypeIcon type={inputType} className={style['var-item-icon']} />
-					<span>{inputType}</span>
-				</div>
-			))}
-		</div>
-	);
-});
 const fieldTypeToVarType = (fieldType: FormItemType): DPVarType => {
 	switch (fieldType) {
 		case FormItemType.multiFiles:
@@ -50,6 +17,14 @@ const fieldTypeToVarType = (fieldType: FormItemType): DPVarType => {
 			return DPVarType.String;
 	}
 };
+
+const fileTypes = {
+	doc: ['TXT', 'MD', 'MDX', 'MARKDOWN', 'PDF', 'HTML', 'XLSX', 'XLS', 'DOC', 'DOCX', 'CSV', 'EML', 'MSG', 'PPTX', 'PPT', 'XML', 'EPUB'],
+	img: ['JPG', 'JPEG', 'PNG', 'GIF', 'WEBP', 'SVG'],
+	audio: ['MP3', 'M4A', 'WAV', 'AMR', 'MPGA'],
+	video: ['MP4', 'MOV', 'MPEG', 'WEBM']
+};
+
 export const InputAddModal = async (editValue?: InputVarData) => {
 	const ModalInner: React.FC<DPModalWrapType> = ({ modalRef }) => {
 		const [form] = Form.useForm();
@@ -64,11 +39,12 @@ export const InputAddModal = async (editValue?: InputVarData) => {
 				form.setFieldsValue(editValue);
 			}
 		}, [form]);
+		const fieldType = Form.useWatch('fieldType', form);
 		return (
 			<div className={style['select-field']}>
 				<Form form={form} layout="vertical">
 					<Form.Item label="字段类型" field="fieldType" rules={[{ required: true, message: '请选择' }]}>
-						<SelectInputVar />
+						<SelectInputType />
 					</Form.Item>
 					<Form.Item
 						label="变量名称"
@@ -95,12 +71,42 @@ export const InputAddModal = async (editValue?: InputVarData) => {
 					<Form.Item label="显示名称" field="label" required>
 						<Input placeholder="请输入" maxLength={20} />
 					</Form.Item>
-					<Form.Item label="默认值" field="defaultValue">
-						<Input placeholder="可不填" maxLength={200} />
-					</Form.Item>
-					<Form.Item label="输入提示语" field="placeholder">
-						<Input placeholder="可不填" maxLength={200} />
-					</Form.Item>
+					{(fieldType === FormItemType.textInput || fieldType === FormItemType.paragraph) && (
+						<>
+							<Form.Item label="默认值" field="defaultValue">
+								<Input placeholder="可不填" maxLength={200} />
+							</Form.Item>
+							<Form.Item label="输入提示语" field="placeholder">
+								<Input placeholder="可不填" maxLength={200} />
+							</Form.Item>
+						</>
+					)}
+					{fieldType === FormItemType.select && (
+						<Form.Item label="选项" field="options">
+							<SelectOptionSet />
+						</Form.Item>
+					)}
+					{(fieldType === FormItemType.singleFile || fieldType === FormItemType.multiFiles) && (
+						<Form.Item label="支持的文件类型" field="filetypes" required>
+							<Select placeholder="选择文件类型" mode="multiple">
+								<Select.Option key="doc" value={fileTypes.doc.map((f) => '.' + f).join(',')}>
+									文档 {fileTypes.doc.join(',')}
+								</Select.Option>
+								<Select.Option key="img" value={fileTypes.img.map((f) => '.' + f).join(',')}>
+									图片 {fileTypes.img.join(',')}
+								</Select.Option>
+								<Select.Option key="audio" value={fileTypes.audio.map((f) => '.' + f).join(',')}>
+									音频 {fileTypes.audio.join(',')}
+								</Select.Option>
+								<Select.Option key="video" value={fileTypes.video.map((f) => '.' + f).join(',')}>
+									视频 {fileTypes.video.join(',')}
+								</Select.Option>
+								<Select.Option key="*" value={`*`}>
+									所有文件
+								</Select.Option>
+							</Select>
+						</Form.Item>
+					)}
 					<Form.Item field="required" triggerPropName="checked">
 						<Checkbox>必填</Checkbox>
 					</Form.Item>

@@ -1,6 +1,6 @@
 import React, { useEffect, useImperativeHandle } from 'react';
 import { DPModalRender, DPModalWrapType } from '../../../workflow/components/DPModal';
-import { Form, Input } from '@arco-design/web-react';
+import { Form, Input, Select } from '@arco-design/web-react';
 import style from './InputAddModal.module.less';
 import { FormItemType, InputVarData } from '..';
 
@@ -39,22 +39,22 @@ export const RunInputModal = async (inputDatas: InputVarData[]) => {
 							)}
 							{item.fieldType === FormItemType.number && (
 								<Form.Item label={item.label} field={item.fieldName} rules={[{ required: item.required, message: '请输入' }]}>
-									<Input placeholder={item.placeholder} type="number" />
+									<Input placeholder={item.placeholder || '请输入数字'} type="number" />
 								</Form.Item>
 							)}
-							{item.fieldType === FormItemType.url && (
-								<Form.Item label={item.label} field={item.fieldName} rules={[{ required: item.required, message: '请输入' }]}>
-									<Input placeholder={item.placeholder} type="url" />
+							{item.fieldType === FormItemType.select && (
+								<Form.Item label={item.label} field={item.fieldName} rules={[{ required: item.required, message: '请选择' }]}>
+									<Select options={item.options.map((option) => ({ label: option.label, value: option.label }))} placeholder="请选择" />
 								</Form.Item>
 							)}
 							{item.fieldType === FormItemType.singleFile && (
 								<Form.Item label={item.label} field={item.fieldName} rules={[{ required: item.required, message: '请输入' }]}>
-									<Input placeholder={item.placeholder} type="file" />
+									<Input placeholder={item.placeholder || '请选择文件'} type="file" accept={item.filetypes.join(',')} />
 								</Form.Item>
 							)}
 							{item.fieldType === FormItemType.multiFiles && (
 								<Form.Item label={item.label} field={item.fieldName} rules={[{ required: item.required, message: '请输入' }]}>
-									<Input placeholder={item.placeholder} type="file" multiple />
+									<Input placeholder={item.placeholder || '请选择文件（多选）'} type="file" accept={item.filetypes.join(',')} multiple />
 								</Form.Item>
 							)}
 						</React.Fragment>
