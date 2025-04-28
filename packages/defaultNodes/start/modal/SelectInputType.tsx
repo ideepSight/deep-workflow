@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import React, { memo, useCallback, useEffect, useState } from 'react';
 import InputVarTypeIcon from './InputTypeIcon';
 import style from './InputAddModal.module.less';
-import { FormItemType } from '..';
+import { FormItemType } from '../../../workflow';
 
 export const SelectInputType: React.FC<{ value?: FormItemType; onChange?: (v: FormItemType) => void }> = memo(({ value, onChange }) => {
 	const [type, setType] = useState<FormItemType>(FormItemType.textInput);
