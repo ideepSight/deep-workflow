@@ -1,8 +1,10 @@
 import type { FC, ReactNode } from 'react';
 import { DPEvent, observe } from '../../base';
 import { Node } from '@xyflow/react';
-import { DPVar } from './var';
+import { DPVar, DPVarType } from './var';
 import type { DPWorkflow } from './workflow';
+import { RunInputModal } from '../../defaultNodes/start/modal/RunInputModal';
+import { FormItemType } from '../../defaultNodes';
 
 export enum BlockEnum {
 	Start = 'start',
@@ -57,14 +59,23 @@ export type DPRegisterNode = {
 	height?: number;
 };
 
-export type LogData = { time: number; msg: string; type: 'info' | 'error' };
+export type LogData = { time: number; msg: string; type: 'info' | 'warning' | 'error' };
 
 export type EnableVar = { id: string; node: DPBaseNode; vars: DPVar[] };
-export type DPNodeInnerData = { dpNodeType: BlockEnum; title?: string; desc?: string };
+export type DPNodeInnerData = {
+	dpNodeType: BlockEnum;
+	title?: string;
+	desc?: string;
+	inputs?: { key: string; type: DPVarType }[];
+	outputs?: { key: string; type: DPVarType }[];
+};
 
 export type DPNodeData<T extends DPNodeInnerData = DPNodeInnerData> = Omit<Node<T>, 'id'> & { id?: string };
 
-export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> extends DPEvent {
+type DPBaseNodeEvent = {
+	stoping: () => void;
+};
+export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> extends DPEvent<DPBaseNodeEvent> {
 	static types: { [type: string]: DPRegisterNode } = {};
 	static registerType(item: DPRegisterNode) {
 		DPBaseNode.types[item.type] = item;
@@ -85,6 +96,20 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 	private _vars: DPVar[] = [];
 	@observe
 	public _nextRunNode: DPBaseNode = null;
+	@observe
+	public singleRunning = false;
+	@observe
+	private _outputs: DPVar[];
+	@observe
+	private _inputs: DPVar[];
+
+	get outputs() {
+		return this._outputs;
+	}
+
+	get inputs() {
+		return this._inputs;
+	}
 
 	set runlog(val: LogData) {
 		this._runlogs.push(val);
@@ -150,44 +175,143 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 		return enableVars;
 	}
 
+	abstract get singleRunAble(): boolean; // 是否可以独立运行
+
+	async getContext() {
+		if (this.singleRunning) {
+			// runSingleNeedAssignVars需要输入框填写才能独立运行
+			if (this.runSingleNeedAssignVars.length) {
+				const res = await RunInputModal(
+					this.runSingleNeedAssignVars.map((v) => {
+						let fieldType = FormItemType.textInput;
+						if (v.type === DPVarType.Number) {
+							fieldType = FormItemType.number;
+						}
+						return {
+							fieldType,
+							fieldName: `${v.owner.title}.${v.key}`,
+							label: v.key,
+							varType: v.type,
+							required: true
+						};
+					})
+				);
+				if (res && Object.keys(res).length) {
+					// 把res的 {'Start.one': 1}转成 {Start:{one: 1}}
+					const context = Object.entries(res).reduce((acc, [key, value]) => {
+						const [nodeName, varName] = key.split('.');
+						if (!acc[nodeName]) {
+							acc[nodeName] = {};
+						}
+						acc[nodeName][varName] = value;
+						return acc;
+					}, {});
+					return context;
+				}
+			}
+			return {};
+		}
+		return this.enableVars.reduce((acc, { node, vars }) => {
+			acc[node.title] = vars.reduce((varAcc, v) => {
+				varAcc[v.key] = v.value;
+				return varAcc;
+			}, {});
+			return acc;
+		}, {});
+	}
+	// 节点自行决定独立运行时需要手动赋值的变量
+	get runSingleNeedAssignVars(): DPVar[] {
+		return [];
+	}
+
 	constructor(owner: DPWorkflow, nodeData: DPNodeData<T>) {
 		super();
 		this._nodeData = nodeData;
 		this.owner = owner;
-		this.init && this.init(this._nodeData.data);
+		if (!this.data.inputs) {
+			this.data.inputs = [];
+		}
+		this._inputs = this.data.inputs.map((v) => new DPVar(v, this));
+		if (!this.data.outputs) {
+			this.data.outputs = [];
+		}
+		this._outputs = this.data.outputs.map((v) => new DPVar(v, this));
+		this.init && this.init(this.data);
 	}
 	init?(data: T): void;
+
+	addInput() {
+		this.data.inputs.push({ key: `var${this.data.inputs.length + 1}`, type: DPVarType.String });
+		this._inputs.push(new DPVar(this.data.inputs[this.data.inputs.length - 1], this));
+	}
+	removeInput(index: number) {
+		this.data.inputs.splice(index, 1);
+		this._inputs.splice(index, 1);
+	}
+	addOutput() {
+		this.data.outputs.push({ key: `var${this.data.outputs.length + 1}`, type: DPVarType.String });
+		this._outputs.push(new DPVar(this.data.outputs[this.data.outputs.length - 1], this));
+	}
+	removeOutput(index: number) {
+		this.data.outputs.splice(index, 1);
+		this._outputs.splice(index, 1);
+	}
 
 	toCenter() {
 		this.owner.reactFlowIns.setCenter(this.nodeData.position.x, this.nodeData.position.y, { duration: 500, zoom: this.owner.reactFlowIns.getZoom() });
 	}
 
-	async run() {
+	async runSingle() {
+		if (!this.singleRunAble) {
+			throw new Error('节点不能独立运行');
+		}
+		this.singleRunning = true;
+		await this.run({ runMode: 'single' });
+		this.singleRunning = false;
+	}
+	async stop() {
+		this.emit('stop');
+	}
+
+	async run(params?: { runMode: 'single' }) {
 		this.runningStatus = NodeRunningStatus.Running;
 		this.runlog = { time: Date.now(), msg: `开始运行`, type: 'info' };
-		try {
-			await this.runSelf();
-			this.runningStatus = NodeRunningStatus.Succeeded;
-			this.runlog = { time: Date.now(), msg: `运行成功`, type: 'info' };
-		} catch (error) {
-			this.toCenter();
-			this.runningStatus = NodeRunningStatus.Failed;
-			this.runlog = {
-				time: Date.now(),
-				msg: `运行失败，${error?.message ? `错误信息：${error.message}` : ''}`,
-				type: 'error'
-			};
-			if (this.errorHandleMode === ErrorHandleMode.Terminated) {
-				return;
+		let retryCount = 0;
+		const maxRetries = 1;
+
+		while (retryCount < maxRetries) {
+			try {
+				await this.runSelf();
+				this.runningStatus = NodeRunningStatus.Succeeded;
+				this.runlog = { time: Date.now(), msg: `运行成功`, type: 'info' };
+				break;
+			} catch (error) {
+				retryCount++;
+				this.toCenter();
+				if (retryCount < maxRetries) {
+					this.runlog = {
+						time: Date.now(),
+						msg: `运行失败，正在重试第${retryCount}次,${error?.message ? `错误信息：${error.message}` : ''}`,
+						type: 'warning'
+					};
+					continue;
+				}
+				this.runningStatus = NodeRunningStatus.Failed;
+				this.runlog = { time: Date.now(), msg: `重试${maxRetries}次后运行失败,${error?.message ? `错误信息：${error.message}` : ''}`, type: 'error' };
+				if (this.errorHandleMode === ErrorHandleMode.Terminated) {
+					return;
+				}
 			}
 		}
 		if (this.owner.stoping) {
 			this.runlog = { time: Date.now(), msg: '中途停止', type: 'info' };
 			return;
 		}
+		if (params.runMode === 'single') {
+			return;
+		}
 		await this.nextRunNode?.run();
 	}
-	abstract runSelf(): Promise<void>;
 
-	stop?(): void;
+	abstract runSelf(): Promise<void>;
 }

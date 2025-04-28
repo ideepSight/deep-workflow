@@ -2,7 +2,7 @@ import React, { useEffect, useImperativeHandle } from 'react';
 import { DPModalRender, DPModalWrapType } from '../../../workflow/components/DPModal';
 import { Checkbox, Form, Input, Select } from '@arco-design/web-react';
 import style from './InputAddModal.module.less';
-import { FormItemType, InputVarData } from '..';
+import { FormItemType, InputFieldData } from '..';
 import { DPVarType } from '../../../workflow';
 import { SelectOptionSet } from './SelectOptionSet';
 import { SelectInputType } from './SelectInputType';
@@ -25,7 +25,7 @@ const fileTypes = {
 	video: ['MP4', 'MOV', 'MPEG', 'WEBM']
 };
 
-export const InputAddModal = async (editValue?: InputVarData) => {
+export const InputAddModal = async (editValue?: InputFieldData) => {
 	const ModalInner: React.FC<DPModalWrapType> = ({ modalRef }) => {
 		const [form] = Form.useForm();
 		useImperativeHandle(modalRef, () => ({
@@ -114,7 +114,7 @@ export const InputAddModal = async (editValue?: InputVarData) => {
 			</div>
 		);
 	};
-	return new Promise<InputVarData>((resolve) => {
+	return new Promise<InputFieldData>((resolve) => {
 		DPModalRender({
 			width: 500,
 			title: editValue ? '编辑输入字段' : '添加输入字段',

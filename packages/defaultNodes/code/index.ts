@@ -9,6 +9,9 @@ export type CodeNodeInnerData = DPNodeInnerData & {
 };
 
 export class CodeNode extends DPBaseNode<CodeNodeInnerData> {
+	get singleRunAble() {
+		return true;
+	}
 	get code() {
 		return this.data.code;
 	}
@@ -97,16 +100,9 @@ function main() {
 	}
 
 	async runSelf(): Promise<void> {
-		const context = this.enableVars.reduce((acc, { node, vars }) => {
-			acc[node.title] = vars.reduce((varAcc, v) => {
-				varAcc[v.key] = v.value;
-				return varAcc;
-			}, {});
-			return acc;
-		}, {});
 		try {
 			// 执行代码 获取返回值 ，保证先运行入口方法main
-			const res = await this.runCode(this.code, context);
+			const res = await this.runCode(this.code, await this.getContext());
 			// 更新变量值
 			this.vars.forEach((v) => {
 				v.value = res[v.key];

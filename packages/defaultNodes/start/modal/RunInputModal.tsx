@@ -2,9 +2,9 @@ import React, { useEffect, useImperativeHandle } from 'react';
 import { DPModalRender, DPModalWrapType } from '../../../workflow/components/DPModal';
 import { Form, Input, Select } from '@arco-design/web-react';
 import style from './InputAddModal.module.less';
-import { FormItemType, InputVarData } from '..';
+import { FormItemType, InputFieldData } from '..';
 
-export const RunInputModal = async (inputDatas: InputVarData[]) => {
+export const RunInputModal = async (inputDatas: InputFieldData[]) => {
 	const ModalInner: React.FC<DPModalWrapType> = ({ modalRef }) => {
 		const [form] = Form.useForm();
 		useImperativeHandle(modalRef, () => ({

@@ -24,7 +24,6 @@ export type DPWorkflowData = {
 type DPWorkflowEvent = {
 	save: (data: DPWorkflowData) => void;
 	running: () => void;
-	stoping: () => void;
 };
 export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 	id: string;
@@ -170,7 +169,7 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 			return;
 		}
 		this.stoping = true;
-		this.emit('stoping'); // 自定义节点其他运行进程可监听该事件中途停止
+		this.dpNodes.forEach((node) => node.runningStatus === NodeRunningStatus.Running && node.stop());
 	}
 
 	addVar(varData: DPVarData) {

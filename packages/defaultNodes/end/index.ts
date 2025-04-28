@@ -2,6 +2,9 @@ import { DPBaseNode, BlockEnum } from '../../workflow';
 import { End, EndIcon } from './End';
 
 export class EndNode extends DPBaseNode {
+	get singleRunAble() {
+		return false;
+	}
 	async runSelf(): Promise<void> {}
 }
 DPBaseNode.registerType({

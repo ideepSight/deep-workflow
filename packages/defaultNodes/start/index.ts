@@ -8,11 +8,11 @@ export enum FormItemType {
 	select = 'select',
 	number = 'number',
 	singleFile = 'file',
-	multiFiles = 'file-list',
-	dir = 'dir' // 文件夹
+	multiFiles = 'file-list'
+	// dir = 'dir' // 文件夹
 }
 
-export type InputVarData = {
+export type InputFieldData = {
 	fieldType: FormItemType;
 	fieldName: string;
 	label: string; // 显示名称
@@ -23,35 +23,38 @@ export type InputVarData = {
 	options?: { id: string; label: string }[];
 	filetypes?: string[];
 };
-export type DPStartNodeInnerData = DPNodeInnerData & { inputs: InputVarData[] };
+export type DPStartNodeInnerData = DPNodeInnerData & { inputFields: InputFieldData[] };
 
 export class DPStartNode extends DPBaseNode<DPStartNodeInnerData> {
-	get inputs() {
-		return this.data.inputs.map((input) => {
+	get singleRunAble() {
+		return false;
+	}
+	get inputFields() {
+		return this.data.inputFields.map((input) => {
 			const dpVar = this.vars.find((item) => item.key === input.fieldName);
 			return { dpVar, input };
 		});
 	}
 	init(data: DPStartNodeInnerData) {
-		if (!data.inputs) {
-			data.inputs = [];
+		if (!data.inputFields) {
+			data.inputFields = [];
 		}
-		data.inputs.forEach((inputData) => {
+		data.inputFields.forEach((inputData) => {
 			new DPVar({ key: inputData.fieldName, type: inputData.varType, defaultValue: inputData.defaultValue }, this);
 		});
 	}
-	addInput(inputData: InputVarData) {
+	addInputFields(inputData: InputFieldData) {
 		new DPVar({ key: inputData.fieldName, type: inputData.varType, defaultValue: inputData.defaultValue }, this);
-		this.data.inputs.push(inputData);
+		this.data.inputFields.push(inputData);
 	}
-	updateInput(item: InputVarData, inputData: InputVarData) {
+	updateInput(item: InputFieldData, inputData: InputFieldData) {
 		const dpVar = this.vars.find((v) => v.key === item.fieldName);
 		dpVar.data = {
 			key: inputData.fieldName,
 			type: inputData.varType,
 			defaultValue: inputData.defaultValue
 		};
-		this.data.inputs = this.data.inputs.map((input) => {
+		this.data.inputFields = this.data.inputFields.map((input) => {
 			if (input.fieldName === item.fieldName) {
 				return inputData;
 			} else {
@@ -59,13 +62,13 @@ export class DPStartNode extends DPBaseNode<DPStartNodeInnerData> {
 			}
 		});
 	}
-	removeInput(input: InputVarData): void {
-		this.data.inputs = this.data.inputs.filter((item) => item.fieldName !== input.fieldName);
+	removeInputFields(input: InputFieldData): void {
+		this.data.inputFields = this.data.inputFields.filter((item) => item.fieldName !== input.fieldName);
 		this.vars = this.vars.filter((item) => item.key !== input.fieldName);
 	}
 	async runSelf(): Promise<void> {
-		if (this.inputs.length) {
-			const res = await RunInputModal(this.inputs.map((item) => item.input));
+		if (this.inputFields.length) {
+			const res = await RunInputModal(this.inputFields.map((item) => item.input));
 			if (res) {
 				// 给后面node用到的变量赋值
 				this.vars.forEach((item) => {

@@ -55,6 +55,25 @@
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
+			.btns{
+				display: flex;
+				align-items: center;
+			}
+			.big-icon {
+				color: var(--color-text-3);
+				padding: 0;
+				svg {
+					padding: 0;
+					width: 1.4em;
+					height: 1.4em;
+					margin-top: 3px;
+				}
+				&:hover {
+					.arco-icon-close {
+						color: rgb(var(--red-6));
+					}
+				}
+			}
 			.node-icon-wrap {
 				display: flex;
 				width: 24px;
