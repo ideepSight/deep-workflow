@@ -52,9 +52,6 @@ export const StartSet: React.FC<NodeComponentProps<DPStartNode>> = observer(({ n
 		<div className="custom-node-set-wrap">
 			<Space>
 				<b>输入字段</b>
-				<Tooltip content="添加字段">
-					<Button type="default" shape="round" size="mini" onClick={handleAdd} icon={<IconPlus className="btn-gray-icon" />} />
-				</Tooltip>
 			</Space>
 			<div className="out-var-list">
 				{node.inputs.map(({ input }) => {
