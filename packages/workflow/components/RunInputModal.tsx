@@ -1,8 +1,7 @@
 import React, { useEffect, useImperativeHandle } from 'react';
-import { DPModalRender, DPModalWrapType } from '../../../workflow/components/DPModal';
+import { DPModalRender, DPModalWrapType } from './DPModal';
 import { Form, Input, Select } from '@arco-design/web-react';
-import style from './InputAddModal.module.less';
-import { FormItemType, InputFieldData } from '..';
+import { FormItemType, InputFieldData } from '../types';
 
 export const RunInputModal = async (inputDatas: InputFieldData[]) => {
 	const ModalInner: React.FC<DPModalWrapType> = ({ modalRef }) => {
@@ -23,7 +22,7 @@ export const RunInputModal = async (inputDatas: InputFieldData[]) => {
 			form.setFieldsValue(defaultValues);
 		}, [form]);
 		return (
-			<div className={style['select-field']}>
+			<div style={{ marginTop: 10 }}>
 				<Form form={form} layout="vertical">
 					{inputDatas.map((item) => (
 						<React.Fragment key={item.fieldName}>

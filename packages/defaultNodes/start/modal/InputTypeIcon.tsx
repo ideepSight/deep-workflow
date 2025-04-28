@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { RiAlignLeft, RiCheckboxMultipleLine, RiFileCopy2Line, RiFileList2Line, RiHashtag, RiTextSnippet } from '@remixicon/react';
-import { FormItemType } from '..';
+import { FormItemType } from '../../../workflow';
 
 type Props = {
 	className?: string;

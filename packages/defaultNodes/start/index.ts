@@ -1,28 +1,7 @@
-import { DPNodeInnerData, DPBaseNode, BlockEnum, DPVar, DPVarType, NodeRunningStatus } from '../../workflow/lib';
+import { DPNodeInnerData, DPBaseNode, BlockEnum, DPVar, InputFieldData, NodeRunningStatus } from '../../workflow';
 import { Start, StartIcon, StartSet } from './Start';
-import { RunInputModal } from './modal/RunInputModal';
+import { RunInputModal } from '../../workflow/components/RunInputModal';
 
-export enum FormItemType {
-	textInput = 'text-input',
-	paragraph = 'paragraph',
-	select = 'select',
-	number = 'number',
-	singleFile = 'file',
-	multiFiles = 'file-list'
-	// dir = 'dir' // 文件夹
-}
-
-export type InputFieldData = {
-	fieldType: FormItemType;
-	fieldName: string;
-	label: string; // 显示名称
-	varType: DPVarType; // 数据类型
-	defaultValue?: string; // 默认值
-	placeholder?: string; // 占位符
-	required: boolean;
-	options?: { id: string; label: string }[];
-	filetypes?: string[];
-};
 export type DPStartNodeInnerData = DPNodeInnerData & { inputFields: InputFieldData[] };
 
 export class DPStartNode extends DPBaseNode<DPStartNodeInnerData> {

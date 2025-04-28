@@ -3,8 +3,8 @@ import { DPEvent, observe } from '../../base';
 import { Node } from '@xyflow/react';
 import { DPVar, DPVarType } from './var';
 import type { DPWorkflow } from './workflow';
-import { RunInputModal } from '../../defaultNodes/start/modal/RunInputModal';
-import { FormItemType } from '../../defaultNodes';
+import { RunInputModal } from '../components/RunInputModal';
+import { FormItemType } from '../../workflow';
 
 export enum BlockEnum {
 	Start = 'start',
