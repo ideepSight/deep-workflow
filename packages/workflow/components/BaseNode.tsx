@@ -1,7 +1,7 @@
 import React, { memo, cloneElement, ReactElement, useContext, useEffect, useRef, Fragment } from 'react';
 import { BlockEnum, DPBaseNode, DPNodeInnerData } from '../lib/baseNode';
 import { Button, Popconfirm, Space, Spin, Tooltip } from '@arco-design/web-react';
-import { IconDelete, IconExclamationCircle, IconInfo, IconPlayCircle } from '@arco-design/web-react/icon';
+import { IconDelete, IconExclamationCircle, IconInfo, IconPlayCircle, IconRecordStop } from '@arco-design/web-react/icon';
 import './index.less';
 import { WorkfowContext } from './context';
 import { observer } from 'mobx-react-lite';
@@ -35,11 +35,15 @@ const BaseNodeInner: React.FC<
 			<div className="node-toolbar">
 				{baseInfo.type !== BlockEnum.Start && baseInfo.type !== BlockEnum.End && baseInfo.group !== 'hide' && (
 					<>
-						{/* {baseInfo.group !== 'sys' && (
-							<Tooltip content="运行此步骤">
-								<Button type="secondary" shape="circle" size="mini" icon={<IconPlayCircle />} />
+						{node.singleRunAble && (
+							<Tooltip content={node.singleRunning ? '停止' : '运行此步骤'}>
+								{node.singleRunning ? (
+									<Button type="secondary" shape="circle" size="mini" icon={<IconRecordStop />} onClick={() => node.stop()} />
+								) : (
+									<Button type="secondary" shape="circle" size="mini" icon={<IconPlayCircle />} onClick={() => node.runSingle()} />
+								)}
 							</Tooltip>
-						)} */}
+						)}
 						<Popconfirm blurToHide title="确定删除此节点吗？" onOk={() => workflowIns.delNode(id)}>
 							<Button type="secondary" shape="circle" size="mini" icon={<IconDelete />} />
 						</Popconfirm>
