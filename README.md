@@ -101,7 +101,7 @@ export const EndSet: React.FC<NodeComponentProps<EndNode>> = observer(({node}) =
 
 -   [x] 运行日志功能
 -   [x] 运行错误时自动聚焦到错误节点
--   [ ] 暂停运行、中途停止运行
+-   [x] 中途停止运行
 -   [ ] 节点单独测试运行、重试运行
 -   [ ] 历史记录、上一步、下一步
 -   [ ] 第三方节点插件机制、节点市场

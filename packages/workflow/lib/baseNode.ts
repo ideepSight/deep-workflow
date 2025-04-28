@@ -181,6 +181,10 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 				return;
 			}
 		}
+		if (this.owner.stoping) {
+			this.runlog = { time: Date.now(), msg: '中途停止', type: 'info' };
+			return;
+		}
 		await this.nextRunNode?.run();
 	}
 	abstract runSelf(): Promise<void>;
