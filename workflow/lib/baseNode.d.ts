@@ -102,6 +102,7 @@ export declare abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInner
     private _outputs;
     private _inputs;
     get outputs(): DPVar[];
+    set outputs(val: DPVar[]);
     get inputs(): DPVar[];
     set runlog(val: LogData);
     get runlogs(): LogData[];
@@ -124,9 +125,15 @@ export declare abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInner
     get runSingleNeedAssignVars(): DPVar[];
     constructor(owner: DPWorkflow, nodeData: DPNodeData<T>);
     init?(data: T): void;
-    addInput(): void;
+    addInput(params?: {
+        key?: string;
+        type?: DPVarType;
+    }): void;
     removeInput(index: number): void;
-    addOutput(): void;
+    addOutput(params?: {
+        key?: string;
+        type?: DPVarType;
+    }): void;
     removeOutput(index: number): void;
     toCenter(): void;
     runSingle(): Promise<void>;

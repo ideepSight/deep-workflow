@@ -3,6 +3,7 @@ import { Connection, ReactFlowInstance } from '@xyflow/react';
 import { DPBaseNode, DPNodeData, LogData } from './baseNode';
 import { DPBaseEdge, DPEdgeData } from './baseEdge';
 import { DPVarData, DPVar } from './var';
+import { DPHistory } from './history';
 export declare enum ControlMode {
     Pointer = "pointer",
     Hand = "hand"
@@ -33,6 +34,7 @@ export declare class DPWorkflow extends DPEvent<DPWorkflowEvent> {
     private _autoSave;
     private _autoSaveIng;
     reactFlowIns: ReactFlowInstance;
+    history: DPHistory;
     get runlogs(): (LogData & {
         node: DPBaseNode;
     })[];
@@ -48,13 +50,17 @@ export declare class DPWorkflow extends DPEvent<DPWorkflowEvent> {
         edges: DPEdgeData[];
         vars: DPVarData[];
     };
-    get dpNodes(): DPBaseNode<import('./baseNode').DPNodeInnerData>[];
+    get dpNodes(): DPBaseNode[];
+    set dpNodes(val: DPBaseNode[]);
     get dpEdges(): DPBaseEdge[];
+    set dpEdges(val: DPBaseEdge[]);
     get vars(): DPVar[];
     setNodes(nodes: DPNodeData[]): void;
     setEdges(edges: DPEdgeData[]): void;
-    updateNodes(): void;
-    updateEdges(): void;
+    private _updateNodes;
+    private _updateEdges;
+    updateNodes(noHistory?: boolean): void;
+    updateEdges(noHistory?: boolean): void;
     constructor(data: DPWorkflowData);
     private autoSaveFunc;
     save(): void;
