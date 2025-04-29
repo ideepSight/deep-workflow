@@ -3,9 +3,9 @@ import { IfElse, IfElseIcon, IfElseSet } from './IfElse';
 import type { ExpValue } from './conditionExp';
 import { uuid } from 'short-uuid';
 
-export type DPIfElseNodeInnerData = DPNodeInnerData & { conditions: { type: 'if' | 'else'; id: string; expValue?: ExpValue }[] };
+export type IfElseNodeInnerData = DPNodeInnerData & { conditions: { type: 'if' | 'else'; id: string; expValue?: ExpValue }[] };
 
-export class IfElseNode extends DPBaseNode<DPIfElseNodeInnerData> {
+export class IfElseNode extends DPBaseNode<IfElseNodeInnerData> {
 	get singleRunAble() {
 		return false;
 	}
@@ -13,7 +13,7 @@ export class IfElseNode extends DPBaseNode<DPIfElseNodeInnerData> {
 		return this.data.conditions;
 	}
 
-	init(data: DPIfElseNodeInnerData) {
+	init(data: IfElseNodeInnerData) {
 		if (!data.conditions) {
 			data.conditions = [
 				{ type: 'if', id: uuid(), expValue: { mode: 'simple' } },

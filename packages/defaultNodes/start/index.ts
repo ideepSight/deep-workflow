@@ -2,9 +2,9 @@ import { DPNodeInnerData, DPBaseNode, BlockEnum, DPVar, InputFieldData, NodeRunn
 import { Start, StartIcon, StartSet } from './Start';
 import { RunInputModal } from '../../workflow/components/RunInputModal';
 
-export type DPStartNodeInnerData = DPNodeInnerData & { inputFields: InputFieldData[] };
+export type StartNodeInnerData = DPNodeInnerData & { inputFields: InputFieldData[] };
 
-export class DPStartNode extends DPBaseNode<DPStartNodeInnerData> {
+export class StartNode extends DPBaseNode<StartNodeInnerData> {
 	get singleRunAble() {
 		return false;
 	}
@@ -14,7 +14,7 @@ export class DPStartNode extends DPBaseNode<DPStartNodeInnerData> {
 			return { dpVar, input };
 		});
 	}
-	init(data: DPStartNodeInnerData) {
+	init(data: StartNodeInnerData) {
 		if (!data.inputFields) {
 			data.inputFields = [];
 		}
@@ -62,7 +62,7 @@ export class DPStartNode extends DPBaseNode<DPStartNodeInnerData> {
 }
 DPBaseNode.registerType({
 	type: BlockEnum.Start,
-	model: DPStartNode,
+	model: StartNode,
 	NodeComponent: Start,
 	SetComponent: StartSet,
 	icon: StartIcon,
