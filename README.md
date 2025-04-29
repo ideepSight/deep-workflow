@@ -96,6 +96,18 @@ export const EndSet: React.FC<NodeComponentProps<EndNode>> = observer(({node}) =
 	);
 });
 ```
+### 国际化支持
+
+- 本组件库内置中英文词条，开箱即用，无需额外配置。
+- 如需自定义多语言或与宿主项目 i18next 实例集成，可用 I18nProvider 包裹：
+
+```tsx
+import { I18nProvider } from '@deep-sight/workflow/i18n';
+
+<I18nProvider i18nInstance={yourI18n}>
+  <YourComponent />
+</I18nProvider>
+```
 
 ## 计划
 

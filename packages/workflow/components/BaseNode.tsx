@@ -9,18 +9,14 @@ import { Node } from '@xyflow/react';
 import { DPWorkflow, NodeRunningStatus } from '../lib';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
-
-// export type WorkflowRetryConfig = {
-// 	maxRetries: number;
-// 	retryInterval: number;
-// 	retryEnabled: boolean;
-// };
+import { useI18n } from '../i18n';
 
 const BaseNodeInner: React.FC<
 	Node<DPNodeInnerData> & { children: ReactElement; node: DPBaseNode<DPNodeInnerData>; nodeRef: React.RefObject<HTMLDivElement>; workflowIns: DPWorkflow }
 > = observer((props) => {
 	const { id, data, children, node, workflowIns, nodeRef } = props;
 	const baseInfo = DPBaseNode.types[data.dpNodeType];
+	const { t } = useI18n();
 
 	return (
 		<div
@@ -36,7 +32,7 @@ const BaseNodeInner: React.FC<
 				{baseInfo.type !== BlockEnum.Start && baseInfo.type !== BlockEnum.End && baseInfo.group !== 'hide' && (
 					<>
 						{node.singleRunAble && (
-							<Tooltip content={node.singleRunning ? '停止' : '运行此步骤'}>
+							<Tooltip content={node.singleRunning ? t('workflow:baseNode.stop') : t('workflow:baseNode.runStep')}>
 								{node.singleRunning ? (
 									<Button type="secondary" shape="circle" size="mini" icon={<IconRecordStop />} onClick={() => node.stop()} />
 								) : (
@@ -44,7 +40,7 @@ const BaseNodeInner: React.FC<
 								)}
 							</Tooltip>
 						)}
-						<Popconfirm blurToHide title="确定删除此节点吗？" onOk={() => workflowIns.delNode(id)}>
+						<Popconfirm blurToHide title={t('workflow:baseNode.confirmDelete')} onOk={() => workflowIns.delNode(id)}>
 							<Button type="secondary" shape="circle" size="mini" icon={<IconDelete />} />
 						</Popconfirm>
 					</>

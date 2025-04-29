@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import React, { useMemo, useRef, useState } from 'react';
-import { Select, Space, Tooltip } from '@arco-design/web-react';
+import { Select, Space, Tooltip, Empty } from '@arco-design/web-react';
 import type { EnableVar } from '../../../workflow';
 import { DPVarType } from '../../../workflow';
 import { Icon } from '../../../workflow/components/Icon';
@@ -10,6 +10,7 @@ import { RefInputType } from '@arco-design/web-react/es/Input';
 import InputComponent from '@arco-design/web-react/es/Input/input-element';
 import { Esc, Enter, ArrowUp, ArrowDown, Backspace } from './lib/getHotkeyHandler';
 import { validateExpression } from './lib/validate';
+import { useI18n } from '../../i18n';
 
 interface MeasureIndex {
 	location: number;
@@ -47,10 +48,12 @@ type SelfProps = {
 	onSearch?: (text: string, prefix: string) => void;
 	needValidate?: boolean;
 	placeholder?: string;
+	empty?: string;
 };
 
 export const SimpleExpression: React.FC<SelfProps> = observer((props) => {
-	const { enableVars, defaultValue, onChange, size = 'default', varPrefix = '/', onSearch, needValidate = true, placeholder = '请输入' } = props;
+	const { enableVars, defaultValue, onChange, size = 'default', varPrefix = '/', onSearch, needValidate = true, placeholder = '请输入', empty } = props;
+	const { t } = useI18n();
 	const split = ' ';
 	const refSelect = useRef<SelectHandle>(null);
 	const refEditarea = useRef<RefInputType>(null);
@@ -68,7 +71,7 @@ export const SimpleExpression: React.FC<SelfProps> = observer((props) => {
 				validateExpression(v, enableVars);
 				setErrorMsg('');
 			} catch (error) {
-				setErrorMsg(typeof error === 'string' ? error : '表达式错误');
+				setErrorMsg(typeof error === 'string' ? error : t('workflow:simpleExpression.error'));
 			}
 		}
 	};
@@ -233,9 +236,9 @@ export const SimpleExpression: React.FC<SelfProps> = observer((props) => {
 				<Tooltip
 					content={
 						<>
-							支持输入简易表达式
+							{t('workflow:simpleExpression.supportSimple')}
 							<br />
-							符号“/”可呼出变量
+							{t('workflow:simpleExpression.varTip')}
 						</>
 					}
 				>
@@ -277,6 +280,7 @@ export const SimpleExpression: React.FC<SelfProps> = observer((props) => {
 					triggerElement={<span className={`arco-mentions-measure-trigger`}>{measureInfo.prefix}</span>}
 					triggerProps={{ popupVisible: measureInfo.measuring }}
 					style={{ minWidth: 160 }}
+					notFoundContent={<Empty description={enableVars.length ? empty : t('workflow:simpleExpression.connectVarNode')} />}
 				>
 					{enableVars.map(({ id, node, vars }) => {
 						if (!vars.length) return null;

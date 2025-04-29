@@ -4,6 +4,7 @@ import CodeMirror from '@uiw/react-codemirror';
 import { javascript, javascriptLanguage } from '@codemirror/lang-javascript';
 import { autocompletion, CompletionContext, completeFromList } from '@codemirror/autocomplete';
 import { validateCode } from './lib/validate';
+import { useI18n } from '../../i18n';
 
 interface CodeEditorProps {
 	enableVars: EnableVar[];
@@ -14,6 +15,7 @@ interface CodeEditorProps {
 export const CodeEditor: React.FC<CodeEditorProps> = ({ enableVars, value = '', onChange }) => {
 	const [expression, setExpression] = useState(value);
 	const [errMsg, setErrorMsg] = useState('');
+	const { t } = useI18n();
 
 	const handleInputChange = useCallback(
 		(v: string) => {
@@ -23,10 +25,10 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({ enableVars, value = '', 
 				setErrorMsg('');
 				onChange(v);
 			} catch (error) {
-				setErrorMsg(typeof error === 'string' ? error : '代码错误');
+				setErrorMsg(typeof error === 'string' ? error : t('workflow:codeEditor.error'));
 			}
 		},
-		[onChange, enableVars]
+		[onChange, enableVars, t]
 	);
 
 	// 合并自定义补全函数

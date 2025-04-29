@@ -5,6 +5,10 @@ import { DPVar, DPVarType } from './var';
 import type { DPWorkflow } from './workflow';
 import { RunInputModal } from '../components/RunInputModal';
 import { FormItemType } from '../../workflow';
+import { useI18n } from '../i18n/i18n';
+import i18next from 'i18next';
+
+const t = i18next.t.bind(i18next);
 
 export enum BlockEnum {
 	Start = 'start',
@@ -289,7 +293,7 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 			return;
 		}
 		if (!this.singleRunAble) {
-			throw new Error('节点不能独立运行');
+			throw new Error(t('workflow:baseNode.cannotRunSingle'));
 		}
 		this.singleRunning = true;
 		this.runlogs = [];
@@ -310,19 +314,19 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 
 	async run(params?: { runMode: 'single' }) {
 		this.runningStatus = NodeRunningStatus.Running;
-		this.runlog = { time: Date.now(), msg: `开始运行`, type: 'info' };
+		this.runlog = { time: Date.now(), msg: t('workflow:baseNode.startRun'), type: 'info' };
 
 		if (!this.data.failRetryEnable) {
 			try {
 				await this.runSelf();
 				this.runningStatus = NodeRunningStatus.Succeeded;
-				this.runlog = { time: Date.now(), msg: `运行成功`, type: 'info' };
+				this.runlog = { time: Date.now(), msg: t('workflow:baseNode.runSuccess'), type: 'info' };
 			} catch (error) {
 				this.toCenter();
 				this.runningStatus = NodeRunningStatus.Failed;
 				this.runlog = {
 					time: Date.now(),
-					msg: `运行失败，${error?.message ? `错误信息：${error.message}` : ''}`,
+					msg: t('workflow:baseNode.runFail', { error: error?.message ? t('workflow:baseNode.errorMsg', { msg: error.message }) : '' }),
 					type: 'error'
 				};
 				if (this.errorHandleMode === ErrorHandleMode.Terminated) {
@@ -337,14 +341,14 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 				try {
 					await this.runSelf();
 					this.runningStatus = NodeRunningStatus.Succeeded;
-					this.runlog = { time: Date.now(), msg: `运行成功`, type: 'info' };
+					this.runlog = { time: Date.now(), msg: t('workflow:baseNode.runSuccess'), type: 'info' };
 					break;
 				} catch (error) {
 					retryCount++;
 					if (retryCount < maxRetries) {
 						this.runlog = {
 							time: Date.now(),
-							msg: `运行失败，正在重试第${retryCount}次,${error?.message ? `错误信息：${error?.message}` : ''}`,
+							msg: t('workflow:baseNode.retrying', { count: retryCount, error: error?.message ? t('workflow:baseNode.errorMsg', { msg: error?.message }) : '' }),
 							type: 'warning'
 						};
 						continue;
@@ -353,7 +357,7 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 					this.toCenter();
 					this.runlog = {
 						time: Date.now(),
-						msg: `重试${maxRetries}次后运行失败,${error?.message ? `错误信息：${error?.message}` : ''}`,
+						msg: t('workflow:baseNode.retryFail', { max: maxRetries, error: error?.message ? t('workflow:baseNode.errorMsg', { msg: error?.message }) : '' }),
 						type: 'error'
 					};
 					if (this.errorHandleMode === ErrorHandleMode.Terminated) {
@@ -363,7 +367,7 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 			}
 		}
 		if (this.owner.stoping) {
-			this.runlog = { time: Date.now(), msg: '中途停止', type: 'info' };
+			this.runlog = { time: Date.now(), msg: t('workflow:baseNode.stopped'), type: 'info' };
 			return;
 		}
 		if (params?.runMode === 'single') {

@@ -1,6 +1,7 @@
 import * as acorn from 'acorn';
 import * as walk from 'acorn-walk';
 import type { EnableVar } from '../../../index';
+import i18next from 'i18next';
 
 const innerKeywords = [
 	'true',
@@ -23,6 +24,8 @@ const innerKeywords = [
 
 const globalIdentifiers = typeof window !== 'undefined' ? Object.getOwnPropertyNames(window) : Object.getOwnPropertyNames(globalThis);
 
+const t = i18next.t.bind(i18next);
+
 export const validateExpression = (expr: string, enableVars: EnableVar[]) => {
 	// 使用 acorn 解析表达式
 	const ast = acorn.parse(`(${expr})`, {
@@ -42,7 +45,7 @@ export const validateExpression = (expr: string, enableVars: EnableVar[]) => {
 	});
 
 	if (hasAssignment) {
-		throw '表达式不能包含赋值操作';
+		throw t('workflow:validate.noAssignment');
 	}
 
 	// 检查未定义的变量
@@ -73,7 +76,7 @@ export const validateExpression = (expr: string, enableVars: EnableVar[]) => {
 	});
 
 	if (undefinedVar) {
-		throw `未定义的变量: ${undefinedVar}`;
+		throw t('workflow:validate.undefinedVar', { var: undefinedVar });
 	}
 };
 
@@ -98,7 +101,7 @@ export const validateCode = (code: string, enableVars: EnableVar[]) => {
 		walk.base
 	);
 	if (!mainNode) {
-		throw '代码中必须包含 main 方法';
+		throw t('workflow:validate.needMain');
 	}
 
 	// 检查函数体中的 return 语句
@@ -123,13 +126,13 @@ export const validateCode = (code: string, enableVars: EnableVar[]) => {
 		}
 	});
 	if (!returnKeys.length) {
-		throw 'main 方法必须返回一个对象';
+		throw t('workflow:validate.mainReturnObject');
 	}
 	// 如果returnKeys中存在相同的key，则抛出错误
 	const uniqueKeys = new Set();
 	returnKeys.forEach((item) => {
 		if (uniqueKeys.has(item.key)) {
-			throw `返回重复的key: ${item.key}`;
+			throw t('workflow:validate.duplicateKey', { key: item.key });
 		}
 		uniqueKeys.add(item.key);
 	});
@@ -165,6 +168,6 @@ export const validateCode = (code: string, enableVars: EnableVar[]) => {
 	});
 
 	if (undefinedVar) {
-		throw `含有未定义的变量: ${undefinedVar}`;
+		throw t('workflow:validate.undefinedVarCode', { var: undefinedVar });
 	}
 };

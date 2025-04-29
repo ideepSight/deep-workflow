@@ -1,4 +1,4 @@
-import { BlockEnum, DPWorkflow } from '.';
+import { DPWorkflow } from '.';
 import { DPEvent, observe } from '../../base';
 import { DPBaseNode } from './baseNode';
 import { DPBaseEdge } from './baseEdge';

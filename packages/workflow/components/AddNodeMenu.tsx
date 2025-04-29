@@ -3,9 +3,11 @@ import { WorkfowContext } from './context';
 import { Tooltip, Space } from '@arco-design/web-react';
 import { uuid } from 'short-uuid';
 import { BlockEnum, DPBaseNode, DPRegisterNode } from '../lib';
+import { useI18n } from '../i18n';
 
 export const AddNodeMenu: React.FC<{ blackList?: string[]; parentNode?: DPBaseNode }> = ({ blackList = [], parentNode }) => {
 	const { workflowIns } = useContext(WorkfowContext);
+	const { t } = useI18n();
 	const nodeTypes = Object.values(DPBaseNode.types).filter((node) => !blackList.includes(node.type) && node.type !== BlockEnum.Start);
 	const groups = {
 		sys: nodeTypes.filter((node) => node.group === 'sys'),
@@ -15,11 +17,11 @@ export const AddNodeMenu: React.FC<{ blackList?: string[]; parentNode?: DPBaseNo
 		custom: nodeTypes.filter((node) => node.group === 'custom')
 	};
 	const groupLabels = {
-		sys: '系统节点',
-		ai: '大模型节点',
-		autoTool: '自动化/工具',
-		platformApi: '平台连接',
-		custom: '自定义节点'
+		sys: t('workflow:addNodeMenu.sys'),
+		ai: t('workflow:addNodeMenu.ai'),
+		autoTool: t('workflow:addNodeMenu.autoTool'),
+		platformApi: t('workflow:addNodeMenu.platformApi'),
+		custom: t('workflow:addNodeMenu.custom'),
 	};
 	const handleAdd = (node: DPRegisterNode) => {
 		const normalNodes = workflowIns.dpNodes.filter((n) => !n.nodeData.parentId);
