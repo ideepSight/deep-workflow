@@ -5,7 +5,6 @@ import { DPVar, DPVarType } from './var';
 import type { DPWorkflow } from './workflow';
 import { RunInputModal } from '../components/RunInputModal';
 import { FormItemType } from '../../workflow';
-import { useI18n } from '../i18n/i18n';
 import i18next from 'i18next';
 
 const t = i18next.t.bind(i18next);
