@@ -5,8 +5,9 @@ import { uuid } from 'short-uuid';
 import { DPBaseEdge, DPEdgeData } from './baseEdge';
 import { Message } from '@arco-design/web-react';
 import { DPVarData, DPVar } from './var';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, debounce } from 'lodash';
 import { LoopNode } from '../../defaultNodes';
+import { DPHistory } from './history';
 
 export enum ControlMode {
 	Pointer = 'pointer',
@@ -18,7 +19,7 @@ export type DPWorkflowData = {
 	title?: string;
 	nodes: DPNodeData[];
 	edges: DPEdgeData[];
-	vars?: DPVarData[];
+	vars?: DPVarData[]; // 全局变量还没实现完，貌似没啥用
 };
 
 type DPWorkflowEvent = {
@@ -50,6 +51,8 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 	private _autoSave = false;
 	private _autoSaveIng = false;
 	public reactFlowIns: ReactFlowInstance;
+
+	public history = new DPHistory(this);
 
 	get runlogs() {
 		return this._runlogs;
@@ -86,19 +89,39 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 	get dpNodes() {
 		return this._dpNodes;
 	}
+	set dpNodes(val: DPBaseNode[]) {
+		this._dpNodes = val;
+		this.updateNodes(true);
+	}
 	get dpEdges() {
 		return this._dpEdges;
+	}
+	set dpEdges(val) {
+		this._dpEdges = val;
+		this.updateEdges(true);
 	}
 	get vars() {
 		return this._vars;
 	}
 	setNodes(nodes: DPNodeData[]) {}
 	setEdges(edges: DPEdgeData[]) {}
-	updateNodes() {
-		this.setNodes(this._dpNodes.map((node) => node.nodeData));
+	private _updateNodes = debounce((noHistory?: boolean) => {
+		const nodeDatas = this._dpNodes.map((node) => node.nodeData);
+		this.setNodes(nodeDatas);
+		!noHistory && this.history.addStep(); // 添加历史记录
+	}, 50);
+
+	private _updateEdges = debounce((noHistory?: boolean) => {
+		const edgeDates = this._dpEdges.map((edge) => edge.data);
+		this.setEdges(edgeDates);
+		!noHistory && this.history.addStep(); // 添加历史记录
+	}, 50);
+	updateNodes(noHistory?: boolean) {
+		this._updateNodes(noHistory);
 	}
-	updateEdges() {
-		this.setEdges(this._dpEdges.map((edge) => edge.data));
+
+	updateEdges(noHistory?: boolean) {
+		this._updateEdges(noHistory);
 	}
 
 	constructor(data: DPWorkflowData) {

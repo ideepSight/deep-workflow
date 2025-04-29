@@ -7,6 +7,7 @@ import { Button, Divider, Empty, InputNumber, Popover, Radio, Space, Tag } from 
 import './index.less';
 import { IconDelete, IconPlus, IconPlusCircleFill } from '@arco-design/web-react/icon';
 import { Icon } from '../../workflow/components/Icon';
+import { LoopStartNode } from './loopStart';
 export const LoopIcon = () => {
 	return <Icon name="duoxunhuan" />;
 };
@@ -16,7 +17,7 @@ export const Loop: React.FC<NodeComponentProps<LoopNode>> = observer(({ node }) 
 
 	useEffect(() => {
 		if (!node.childNodes.find((n) => n.nodeConfig.type === BlockEnum.LoopStart)) {
-			node.owner.addNode({
+			const loopStartNode = node.owner.addNode({
 				position: { x: 50, y: 80 },
 				width: 44,
 				height: 44,
@@ -25,7 +26,8 @@ export const Loop: React.FC<NodeComponentProps<LoopNode>> = observer(({ node }) 
 				selectable: false,
 				parentId: node.id,
 				extent: 'parent'
-			});
+			}) as LoopStartNode;
+			loopStartNode.parentNode = node;
 		}
 	}, []);
 

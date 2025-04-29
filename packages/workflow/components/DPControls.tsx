@@ -61,11 +61,11 @@ export const DPControls: React.FC = () => {
 	}, [setViewport, workflowIns]);
 
 	const handleUndo = useCallback(() => {
-		// workflowIns.undo();
+		workflowIns.history.undo();
 	}, [workflowIns]);
 
 	const handleRedo = useCallback(() => {
-		// workflowIns.redo();
+		workflowIns.history.redo();
 	}, [workflowIns]);
 
 	return (
@@ -116,10 +116,10 @@ export const DPControls: React.FC = () => {
 			</Button.Group>
 			<Button.Group className="control-group">
 				<Tooltip content="撤销">
-					<Button size="mini" type="text" className="big-icon" onClick={handleUndo} icon={<IconUndo />} />
+					<Button size="mini" type="text" className="big-icon" disabled={!workflowIns.history.undoEnable} onClick={handleUndo} icon={<IconUndo />} />
 				</Tooltip>
 				<Tooltip content="重做">
-					<Button size="mini" type="text" className="big-icon" onClick={handleRedo} icon={<IconRedo />} />
+					<Button size="mini" type="text" className="big-icon" disabled={!workflowIns.history.redoEnable} onClick={handleRedo} icon={<IconRedo />} />
 				</Tooltip>
 			</Button.Group>
 			<Button.Group className="control-group">
