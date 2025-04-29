@@ -6,14 +6,14 @@ import { InputAddModal } from './modal/InputAddModal';
 import './index.less';
 import { Icon } from '../../workflow/components/Icon';
 import { IconDelete, IconEdit, IconPlus } from '@arco-design/web-react/icon';
-import { DPStartNode } from '.';
+import { StartNode } from '.';
 import { InputFieldData, NodeComponentProps } from '../../workflow';
 
 export const StartIcon = () => {
 	return <Icon name="huojian" />;
 };
 
-export const Start: React.FC<NodeComponentProps<DPStartNode>> = observer(({ node }) => {
+export const Start: React.FC<NodeComponentProps<StartNode>> = observer(({ node }) => {
 	return (
 		<div className="start-node-wrap">
 			<Handle type="source" id="start" className="base-handle" position={Position.Right} />
@@ -35,7 +35,7 @@ export const Start: React.FC<NodeComponentProps<DPStartNode>> = observer(({ node
 	);
 });
 
-export const StartSet: React.FC<NodeComponentProps<DPStartNode>> = observer(({ node }) => {
+export const StartSet: React.FC<NodeComponentProps<StartNode>> = observer(({ node }) => {
 	const handleAdd = async () => {
 		const res = await InputAddModal();
 		if (res) {
