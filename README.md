@@ -106,7 +106,7 @@ export const EndSet: React.FC<NodeComponentProps<EndNode>> = observer(({node}) =
 -   [x] 节点单独测试运行、失败重试运行
 -   [x] 历史记录、上一步、下一步
 -   [ ] 第三方节点插件机制、节点市场
--   [ ] 完善文档
+-   [x] 完善文档
 -   [ ] 国际化
 
 ## 贡献
