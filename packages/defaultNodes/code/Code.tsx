@@ -8,6 +8,7 @@ import _ from 'lodash';
 import { IconInfoCircleFill } from '@arco-design/web-react/icon';
 import { Icon } from '../../workflow/components/Icon';
 import { InputVar } from './InputVar';
+import { useI18n } from '../../workflow/i18n';
 
 export const CodeIcon = () => {
 	return <Icon name="code" />;
@@ -23,6 +24,7 @@ export const Code: React.FC<NodeComponentProps<CodeNode>> = observer(({ node }) 
 });
 
 export const CodeSet: React.FC<NodeComponentProps<CodeNode>> = observer(({ node }) => {
+	const { t } = useI18n();
 	const enableVars = node.enableVars.reverse();
 	const [code, setCode] = useState(node.code);
 
@@ -46,8 +48,8 @@ export const CodeSet: React.FC<NodeComponentProps<CodeNode>> = observer(({ node 
 			<div className="output-var-wrap">
 				<br />
 				<br />
-				<b className="handle-name">输出变量</b>
-				<Tooltip content="无需配置，自动从代码里的 return 中获取">
+				<b className="handle-name">{t('workflow:code.outputVar')}</b>
+				<Tooltip content={t('workflow:code.outputTip')}>
 					<IconInfoCircleFill className="info-icon" />
 				</Tooltip>
 				<br />
@@ -66,7 +68,7 @@ export const CodeSet: React.FC<NodeComponentProps<CodeNode>> = observer(({ node 
 							</Fragment>
 						);
 					})}
-					{node.outputs.length === 0 && <Empty description="暂无输出字段" />}
+					{node.outputs.length === 0 && <Empty description={t('workflow:code.noOutput')} />}
 				</div>
 			</div>
 		</div>

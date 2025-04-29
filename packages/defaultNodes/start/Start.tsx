@@ -8,12 +8,14 @@ import { Icon } from '../../workflow/components/Icon';
 import { IconDelete, IconEdit, IconPlus } from '@arco-design/web-react/icon';
 import { StartNode } from '.';
 import { InputFieldData, NodeComponentProps } from '../../workflow';
+import { useI18n } from '../../workflow/i18n';
 
 export const StartIcon = () => {
 	return <Icon name="huojian" />;
 };
 
 export const Start: React.FC<NodeComponentProps<StartNode>> = observer(({ node }) => {
+	const { t } = useI18n();
 	return (
 		<div className="start-node-wrap">
 			<Handle type="source" id="start" className="base-handle" position={Position.Right} />
@@ -36,6 +38,7 @@ export const Start: React.FC<NodeComponentProps<StartNode>> = observer(({ node }
 });
 
 export const StartSet: React.FC<NodeComponentProps<StartNode>> = observer(({ node }) => {
+	const { t } = useI18n();
 	const handleAdd = async () => {
 		const res = await InputAddModal();
 		if (res) {
@@ -51,7 +54,7 @@ export const StartSet: React.FC<NodeComponentProps<StartNode>> = observer(({ nod
 	return (
 		<div className="custom-node-set-wrap">
 			<Space>
-				<b>输入字段</b>
+				<b>{t('workflow:start.inputField')}</b>
 			</Space>
 			<div className="out-var-list">
 				{node.inputFields.map(({ input }) => {
@@ -67,32 +70,32 @@ export const StartSet: React.FC<NodeComponentProps<StartNode>> = observer(({ nod
 											column={1}
 											data={[
 												{
-													label: '变量类型',
+													label: t('workflow:start.varType'),
 													value: <Tag>{input.varType}</Tag>
 												},
 												{
-													label: '字段类型',
+													label: t('workflow:start.fieldType'),
 													value: <Tag>{input.fieldType}</Tag>
 												},
 												{
-													label: '变量名称',
+													label: t('workflow:start.varName'),
 													value: <Tag>{input.fieldName}</Tag>
 												},
 												{
-													label: '显示名称',
+													label: t('workflow:start.label'),
 													value: <Tag>{input.label}</Tag>
 												},
 												{
-													label: '默认值',
-													value: input.defaultValue ? <Tag>{input.defaultValue}</Tag> : '无'
+													label: t('workflow:start.defaultValue'),
+													value: input.defaultValue ? <Tag>{input.defaultValue}</Tag> : t('workflow:start.none')
 												},
 												{
-													label: '输入提示语',
-													value: input.placeholder ? <Tag>{input.placeholder}</Tag> : '无'
+													label: t('workflow:start.placeholder'),
+													value: input.placeholder ? <Tag>{input.placeholder}</Tag> : t('workflow:start.none')
 												},
 												{
-													label: '是否必填',
-													value: <Tag>{input.required ? '是' : '否'}</Tag>
+													label: t('workflow:start.required'),
+													value: <Tag>{input.required ? t('workflow:start.yes') : t('workflow:start.no')}</Tag>
 												}
 											]}
 										/>
@@ -119,13 +122,13 @@ export const StartSet: React.FC<NodeComponentProps<StartNode>> = observer(({ nod
 					<Empty
 						description={
 							<Button onClick={handleAdd} icon={<IconPlus className="btn-gray-icon" />}>
-								添加字段
+								{t('workflow:start.addField')}
 							</Button>
 						}
 					/>
 				) : (
 					<Button style={{ marginTop: 10 }} onClick={handleAdd} icon={<IconPlus className="btn-gray-icon" />}>
-						添加字段
+						{t('workflow:start.addField')}
 					</Button>
 				)}
 			</div>

@@ -8,12 +8,14 @@ import { ConditionExp } from './conditionExp';
 import { Button, Divider, Tooltip } from '@arco-design/web-react';
 import { IconDelete, IconPlus } from '@arco-design/web-react/icon';
 import { Icon } from '../../workflow/components/Icon';
+import { useI18n } from '../../workflow/i18n';
 
 export const IfElseIcon = () => {
 	return <Icon name="fenzhijiedian" />;
 };
 
 export const IfElse: React.FC<NodeComponentProps<IfElseNode>> = observer(({ node }) => {
+	const { t } = useI18n();
 	const conditions = node.conditions.slice().sort((a, b) => (a.type === 'else' ? 1 : -1));
 	return (
 		<div className="if-node-wrap">
@@ -21,7 +23,7 @@ export const IfElse: React.FC<NodeComponentProps<IfElseNode>> = observer(({ node
 			<div className="condition-list">
 				{conditions.map((c) => (
 					<div key={c.id} className="cond-name">
-						<span>{c.type === 'if' ? '如果' : '否则'}</span>
+						<span className="if-else-label">{c.type === 'if' ? t('workflow:ifElse.if') : t('workflow:ifElse.else')}</span>
 						<Handle id={c.id} type="source" className="base-handle" position={Position.Right} />
 					</div>
 				))}
@@ -31,6 +33,7 @@ export const IfElse: React.FC<NodeComponentProps<IfElseNode>> = observer(({ node
 });
 
 export const IfElseSet: React.FC<NodeComponentProps<IfElseNode>> = observer(({ node }) => {
+	const { t } = useI18n();
 	const enableVars = node.enableVars.reverse();
 
 	return (
@@ -40,9 +43,9 @@ export const IfElseSet: React.FC<NodeComponentProps<IfElseNode>> = observer(({ n
 				.map((c) => (
 					<Fragment key={c.id}>
 						<div className="condition-if">
-							<b className="handle-name">如果</b>
+							<b className="handle-name">{t('workflow:ifElse.if')}</b>
 							<ConditionExp enableVars={enableVars} value={c.expValue} onChange={(v) => (c.expValue = v)} />
-							<Tooltip content="删除判断">
+							<Tooltip content={t('workflow:ifElse.deleteCondition')}>
 								<Button
 									type="secondary"
 									className="del-btn"
@@ -55,15 +58,15 @@ export const IfElseSet: React.FC<NodeComponentProps<IfElseNode>> = observer(({ n
 						</div>
 					</Fragment>
 				))}
-			<Tooltip content="添加判断">
+			<Tooltip content={t('workflow:ifElse.addCondition')}>
 				<Button type="secondary" size="mini" icon={<IconPlus className="btn-gray-icon" />} className="add-btn" onClick={() => node.addCondition()} />
 			</Tooltip>
 
 			<Divider className="light-border" />
 			<div className="condition-else">
-				<b className="handle-name">否则</b>
+				<b className="handle-name">{t('workflow:ifElse.else')}</b>
 				<br />
-				<p style={{ marginTop: 10 }}>用于定义当 条件判断 不满足时应执行的逻辑。</p>
+				<p style={{ marginTop: 10 }}>{t('workflow:ifElse.elseDescription')}</p>
 			</div>
 		</div>
 	);
