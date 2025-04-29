@@ -7,12 +7,14 @@ import { getLayoutByDagre } from '../utils';
 import { DPNodeData } from '../lib/baseNode';
 import { RiHand, RiCursorLine } from '@remixicon/react';
 import { AddNodeMenu } from './AddNodeMenu';
+import { useI18n } from '../i18n';
 
 export const DPControls: React.FC = () => {
 	const { workflowIns } = useContext(WorkfowContext);
 	const { zoomIn, zoomOut, zoomTo, fitView, setViewport } = useReactFlow();
 	const { zoom } = useViewport();
 	const reactFlowIns = useReactFlow();
+	const { t } = useI18n();
 
 	useEffect(() => {
 		workflowIns.reactFlowIns = reactFlowIns;
@@ -93,7 +95,7 @@ export const DPControls: React.FC = () => {
 							<Menu.Item key="0.25">25%</Menu.Item>
 							<Divider className="light-border" style={{ padding: 0, margin: '2px 0' }} />
 							<Menu.Item key="fit" onClick={fitView}>
-								自适应
+								{t('workflow:controls.fitView')}
 							</Menu.Item>
 						</Menu>
 					}
@@ -115,18 +117,18 @@ export const DPControls: React.FC = () => {
 				/>
 			</Button.Group>
 			<Button.Group className="control-group">
-				<Tooltip content="撤销">
+				<Tooltip content={t('workflow:controls.undo')}>
 					<Button size="mini" type="text" className="big-icon" disabled={!workflowIns.history.undoEnable} onClick={handleUndo} icon={<IconUndo />} />
 				</Tooltip>
-				<Tooltip content="重做">
+				<Tooltip content={t('workflow:controls.redo')}>
 					<Button size="mini" type="text" className="big-icon" disabled={!workflowIns.history.redoEnable} onClick={handleRedo} icon={<IconRedo />} />
 				</Tooltip>
 			</Button.Group>
 			<Button.Group className="control-group">
-				<Tooltip content="整理布局">
+				<Tooltip content={t('workflow:controls.layout')}>
 					<Button size="mini" type="text" className="big-icon" onClick={handleLayout} icon={<IconApps />} />
 				</Tooltip>
-				<Tooltip content="框选模式">
+				<Tooltip content={t('workflow:controls.pointer')}>
 					<Button
 						size="mini"
 						type="text"
@@ -136,7 +138,7 @@ export const DPControls: React.FC = () => {
 						icon={<RiCursorLine className="arco-icon" />}
 					/>
 				</Tooltip>
-				<Tooltip content="拖动模式">
+				<Tooltip content={t('workflow:controls.hand')}>
 					<Button
 						size="mini"
 						type="text"

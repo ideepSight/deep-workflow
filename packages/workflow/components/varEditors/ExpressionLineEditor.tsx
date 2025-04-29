@@ -7,6 +7,7 @@ import { EditorState, Transaction } from '@codemirror/state';
 import { validateExpression } from './lib/validate';
 import { Tooltip } from '@arco-design/web-react';
 import { Icon } from '../../../workflow/components/Icon';
+import { useI18n } from '../../i18n';
 
 // 添加禁止换行的扩展
 const noNewlineExtension = EditorState.transactionFilter.of((tr: Transaction) => {
@@ -29,6 +30,7 @@ interface ExpressionLineEditorProps {
 export const ExpressionLineEditor: React.FC<ExpressionLineEditorProps> = ({ enableVars, value = '', onChange }) => {
 	const [expression, setExpression] = useState(value);
 	const [errMsg, setErrorMsg] = useState('');
+	const { t } = useI18n();
 
 	const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
 		if (event.key === 'Enter') {
@@ -44,10 +46,10 @@ export const ExpressionLineEditor: React.FC<ExpressionLineEditorProps> = ({ enab
 				setErrorMsg('');
 				onChange(v);
 			} catch (error) {
-				setErrorMsg(typeof error === 'string' ? error : '表达式错误');
+				setErrorMsg(typeof error === 'string' ? error : t('workflow:expressionLine.error'));
 			}
 		},
-		[onChange, enableVars]
+		[onChange, enableVars, t]
 	);
 
 	const getCompletions = useCallback(
@@ -124,11 +126,11 @@ export const ExpressionLineEditor: React.FC<ExpressionLineEditorProps> = ({ enab
 					<Tooltip
 						content={
 							<>
-								支持变量复杂运算，如：
+								{t('workflow:expressionLine.supportComplex')}
 								<br />
 								<code>Start.input.indexOf(Start.input2)</code>
 								<br />
-								变量支持链式呼出，如：
+								{t('workflow:expressionLine.supportChain')}
 								<br />
 								<code>Start.input</code>
 							</>

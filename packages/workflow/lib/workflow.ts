@@ -8,6 +8,8 @@ import { DPVarData, DPVar } from './var';
 import { cloneDeep, debounce } from 'lodash';
 import { LoopNode } from '../../defaultNodes';
 import { DPHistory } from './history';
+import { useI18n } from '../i18n/i18n';
+import i18next from 'i18next';
 
 export enum ControlMode {
 	Pointer = 'pointer',
@@ -124,6 +126,17 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 		this._updateEdges(noHistory);
 	}
 
+	private getI18nT() {
+		// 兼容非React环境下的调用
+		if (typeof window !== 'undefined' && (window as any).useI18n) {
+			return (window as any).useI18n().t;
+		}
+		if (i18next.isInitialized) {
+			return i18next.t.bind(i18next);
+		}
+		return (k: string) => k;
+	}
+
 	constructor(data: DPWorkflowData) {
 		super();
 		this.id = data.id || uuid();
@@ -169,6 +182,7 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 	}
 
 	async run() {
+		const t = this.getI18nT();
 		this.running = true;
 		// 清除所有节点运行状态
 		this._dpNodes.forEach((node) => (node.runningStatus = NodeRunningStatus.NotStart));
@@ -180,7 +194,7 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 		// 从start节点开始运行
 		const startNode = this._dpNodes.find((node) => node.data.dpNodeType === BlockEnum.Start);
 		if (!startNode) {
-			Message.error('未找到开始节点');
+			Message.error(t('workflow:node.notFoundStart'));
 			return;
 		}
 		await startNode.run();
@@ -190,8 +204,9 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 
 	// 停止
 	async stop() {
+		const t = this.getI18nT();
 		if (!this.running) {
-			Message.warning('未运行');
+			Message.warning(t('workflow:node.stopped'));
 			return;
 		}
 		this.stoping = true;
@@ -206,6 +221,7 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 	}
 
 	addNode(nodeData: DPNodeData) {
+		const t = this.getI18nT();
 		nodeData.id = nodeData.id || uuid();
 		nodeData.type = 'custom';
 		const nodeConfig = DPBaseNode.types[nodeData.data.dpNodeType];
@@ -216,7 +232,7 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 			if (nodeData.data.dpNodeType === BlockEnum.Start || nodeData.data.dpNodeType === BlockEnum.End) {
 				const existNode = this._dpNodes.find((node) => node.data.dpNodeType === nodeData.data.dpNodeType);
 				if (existNode) {
-					Message.warning('开始节点或结束节点只能有一个');
+					Message.warning(t('workflow:node.startOnlyOne'));
 					return;
 				}
 			}
@@ -254,18 +270,19 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 	}
 
 	onConnect(params: Connection) {
+		const t = this.getI18nT();
 		// 不允许连接到自己、不允许重复连接
 		if (this._dpEdges.find((edge) => edge.data.source === params.source && edge.data.target === params.target)) {
 			return false;
 		}
 		if (params.source === params.target) {
-			Message.warning('不允许连接到自己');
+			Message.warning(t('workflow:node.connectSelf'));
 			return false;
 		}
 		// 一个桩只能连接一个
 		const hasOne = this.dpEdges.find((e) => e.data.sourceHandle === params.sourceHandle);
 		if (hasOne) {
-			Message.warning('一个连接桩只能连接一个节点');
+			Message.warning(t('workflow:node.connectOnce'));
 			return false;
 		}
 		// 如果有parentId，则只能连接同parentId的节点
@@ -273,7 +290,7 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 		const targetNode = this._dpNodes.find((node) => node.id === params.target);
 		if (sourceNode?.nodeData.parentId || targetNode?.nodeData.parentId) {
 			if (sourceNode?.nodeData.parentId !== targetNode?.nodeData.parentId) {
-				Message.warning('只能连接同一循环节点下的节点');
+				Message.warning(t('workflow:node.connectLoop'));
 				return false;
 			}
 		}
@@ -283,8 +300,9 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 	}
 
 	onBeforeDelete(params: { nodes: DPBaseNode[]; edges: DPEdgeData[] }) {
+		const t = this.getI18nT();
 		if (params.nodes.find((n) => n.data.dpNodeType === BlockEnum.Start)) {
-			Message.warning('开始节点不能删除');
+			Message.warning(t('workflow:node.deleteStart'));
 			return false;
 		}
 		const delNodeIds = params.nodes.map((n) => n.id);

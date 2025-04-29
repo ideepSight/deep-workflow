@@ -6,6 +6,7 @@ import { DPWorkflow, DPWorkflowData } from '../lib';
 import { BaseNodePane } from './BaseNodePane';
 import { Delete } from './varEditors/lib/getHotkeyHandler';
 import { Icon } from './Icon';
+import { useI18n } from '../i18n';
 
 import './Icon/index.less';
 import './index.less';
@@ -17,6 +18,8 @@ export const Workflow: React.FC<SelfProps> = (props) => {
 	const context: DPWorkfowContext = {
 		workflowIns: dpWorkflow
 	};
+
+	const { t } = useI18n();
 
 	const [nodes, setNodes, onNodesChange] = useNodesState(dpWorkflow.dpNodes.map((node) => node.nodeData as Node));
 	const [edges, setEdges, onEdgesChange] = useEdgesState(dpWorkflow.dpEdges.map((edge) => edge.data));
@@ -76,7 +79,7 @@ export const Workflow: React.FC<SelfProps> = (props) => {
 							<div className="copyright">
 								<a href="https://github.com/ideepSight/deep-workflow.git" target="_blank" rel="noreferrer">
 									<Icon name="logo" symbol />
-									deep-workflow
+									{t('workflow:copyright')}
 								</a>
 							</div>
 							<DPControls />

@@ -6,12 +6,14 @@ import { BlockEnum, DPBaseNode } from '../lib';
 import { WorkfowContext } from './context';
 import { Icon } from '../../workflow/components/Icon';
 import { IconClose, IconDelete, IconPlayCircle, IconRecordStop } from '@arco-design/web-react/icon';
+import { useI18n } from '../i18n';
 
 export const BaseNodePane: React.FC = observer(() => {
 	const { workflowIns } = useContext(WorkfowContext);
 	const activeNode = workflowIns.dpNodes.find((n) => n.active);
 	const [title, setTitle] = React.useState('');
 	const [errorTitle, setErrorTitle] = React.useState('');
+	const { t } = useI18n();
 
 	useEffect(() => {
 		if (activeNode) {
@@ -28,7 +30,7 @@ export const BaseNodePane: React.FC = observer(() => {
 	if (!baseInfo) {
 		return null;
 	}
-	const SetComponent = baseInfo.SetComponent || (() => <Empty description="无需配置" />);
+	const SetComponent = baseInfo.SetComponent || (() => <Empty description={t('workflow:nodePane.noConfig')} />);
 
 	return (
 		<div className="base-node-pane" key={activeNode?.id}>
@@ -52,12 +54,12 @@ export const BaseNodePane: React.FC = observer(() => {
 						value={title}
 						onChange={(v) => {
 							if (v === '') {
-								setErrorTitle('标题不能为空');
+								setErrorTitle(t('workflow:nodePane.titleRequired'));
 								setTitle(v);
 								return;
 							}
 							if (!/^[a-zA-Z_\u4e00-\u9fa5$][a-zA-Z0-9_\u4e00-\u9fa5$]*$/.test(v)) {
-								return setErrorTitle('需以字母、中文、_或$开头');
+								return setErrorTitle(t('workflow:nodePane.titlePattern'));
 							}
 							setErrorTitle('');
 							setTitle(v);
@@ -66,7 +68,7 @@ export const BaseNodePane: React.FC = observer(() => {
 				</Space>
 				<div className="btns">
 					{activeNode.singleRunAble && (
-						<Tooltip content={activeNode.singleRunning ? '运行中' : '运行此步骤'}>
+						<Tooltip content={activeNode.singleRunning ? t('workflow:nodePane.running') : t('workflow:nodePane.runStep')}>
 							{activeNode.singleRunning ? (
 								<Button type="text" className="big-icon" icon={<Spin size={14} />} />
 							) : (
@@ -75,12 +77,12 @@ export const BaseNodePane: React.FC = observer(() => {
 						</Tooltip>
 					)}
 					{activeNode.singleRunning && (
-						<Tooltip content="停止此步骤">
+						<Tooltip content={t('workflow:nodePane.stopStep')}>
 							<Button type="text" className="big-icon" icon={<IconRecordStop />} onClick={() => activeNode.stop()} />
 						</Tooltip>
 					)}
-					<Popconfirm title="确定删除此节点吗？" onOk={() => workflowIns.delNode(activeNode)}>
-						<Tooltip content="删除">
+					<Popconfirm title={t('workflow:nodePane.confirmDelete')} onOk={() => workflowIns.delNode(activeNode)}>
+						<Tooltip content={t('workflow:nodePane.delete')}>
 							<Button type="text" className="big-icon" status="danger" icon={<IconDelete />} />
 						</Tooltip>
 					</Popconfirm>
@@ -93,7 +95,7 @@ export const BaseNodePane: React.FC = observer(() => {
 				<Input.TextArea
 					className="node-desc"
 					onChange={(v) => (activeNode.data.desc = v)}
-					placeholder="输入描述"
+					placeholder={t('workflow:nodePane.inputDesc')}
 					value={activeNode.data.desc || baseInfo.desc}
 					maxLength={100}
 					rows={1}
@@ -103,7 +105,7 @@ export const BaseNodePane: React.FC = observer(() => {
 				{(activeNode.nodeConfig.group !== 'sys' || activeNode.nodeConfig.type === BlockEnum.Code) && (
 					<>
 						<Divider />
-						<b className="handle-name">失败时重试</b>
+						<b className="handle-name">{t('workflow:nodePane.retryOnFail')}</b>
 						<Switch
 							className="switch"
 							size="small"
@@ -115,24 +117,24 @@ export const BaseNodePane: React.FC = observer(() => {
 				{activeNode.data.failRetryEnable && (
 					<>
 						<div className="handle-item">
-							<span className="name">最大重试次数</span>
+							<span className="name">{t('workflow:nodePane.maxRetry')}</span>
 							<InputNumber
 								className="num-input"
 								min={1}
 								value={activeNode.data.maxRetryTimes}
 								onChange={(v) => (activeNode.data.maxRetryTimes = v)}
-								suffix={`次`}
+								suffix={t('workflow:nodePane.times')}
 							/>
 						</div>
 						<div className="handle-item">
-							<span className="name">重试间隔</span>
+							<span className="name">{t('workflow:nodePane.retryInterval')}</span>
 							<InputNumber
 								className="num-input"
 								min={0.1}
 								step={1}
 								value={activeNode.data.retryInterval}
 								onChange={(v) => (activeNode.data.retryInterval = v)}
-								suffix={`秒`}
+								suffix={t('workflow:nodePane.seconds')}
 							/>
 						</div>
 					</>

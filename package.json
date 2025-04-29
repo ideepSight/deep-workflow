@@ -54,7 +54,8 @@
 		"short-uuid": "^5.2.0"
 	},
 	"dependencies": {
-		"@remixicon/react": "^4.6.0"
+		"@remixicon/react": "^4.6.0",
+		"i18next": "^25.0.2"
 	},
 	"devDependencies": {
 		"@types/lodash": "^4.14.191",

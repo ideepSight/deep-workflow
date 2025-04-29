@@ -4,6 +4,7 @@ import { Empty, Select, Space } from '@arco-design/web-react';
 import type { DPBaseNode, DPVar, EnableVar } from '../../../workflow';
 import { DPVarType } from '../../../workflow';
 import { Icon } from '../../../workflow/components/Icon';
+import { useI18n } from '../../i18n';
 
 type SelfProps = {
 	enableVars: EnableVar[];
@@ -17,6 +18,7 @@ type SelfProps = {
 
 export const SelectVar: React.FC<SelfProps> = observer((props) => {
 	const { enableVars, value, onChange, size, style, filterType, empty } = props;
+	const { t } = useI18n();
 	const handleChange = (key: string, node: DPBaseNode) => {
 		const varItem = node?.vars.find((v) => v.key === key);
 		onChange(varItem);
@@ -40,9 +42,9 @@ export const SelectVar: React.FC<SelfProps> = observer((props) => {
 			dropdownMenuClassName={'select-var'}
 			getPopupContainer={() => document.querySelector('.workflow-wrap')}
 			allowClear
-			notFoundContent={<Empty description={enableVars.length ? empty : '请先连接有变量的节点'} />}
+			notFoundContent={<Empty description={enableVars.length ? empty : t('workflow:selectVar.connectVarNode')} />}
 			defaultValue={value?.key}
-			placeholder="选择变量"
+			placeholder={t('workflow:selectVar.selectVar')}
 			style={{ minWidth: 160, ...style }}
 			onChange={(key, option) => handleChange(key, Array.isArray(option) ? option.map((o) => o.extra)[0] : option?.extra)}
 			renderFormat={(option, value) => {
