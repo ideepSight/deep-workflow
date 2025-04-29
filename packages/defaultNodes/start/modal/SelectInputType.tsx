@@ -3,6 +3,8 @@ import React, { memo, useCallback, useEffect, useState } from 'react';
 import InputVarTypeIcon from './InputTypeIcon';
 import style from './InputAddModal.module.less';
 import { FormItemType } from '../../../workflow';
+import i18next from 'i18next';
+const t = i18next.t.bind(i18next);
 
 export const SelectInputType: React.FC<{ value?: FormItemType; onChange?: (v: FormItemType) => void }> = memo(({ value, onChange }) => {
 	const [type, setType] = useState<FormItemType>(FormItemType.textInput);
@@ -38,7 +40,7 @@ export const SelectInputType: React.FC<{ value?: FormItemType; onChange?: (v: Fo
 			{inputTypes.map((inputType) => (
 				<div key={inputType} className={classNames({ [style['selected']]: type === inputType }, style['item'])} onClick={() => handleChange(inputType)}>
 					<InputVarTypeIcon type={inputType} className={style['var-item-icon']} />
-					<span>{inputType}</span>
+					<span>{t(`workflow:selectInputType.${inputType}`)}</span>
 				</div>
 			))}
 		</div>

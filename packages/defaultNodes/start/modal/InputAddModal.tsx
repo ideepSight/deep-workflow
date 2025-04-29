@@ -6,7 +6,8 @@ import { FormItemType, InputFieldData } from '../../../workflow';
 import { DPVarType } from '../../../workflow';
 import { SelectOptionSet } from './SelectOptionSet';
 import { SelectInputType } from './SelectInputType';
-import { useI18n } from '../../../workflow/i18n';
+import i18next from 'i18next';
+const t = i18next.t.bind(i18next);
 
 const fieldTypeToVarType = (fieldType: FormItemType): DPVarType => {
 	switch (fieldType) {
@@ -27,7 +28,6 @@ const fileTypes = {
 };
 
 export const InputAddModal = async (editValue?: InputFieldData) => {
-	const { t } = useI18n();
 	const ModalInner: React.FC<DPModalWrapType> = ({ modalRef }) => {
 		const [form] = Form.useForm();
 		useImperativeHandle(modalRef, () => ({

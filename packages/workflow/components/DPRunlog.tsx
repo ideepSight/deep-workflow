@@ -25,18 +25,20 @@ export const DPRunLog: React.FC = observer(() => {
 				</div>
 			</div>
 			<div className="runlog-area error-info-p">
-				{workflowIns.runlogs.map((log, i) => {
-					const parentNode = log.node.parentNode;
-					return (
-						<p key={log.time + log.msg + i} className={classNames({ [log.type]: true })}>
-							<span>{dayjs(log.time).format('MM-DD HH:mm:ss')}</span>【
-							<div className="log-node" onClick={() => (parentNode || log.node).toCenter()}>
-								{(parentNode ? `${parentNode.title} - ` : '') + log.node.title}
-							</div>
-							】- {log.msg}
-						</p>
-					);
-				})}
+				<div>
+					{workflowIns.runlogs.map((log, i) => {
+						const parentNode = log.node.parentNode;
+						return (
+							<p key={log.time + log.msg + i} className={classNames({ [log.type]: true })}>
+								<span>{dayjs(log.time).format('MM-DD HH:mm:ss')}</span>【
+								<div className="log-node" onClick={() => (parentNode || log.node).toCenter()}>
+									{(parentNode ? `${parentNode.title} - ` : '') + log.node.title}
+								</div>
+								】- {log.msg}
+							</p>
+						);
+					})}
+				</div>
 			</div>
 		</div>
 	);

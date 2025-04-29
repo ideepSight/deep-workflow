@@ -32,7 +32,7 @@ const BaseNodeInner: React.FC<
 				{baseInfo.type !== BlockEnum.Start && baseInfo.type !== BlockEnum.End && baseInfo.group !== 'hide' && (
 					<>
 						{node.singleRunAble && (
-							<Tooltip content={node.singleRunning ? t('workflow:baseNode.stop') : t('workflow:baseNode.runStep')}>
+							<Tooltip content={node.singleRunning ? t('workflow:baseNode.stop') : t('workflow:nodePane.runStep')}>
 								{node.singleRunning ? (
 									<Button type="secondary" shape="circle" size="mini" icon={<IconRecordStop />} onClick={() => node.stop()} />
 								) : (
