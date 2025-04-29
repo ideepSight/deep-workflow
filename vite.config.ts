@@ -50,7 +50,7 @@ export default defineConfig((params: ConfigEnv): UserConfig => {
 						'@codemirror/state',
 						'@codemirror/view',
 						'@dagrejs/dagre',
-						'@uiw/react-codemirror',
+						'@uiw/react-codemirror'
 					],
 					output: {
 						globals: {
@@ -87,7 +87,7 @@ export default defineConfig((params: ConfigEnv): UserConfig => {
 	return {
 		...baseConfig,
 		build: {
-			outDir: 'dist',
+			outDir: params.mode === 'lib' ? 'dist' : 'docs/dist',
 			sourcemap: true
 		}
 	};
