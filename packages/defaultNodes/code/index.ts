@@ -2,6 +2,7 @@ import { DPBaseNode, BlockEnum, DPNodeInnerData, DPVar, DPVarType } from '../../
 import { Code, CodeIcon, CodeSet } from './Code';
 import * as acorn from 'acorn';
 import * as walk from 'acorn-walk';
+import i18next from 'i18next';
 
 export type CodeNodeInnerData = DPNodeInnerData & {
 	code: string;
@@ -20,17 +21,7 @@ export class CodeNode extends DPBaseNode<CodeNodeInnerData> {
 
 	init(data: CodeNodeInnerData) {
 		if (!data.code) {
-			data.code = `
-// 可以直接使用前面节点的变量
-function main() {
-
-  // 输出变量
-  return {
-    output1: '输出1来自代码运行',
-    output2: '输出2来自代码运行'
-  }
-}
-`;
+			data.code = `\n// ${i18next.t('workflow:code.codeComment')}\nfunction main() {\n\n  // ${i18next.t('workflow:code.outputComment')}\n  return {\n    output1: '${i18next.t('workflow:code.output1')}',\n    output2: '${i18next.t('workflow:code.output2')}'\n  }\n}\n`;
 			this.addOutput({ key: 'output1', type: DPVarType.String });
 			this.addOutput({ key: 'output2', type: DPVarType.String });
 		}
@@ -96,8 +87,8 @@ function main() {
 				v.value = res[v.key];
 			});
 		} catch (error) {
-			console.error('代码执行错误:', error);
-			throw new Error(`代码执行失败: ${error.message}`);
+			console.error(i18next.t('workflow:code.runError'), error);
+			throw new Error(i18next.t('workflow:code.runFail', { msg: error.message }));
 		}
 	}
 	async runCode(code: string, context: any) {
@@ -117,7 +108,7 @@ DPBaseNode.registerType({
 	iconColor: '#296dff',
 	NodeComponent: Code,
 	SetComponent: CodeSet,
-	label: '代码',
-	desc: '运行一段代码',
+	label: i18next.t('workflow:code.label'),
+	desc: i18next.t('workflow:code.desc'),
 	group: 'sys'
 });

@@ -2,6 +2,7 @@ import { DPBaseNode, BlockEnum, DPVar, DPVarType } from '../../../workflow';
 import { LoopStart } from './loopStart';
 import type { LoopNode } from '..';
 import { StartIcon } from '../../start/Start';
+import i18next from 'i18next';
 
 export class LoopStartNode extends DPBaseNode {
 	private _parentNode = this.owner?.dpNodes.find((node) => node.id === this.nodeData.parentId) as LoopNode;
@@ -46,7 +47,7 @@ DPBaseNode.registerType({
 	iconColor: '#f79009',
 	NodeComponent: LoopStart,
 	SetComponent: null,
-	label: 'loopStart',
+	label: i18next.t('workflow:loopStart.label'),
 	desc: '',
 	group: 'hide'
 });

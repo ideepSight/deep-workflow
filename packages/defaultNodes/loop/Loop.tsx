@@ -8,12 +8,15 @@ import './index.less';
 import { IconDelete, IconPlus, IconPlusCircleFill } from '@arco-design/web-react/icon';
 import { Icon } from '../../workflow/components/Icon';
 import { LoopStartNode } from './loopStart';
+import { useI18n } from '../../workflow/i18n';
+
 export const LoopIcon = () => {
 	return <Icon name="duoxunhuan" />;
 };
 
 export const Loop: React.FC<NodeComponentProps<LoopNode>> = observer(({ node }) => {
 	const { zoom } = useViewport();
+	const { t } = useI18n();
 
 	useEffect(() => {
 		if (!node.childNodes.find((n) => n.nodeConfig.type === BlockEnum.LoopStart)) {
@@ -48,7 +51,7 @@ export const Loop: React.FC<NodeComponentProps<LoopNode>> = observer(({ node }) 
 					content={<AddNodeMenu blackList={[BlockEnum.Loop]} parentNode={node} />}
 				>
 					<Button size="mini" type="outline" icon={<IconPlusCircleFill />}>
-						添加节点
+						{t('workflow:loop.addNode')}
 					</Button>
 				</Popover>
 			</div>
@@ -69,6 +72,7 @@ export const Loop: React.FC<NodeComponentProps<LoopNode>> = observer(({ node }) 
 });
 
 export const LoopSet: React.FC<NodeComponentProps<LoopNode>> = observer(({ node }) => {
+	const { t } = useI18n();
 	const enableVars = node.enableVars.reverse();
 
 	const handleChangeInput = (varItem: DPVar | null) => {
@@ -82,8 +86,8 @@ export const LoopSet: React.FC<NodeComponentProps<LoopNode>> = observer(({ node 
 					<Radio.Group
 						size="small"
 						options={[
-							{ label: '按固定次数', value: false },
-							{ label: '按数组变量', value: true }
+							{ label: t('workflow:loop.byCount'), value: false },
+							{ label: t('workflow:loop.byVar'), value: true }
 						]}
 						type="button"
 						value={node.isByVar}
@@ -93,11 +97,11 @@ export const LoopSet: React.FC<NodeComponentProps<LoopNode>> = observer(({ node 
 				<div style={{ justifyContent: 'space-between', width: '100%', display: 'flex', alignItems: 'center', gap: 12 }}>
 					{node.isByVar ? (
 						<>
-							<b>循环变量</b>
+							<b>{t('workflow:loop.loopVar')}</b>
 							<SelectVar
 								style={{ flex: 1 }}
 								filterType={[DPVarType.ArrayNumber, DPVarType.ArrayString, DPVarType.ArrayObject, , DPVarType.Number]}
-								empty="前面节点没有数组"
+								empty={t('workflow:loop.noArrayVar')}
 								enableVars={enableVars}
 								value={node.loopVar}
 								onChange={handleChangeInput}
@@ -108,7 +112,7 @@ export const LoopSet: React.FC<NodeComponentProps<LoopNode>> = observer(({ node 
 						</>
 					) : (
 						<>
-							<b>次数</b>
+							<b>{t('workflow:loop.count')}</b>
 							<InputNumber style={{ flex: 1 }} value={node.loopCount} onChange={(val) => (node.loopCount = val)} max={100} min={1} />
 						</>
 					)}
@@ -116,7 +120,7 @@ export const LoopSet: React.FC<NodeComponentProps<LoopNode>> = observer(({ node 
 				<br />
 				<Divider className="light-border" />
 				<div>
-					<b>输出变量</b>
+					<b>{t('workflow:loop.outputVar')}</b>
 					<div className="out-var-list">
 						{node.outputs.map((outVar, index) => {
 							return (
@@ -146,13 +150,13 @@ export const LoopSet: React.FC<NodeComponentProps<LoopNode>> = observer(({ node 
 							<Empty
 								description={
 									<Button onClick={() => node.addOutput()} icon={<IconPlus className="btn-gray-icon" />}>
-										添加变量
+										{t('workflow:loop.addOutput')}
 									</Button>
 								}
 							/>
 						) : (
 							<Button style={{ marginTop: 10 }} onClick={() => node.addOutput()} icon={<IconPlus className="btn-gray-icon" />}>
-								添加变量
+								{t('workflow:loop.addOutput')}
 							</Button>
 						)}
 					</div>

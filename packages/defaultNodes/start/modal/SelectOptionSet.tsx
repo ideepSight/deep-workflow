@@ -3,6 +3,7 @@ import style from './SelectOptionSet.module.less';
 import { Button, Input } from '@arco-design/web-react';
 import { uuid } from 'short-uuid';
 import { IconDelete, IconPlus } from '@arco-design/web-react/icon';
+import { useI18n } from '../../../workflow/i18n';
 
 type Option = {
 	id: string;
@@ -15,6 +16,7 @@ type SelectOptionSetProps = {
 };
 
 export const SelectOptionSet: React.FC<SelectOptionSetProps> = ({ value, onChange }) => {
+	const { t } = useI18n();
 	const [options, setOptions] = useState<Option[]>(value || []);
 	const handleChange = (id: string, label: string) => {
 		const newOptions = options.map((option) => {
@@ -40,7 +42,7 @@ export const SelectOptionSet: React.FC<SelectOptionSetProps> = ({ value, onChang
 				{options.map((option) => (
 					<>
 						<div key={option.id} className={style['select-option-set-item']}>
-							<Input placeholder="请输入选项" value={option.label} onChange={(v) => handleChange(option.id, v)} />
+							<Input placeholder={t('workflow:start.selectOption.inputOption')} value={option.label} onChange={(v) => handleChange(option.id, v)} />
 						</div>
 						<Button size="small" className={style['select-option-set-delete-btn']} onClick={() => handleDelete(option.id)} icon={<IconDelete />} />
 					</>
@@ -48,7 +50,7 @@ export const SelectOptionSet: React.FC<SelectOptionSetProps> = ({ value, onChang
 			</div>
 			<div className={style['select-option-set-btn']}>
 				<Button size="small" onClick={handleAdd} icon={<IconPlus />}>
-					添加选项
+					{t('workflow:start.selectOption.addOption')}
 				</Button>
 			</div>
 		</div>

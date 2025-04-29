@@ -2,6 +2,7 @@ import { DPBaseNode, BlockEnum, DPNodeInnerData, NodeRunningStatus } from '../..
 import { IfElse, IfElseIcon, IfElseSet } from './IfElse';
 import type { ExpValue } from './conditionExp';
 import { uuid } from 'short-uuid';
+import i18next from 'i18next';
 
 export type IfElseNodeInnerData = DPNodeInnerData & { conditions: { type: 'if' | 'else'; id: string; expValue?: ExpValue }[] };
 
@@ -41,7 +42,7 @@ export class IfElseNode extends DPBaseNode<IfElseNodeInnerData> {
 				let expression = c.expValue.expression; // "Start.one === Start.two"
 				if (c.expValue.mode === 'simple') {
 					if (!c.expValue.operator || !c.expValue.left || !c.expValue.right) {
-						throw new Error('表达式配置错误');
+						throw new Error(i18next.t('workflow:ifElse.expConfigError'));
 					}
 					expression = c.expValue.operator.replace('x', `${c.expValue.left}`).replace('y', `${c.expValue.right}`);
 				}
@@ -74,8 +75,8 @@ export class IfElseNode extends DPBaseNode<IfElseNodeInnerData> {
 			const res = new Function(`{${Object.keys(context).join(', ')}}`, `return ${expression}`)(context);
 			return res;
 		} catch (error) {
-			console.error('表达式执行错误:', error);
-			throw new Error(`表达式执行失败: ${error.message}`);
+			console.error(i18next.t('workflow:ifElse.expRunError'), error);
+			throw new Error(i18next.t('workflow:ifElse.expRunFail', { msg: error.message }));
 		}
 	}
 }
@@ -87,7 +88,7 @@ DPBaseNode.registerType({
 	iconColor: '#06aed4',
 	NodeComponent: IfElse,
 	SetComponent: IfElseSet,
-	label: '条件判断',
-	desc: '条件判断节点',
+	label: i18next.t('workflow:ifElse.label'),
+	desc: i18next.t('workflow:ifElse.desc'),
 	group: 'sys'
 });
