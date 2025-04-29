@@ -18,10 +18,6 @@ export class CodeNode extends DPBaseNode<CodeNodeInnerData> {
 		this.data.code = val;
 	}
 
-	// get outputs() {
-	// 	return this.data.outputs.map(({ key }) => this.vars.find((v) => v.key === key));
-	// }
-
 	init(data: CodeNodeInnerData) {
 		if (!data.code) {
 			data.code = `
