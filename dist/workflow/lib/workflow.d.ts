@@ -61,6 +61,7 @@ export declare class DPWorkflow extends DPEvent<DPWorkflowEvent> {
     private _updateEdges;
     updateNodes(noHistory?: boolean): void;
     updateEdges(noHistory?: boolean): void;
+    private getI18nT;
     constructor(data: DPWorkflowData);
     private autoSaveFunc;
     save(): void;

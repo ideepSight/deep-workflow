@@ -10,6 +10,7 @@ type SelfProps = {
     onSearch?: (text: string, prefix: string) => void;
     needValidate?: boolean;
     placeholder?: string;
+    empty?: string;
 };
 export declare const SimpleExpression: React.FC<SelfProps>;
 export {};
