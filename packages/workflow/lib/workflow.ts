@@ -16,10 +16,10 @@ export enum ControlMode {
 }
 
 export type DPWorkflowData = {
-	id: string;
+	id?: string;
 	title?: string;
-	nodes: DPNodeData[];
-	edges: DPEdgeData[];
+	nodes?: DPNodeData[];
+	edges?: DPEdgeData[];
 	vars?: DPVarData[]; // 全局变量还没实现完，貌似没啥用
 };
 
@@ -136,7 +136,7 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 		return (k: string) => k;
 	}
 
-	constructor(data: DPWorkflowData) {
+	constructor(data: DPWorkflowData = {}) {
 		super();
 		this.id = data.id || uuid();
 		this.title = data.title || '';
