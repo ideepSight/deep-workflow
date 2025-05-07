@@ -1,5 +1,5 @@
 import type { FC, ReactNode } from 'react';
-import { DPEvent, observe } from '../../base';
+import { DPEvent, observe } from '@deep-sight/dp-event';
 import { Node } from '@xyflow/react';
 import { DPVar, DPVarType } from './var';
 import type { DPWorkflow } from './workflow';

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Observer } from 'mobx-react-lite';
-import { Background, MiniMap, ReactFlow, SelectionMode, useEdgesState, useNodesState, Node, NodeTypes, useReactFlow } from '@xyflow/react';
+import { Background, MiniMap, ReactFlow, SelectionMode, useEdgesState, useNodesState, Node, NodeTypes } from '@xyflow/react';
 import { nodeTypes, DPWorkfowContext, WorkfowContext, edgeTypes, DPControls, DPRunLog } from '../components';
 import { DPWorkflow, DPWorkflowData } from '../lib';
 import { BaseNodePane } from './BaseNodePane';

@@ -1,4 +1,4 @@
-import { DPEvent, observe } from '../../base';
+import { DPEvent, observe } from '@deep-sight/dp-event';
 import type { DPBaseNode } from './baseNode';
 import type { DPWorkflow } from './workflow';
 

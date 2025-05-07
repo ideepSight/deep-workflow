@@ -1,6 +1,5 @@
 import { DPBaseNode, BlockEnum, DPNodeInnerData, DPVar, DPVarType, EnableVar, NodeRunningStatus } from '../../workflow';
 import { Loop, LoopIcon, LoopSet } from './Loop';
-import { observe } from '../../base';
 import i18next from 'i18next';
 
 export type LoopNodeInnerData = DPNodeInnerData & {

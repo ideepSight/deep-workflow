@@ -1,4 +1,4 @@
-import { DPEvent, observe } from '../../base';
+import { DPEvent, observe } from '@deep-sight/dp-event';
 import { Edge } from '@xyflow/react';
 
 export type DPBaseEdgeInnerData = {

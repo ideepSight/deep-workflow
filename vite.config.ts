@@ -10,7 +10,7 @@ export default defineConfig((params: ConfigEnv): UserConfig => {
 		resolve: {
 			alias: [{ find: '@deep-sight/workflow', replacement: '/packages/workflow' }]
 		},
-		plugins: [react(), dts({ exclude: ['src', 'packages/defaultNodes', 'packages/base'] })],
+		plugins: [react(), dts({ exclude: ['src', 'packages/defaultNodes'] })],
 		server: {
 			port: 5175
 		}

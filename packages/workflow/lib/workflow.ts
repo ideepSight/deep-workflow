@@ -1,4 +1,4 @@
-import { DPEvent, observe } from '../../base';
+import { DPEvent, observe } from '@deep-sight/dp-event';
 import type { Connection, ReactFlowInstance } from '@xyflow/react';
 import { BlockEnum, DPBaseNode, DPNodeData, LogData, NodeRunningStatus } from './baseNode';
 import { uuid } from 'short-uuid';
@@ -8,7 +8,6 @@ import { DPVarData, DPVar } from './var';
 import { cloneDeep, debounce } from 'lodash';
 import { LoopNode } from '../../defaultNodes';
 import { DPHistory } from './history';
-import { useI18n } from '../i18n/i18n';
 import i18next from 'i18next';
 
 export enum ControlMode {

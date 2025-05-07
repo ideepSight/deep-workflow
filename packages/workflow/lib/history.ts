@@ -1,5 +1,5 @@
 import { DPWorkflow } from '.';
-import { DPEvent, observe } from '../../base';
+import { DPEvent, observe } from '@deep-sight/dp-event';
 import { DPBaseNode } from './baseNode';
 import { DPBaseEdge } from './baseEdge';
 import { cloneDeep } from 'lodash';
