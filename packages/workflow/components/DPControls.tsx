@@ -5,9 +5,9 @@ import React, { useCallback, useContext, useEffect } from 'react';
 import { WorkfowContext } from './context';
 import { getLayoutByDagre } from '../utils';
 import { DPNodeData } from '../lib/baseNode';
-import { RiHand, RiCursorLine } from '@remixicon/react';
 import { AddNodeMenu } from './AddNodeMenu';
 import { useI18n } from '../i18n';
+import { Icon } from './Icon';
 
 export const DPControls: React.FC = () => {
 	const { workflowIns } = useContext(WorkfowContext);
@@ -118,10 +118,10 @@ export const DPControls: React.FC = () => {
 			</Button.Group>
 			<Button.Group className="control-group">
 				<Tooltip content={t('workflow:controls.undo')}>
-					<Button size="mini" type="text" className="big-icon" disabled={!workflowIns.history.undoEnable} onClick={handleUndo} icon={<IconUndo />} />
+					<Button size="mini" type="text" className="big-icon" disabled={!workflowIns.history.undoEnable} onClick={handleUndo} icon={<Icon name="undo" />} />
 				</Tooltip>
 				<Tooltip content={t('workflow:controls.redo')}>
-					<Button size="mini" type="text" className="big-icon" disabled={!workflowIns.history.redoEnable} onClick={handleRedo} icon={<IconRedo />} />
+					<Button size="mini" type="text" className="big-icon" disabled={!workflowIns.history.redoEnable} onClick={handleRedo} icon={<Icon name="redo" />} />
 				</Tooltip>
 			</Button.Group>
 			<Button.Group className="control-group">
@@ -135,7 +135,7 @@ export const DPControls: React.FC = () => {
 						style={{ color: workflowIns.controlMode === 'pointer' ? 'rgb(var(--primary-6))' : 'unset' }}
 						className="big-icon"
 						onClick={() => (workflowIns.controlMode = 'pointer')}
-						icon={<RiCursorLine className="arco-icon" />}
+						icon={<Icon name="xuanqu" />}
 					/>
 				</Tooltip>
 				<Tooltip content={t('workflow:controls.hand')}>
@@ -145,7 +145,7 @@ export const DPControls: React.FC = () => {
 						style={{ color: workflowIns.controlMode === 'hand' ? 'rgb(var(--primary-6))' : 'unset' }}
 						className="big-icon"
 						onClick={() => (workflowIns.controlMode = 'hand')}
-						icon={<RiHand className="arco-icon" />}
+						icon={<Icon name="penhuifenli" />}
 					/>
 				</Tooltip>
 			</Button.Group>
