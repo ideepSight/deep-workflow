@@ -9,6 +9,7 @@ import { cloneDeep, debounce } from 'lodash';
 import { LoopNode } from '../../defaultNodes';
 import { DPHistory } from './history';
 import i18next from 'i18next';
+const t = i18next.t.bind(i18next);
 
 export enum ControlMode {
 	Pointer = 'pointer',
@@ -116,17 +117,6 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 		this._updateEdges(noHistory);
 	}
 
-	private getI18nT() {
-		// 兼容非React环境下的调用
-		if (typeof window !== 'undefined' && (window as any).useI18n) {
-			return (window as any).useI18n().t;
-		}
-		if (i18next.isInitialized) {
-			return i18next.t.bind(i18next);
-		}
-		return (k: string) => k;
-	}
-
 	constructor(data: DPWorkflowData = {}) {
 		super();
 		this.id = data.id || uuid();
@@ -174,7 +164,6 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 	}
 
 	async run() {
-		const t = this.getI18nT();
 		this.running = true;
 		// 清除所有节点运行状态
 		this._dpNodes.forEach((node) => (node.runningStatus = NodeRunningStatus.NotStart));
@@ -196,7 +185,6 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 
 	// 停止
 	async stop() {
-		const t = this.getI18nT();
 		if (!this.running) {
 			Message.warning(t('workflow:node.stopped'));
 			return;
@@ -213,7 +201,6 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 	}
 
 	addNode(nodeData: DPNodeData) {
-		const t = this.getI18nT();
 		nodeData.id = nodeData.id || uuid();
 		nodeData.type = 'custom';
 		const nodeConfig = DPBaseNode.types[nodeData.data.dpNodeType];
@@ -262,7 +249,6 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 	}
 
 	onConnect(params: Connection) {
-		const t = this.getI18nT();
 		// 不允许连接到自己、不允许重复连接
 		if (this._dpEdges.find((edge) => edge.data.source === params.source && edge.data.target === params.target)) {
 			return false;
@@ -292,7 +278,6 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 	}
 
 	onBeforeDelete(params: { nodes: DPBaseNode[]; edges: DPEdgeData[] }) {
-		const t = this.getI18nT();
 		if (params.nodes.find((n) => n.data.dpNodeType === BlockEnum.Start)) {
 			Message.warning(t('workflow:node.deleteStart'));
 			return false;

@@ -46,7 +46,7 @@
 		"acorn-walk": "^8.3.4",
 		"classnames": "^2.5.1",
 		"dayjs": "^1.11.13",
-		"i18next": "^19.8.3",
+		"i18next": "^25.1.1",
 		"lodash": "^4.17.21",
 		"mobx": "^6.13.7",
 		"mobx-react-lite": "^4.1.0",
