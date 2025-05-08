@@ -1,5 +1,6 @@
 import type { FC, ReactNode } from 'react';
 import { DPEvent, observe } from '@deep-sight/dp-event';
+import { deepObserve, IDisposer } from 'mobx-utils';
 import { Node } from '@xyflow/react';
 import { DPVar, DPVarType } from './var';
 import type { DPWorkflow } from './workflow';
@@ -87,9 +88,13 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 		DPBaseNode.types[item.type] = item;
 	}
 
+	private _disposer: IDisposer;
+
 	public owner: DPWorkflow;
 	@observe
 	private _nodeData: DPNodeData<T>;
+	@observe
+	public modified = false; // nodeData、data是否被修改过
 	@observe
 	public active = false;
 	@observe
@@ -251,6 +256,13 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 			this.data.outputs = [];
 		}
 		this._outputs = this.data.outputs.map((v) => new DPVar(v, this));
+
+		if (!this._disposer) {
+			this._disposer = deepObserve(this._nodeData, (change, path) => {
+				this.modified = true;
+				this.owner.emit('dataChange');
+			});
+		}
 		this.init && this.init(this.data);
 	}
 	init?(data: T): void;
@@ -347,7 +359,10 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 					if (retryCount < maxRetries) {
 						this.runlog = {
 							time: Date.now(),
-							msg: t('workflow:baseNode.retrying', { count: retryCount, error: error?.message ? t('workflow:baseNode.errorMsg', { msg: error?.message }) : '' }),
+							msg: t('workflow:baseNode.retrying', {
+								count: retryCount,
+								error: error?.message ? t('workflow:baseNode.errorMsg', { msg: error?.message }) : ''
+							}),
 							type: 'warning'
 						};
 						continue;
@@ -356,7 +371,10 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 					this.toCenter();
 					this.runlog = {
 						time: Date.now(),
-						msg: t('workflow:baseNode.retryFail', { max: maxRetries, error: error?.message ? t('workflow:baseNode.errorMsg', { msg: error?.message }) : '' }),
+						msg: t('workflow:baseNode.retryFail', {
+							max: maxRetries,
+							error: error?.message ? t('workflow:baseNode.errorMsg', { msg: error?.message }) : ''
+						}),
 						type: 'error'
 					};
 					if (this.errorHandleMode === ErrorHandleMode.Terminated) {

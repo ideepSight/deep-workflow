@@ -11,10 +11,10 @@ import { useI18n } from '../i18n';
 import './Icon/index.less';
 import './index.less';
 
-type SelfProps = { dpWorkflow: DPWorkflow; onSave: (v: DPWorkflowData) => void; autoSave?: boolean; autoSaveInterval?: number };
+type SelfProps = { dpWorkflow: DPWorkflow; onSave: (v: DPWorkflowData) => void; autoSave?: boolean };
 
 export const Workflow: React.FC<SelfProps> = (props) => {
-	const { dpWorkflow, onSave, autoSave, autoSaveInterval } = props;
+	const { dpWorkflow, onSave, autoSave } = props;
 	const context: DPWorkfowContext = {
 		workflowIns: dpWorkflow
 	};
@@ -31,15 +31,13 @@ export const Workflow: React.FC<SelfProps> = (props) => {
 			onSave && onSave(data);
 		};
 		dpWorkflow.on('save', handleSave);
-		dpWorkflow.autoSave = autoSave;
-		dpWorkflow.autoSaveInterval = autoSaveInterval;
+		typeof autoSave === 'boolean' && (dpWorkflow.autoSave = autoSave);
 		return () => {
 			dpWorkflow.setNodes = undefined;
 			dpWorkflow.setEdges = undefined;
 			dpWorkflow.off('save', handleSave);
-			dpWorkflow.autoSave = false;
 		};
-	}, [autoSave, autoSaveInterval, dpWorkflow, onSave, setEdges, setNodes]);
+	}, [autoSave, dpWorkflow, onSave, setEdges, setNodes]);
 
 	return (
 		<div className="workflow-wrap">

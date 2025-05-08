@@ -26,6 +26,7 @@ export type DPWorkflowData = {
 type DPWorkflowEvent = {
 	save: (data: DPWorkflowData) => void;
 	running: () => void;
+	dataChange: () => void;
 };
 export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 	id: string;
@@ -36,7 +37,7 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 	@observe
 	private _dpEdges: DPBaseEdge[] = [];
 	@observe
-	private _vars: DPVar[] = [];
+	private _vars: DPVar[] = []; // 全局变量还没实现完，貌似没啥用
 	@observe
 	controlMode: 'pointer' | 'hand' = 'hand';
 	@observe
@@ -45,12 +46,10 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 	stoping = false;
 	@observe
 	private _runlogs: (LogData & { node: DPBaseNode })[] = [];
-
+	@observe
+	private _autoSave = true;
 	private _prevData: DPWorkflowData;
 
-	public autoSaveInterval = 1000; // 自动保存间隔，单位：毫秒;
-	private _autoSave = false;
-	private _autoSaveIng = false;
 	public reactFlowIns: ReactFlowInstance;
 
 	public history = new DPHistory(this);
@@ -66,16 +65,6 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 		return this._autoSave;
 	}
 	set autoSave(val: boolean) {
-		if (val === true) {
-			if (val === this._autoSave) {
-				return;
-			}
-			this._autoSave = true;
-			if (this._autoSaveIng) {
-				return;
-			}
-			this.autoSaveFunc();
-		}
 		this._autoSave = val;
 	}
 	get data() {
@@ -110,12 +99,14 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 		const nodeDatas = this._dpNodes.map((node) => node.nodeData);
 		this.setNodes(nodeDatas);
 		!noHistory && this.history.addStep(); // 添加历史记录
+		this.emit('dataChange');
 	}, 50);
 
 	private _updateEdges = debounce((noHistory?: boolean) => {
 		const edgeDates = this._dpEdges.map((edge) => edge.data);
 		this.setEdges(edgeDates);
 		!noHistory && this.history.addStep(); // 添加历史记录
+		this.emit('dataChange');
 	}, 50);
 	updateNodes(noHistory?: boolean) {
 		this._updateNodes(noHistory);
@@ -157,27 +148,29 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 			this._dpEdges = data.edges.map((edgeData) => new DPBaseEdge(edgeData));
 		}
 		this._vars = data.vars ? data.vars.map((varData) => new DPVar(varData, this)) : [];
+		setTimeout(() => {
+			this._handleAutoSave();
+		}, 500);
+	}
+
+	private _handleAutoSave() {
 		this._prevData = cloneDeep(this.data);
+		this.on(
+			'dataChange',
+			debounce(() => {
+				if (!this._autoSave) return;
+				const cloneData = cloneDeep(this.data);
+				if (JSON.stringify(this._prevData) !== JSON.stringify(cloneData)) {
+					this.save(cloneData);
+				}
+			}, 500)
+		);
 	}
 
-	private async autoSaveFunc() {
-		this._autoSaveIng = true;
-		// 自动保存，每秒检查this._data是否有变化
-		if (!this.autoSave) {
-			this._autoSaveIng = false;
-			return;
-		}
-		const cloneData = cloneDeep(this.data);
-		if (JSON.stringify(this._prevData) !== JSON.stringify(cloneData)) {
-			this.save();
-			this._prevData = cloneData;
-		}
-		await new Promise((resolve) => setTimeout(resolve, this.autoSaveInterval));
-		await this.autoSaveFunc(); // 递归调用
-	}
-
-	save() {
-		this.emit('save', this.data);
+	save(cloneData?: DPWorkflowData) {
+		console.log('save');
+		this.emit('save', cloneData || this.data);
+		this._prevData = cloneData || cloneDeep(this.data);
 	}
 
 	async run() {

@@ -4,9 +4,9 @@ import { observer } from 'mobx-react-lite';
 import { Button, Divider, Empty, Input, InputNumber, Popconfirm, Space, Spin, Switch, Tooltip } from '@arco-design/web-react';
 import { BlockEnum, DPBaseNode } from '../lib';
 import { WorkfowContext } from './context';
-import { Icon } from '../../workflow/components/Icon';
 import { IconClose, IconDelete, IconPlayCircle, IconRecordStop } from '@arco-design/web-react/icon';
 import { useI18n } from '../i18n';
+import { StartNode } from '@deep-sight/defaultNodes';
 
 export const BaseNodePane: React.FC = observer(() => {
 	const { workflowIns } = useContext(WorkfowContext);
@@ -81,11 +81,13 @@ export const BaseNodePane: React.FC = observer(() => {
 							<Button type="text" className="big-icon" icon={<IconRecordStop />} onClick={() => activeNode.stop()} />
 						</Tooltip>
 					)}
-					<Popconfirm title={t('workflow:nodePane.confirmDelete')} onOk={() => workflowIns.delNode(activeNode)}>
-						<Tooltip content={t('workflow:nodePane.delete')}>
-							<Button type="text" className="big-icon" status="danger" icon={<IconDelete />} />
-						</Tooltip>
-					</Popconfirm>
+					{activeNode.nodeConfig.type !== BlockEnum.Start && (
+						<Popconfirm title={t('workflow:nodePane.confirmDelete')} onOk={() => workflowIns.delNode(activeNode)}>
+							<Tooltip content={t('workflow:nodePane.delete')}>
+								<Button type="text" className="big-icon" status="danger" icon={<IconDelete />} />
+							</Tooltip>
+						</Popconfirm>
+					)}
 					<Divider type="vertical" />
 					<Button type="text" className="big-icon" icon={<IconClose />} onClick={() => (activeNode.active = false)} />
 				</div>
