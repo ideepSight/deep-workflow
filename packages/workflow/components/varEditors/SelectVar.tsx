@@ -3,7 +3,7 @@ import React, { useMemo } from 'react';
 import { Empty, Select, Space } from '@arco-design/web-react';
 import type { DPBaseNode, DPVar, EnableVar } from '../../../workflow';
 import { DPVarType } from '../../../workflow';
-import { Icon } from '../../../workflow/components/Icon';
+import { Icon } from '@deep-sight/dp-iconfont';
 import { useI18n } from '../../i18n';
 
 type SelfProps = {

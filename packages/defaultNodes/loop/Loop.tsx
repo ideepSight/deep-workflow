@@ -6,7 +6,7 @@ import { LoopNode } from '.';
 import { Button, Divider, Empty, InputNumber, Popover, Radio, Space, Tag } from '@arco-design/web-react';
 import './index.less';
 import { IconDelete, IconPlus, IconPlusCircleFill } from '@arco-design/web-react/icon';
-import { Icon } from '../../workflow/components/Icon';
+import { Icon } from '@deep-sight/dp-iconfont';
 import { LoopStartNode } from './loopStart';
 import { useI18n } from '../../workflow/i18n';
 

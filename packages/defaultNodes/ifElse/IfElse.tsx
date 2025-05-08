@@ -7,7 +7,7 @@ import { IfElseNode } from '.';
 import { ConditionExp } from './conditionExp';
 import { Button, Divider, Tooltip } from '@arco-design/web-react';
 import { IconDelete, IconPlus } from '@arco-design/web-react/icon';
-import { Icon } from '../../workflow/components/Icon';
+import { Icon } from '@deep-sight/dp-iconfont';
 import { useI18n } from '../../workflow/i18n';
 
 export const IfElseIcon = () => {

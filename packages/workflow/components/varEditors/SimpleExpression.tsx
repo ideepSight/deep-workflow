@@ -3,7 +3,7 @@ import React, { useMemo, useRef, useState } from 'react';
 import { Select, Space, Tooltip, Empty } from '@arco-design/web-react';
 import type { EnableVar } from '../../../workflow';
 import { DPVarType } from '../../../workflow';
-import { Icon } from '../../../workflow/components/Icon';
+import { Icon } from '@deep-sight/dp-iconfont';
 import type { SelectHandle } from '@arco-design/web-react/es/Select/interface';
 import useMergeValue from './lib/useMergeValue';
 import { RefInputType } from '@arco-design/web-react/es/Input';

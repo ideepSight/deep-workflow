@@ -31,6 +31,7 @@ export default defineConfig((params: ConfigEnv): UserConfig => {
 					external: [
 						'react',
 						'react-dom',
+						'react/jsx-runtime',
 						'@arco-design/web-react',
 						'@xyflow/react',
 						'mobx',
@@ -55,6 +56,7 @@ export default defineConfig((params: ConfigEnv): UserConfig => {
 						globals: {
 							react: 'React',
 							'react-dom': 'ReactDOM',
+							'react/jsx-runtime': 'ReactJSXRuntime',
 							'@arco-design/web-react': 'ArcoDesign',
 							'@xyflow/react': 'ReactFlow',
 							mobx: 'mobx',

@@ -4,7 +4,7 @@ import { Handle, Position } from '@xyflow/react';
 import { Button, Descriptions, Empty, Space, Tag, Tooltip } from '@arco-design/web-react';
 import { InputAddModal } from './modal/InputAddModal';
 import './index.less';
-import { Icon } from '../../workflow/components/Icon';
+import { Icon } from '@deep-sight/dp-iconfont';
 import { IconDelete, IconEdit, IconPlus } from '@arco-design/web-react/icon';
 import { StartNode } from '.';
 import { InputFieldData, NodeComponentProps } from '../../workflow';

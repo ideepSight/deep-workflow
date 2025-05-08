@@ -1,7 +1,7 @@
 import { Input, Select, Space } from '@arco-design/web-react';
 import React, { useState } from 'react';
 import { DPVar, DPVarType, EnableVar } from '../../lib';
-import { Icon } from '../../../workflow/components/Icon';
+import { Icon } from '@deep-sight/dp-iconfont';
 import { SelectVar } from './SelectVar';
 
 type ValueType = { key?: string; type?: DPVarType; expression?: string };

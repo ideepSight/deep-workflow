@@ -7,7 +7,7 @@ import { getLayoutByDagre } from '../utils';
 import { DPNodeData } from '../lib/baseNode';
 import { AddNodeMenu } from './AddNodeMenu';
 import { useI18n } from '../i18n';
-import { Icon } from './Icon';
+import { Icon } from '@deep-sight/dp-iconfont';
 
 export const DPControls: React.FC = () => {
 	const { workflowIns } = useContext(WorkfowContext);

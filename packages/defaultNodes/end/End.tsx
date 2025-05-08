@@ -3,7 +3,7 @@ import React from 'react';
 import { Handle, Position } from '@xyflow/react';
 import { NodeComponentProps } from '../../workflow';
 import { EndNode } from '.';
-import { Icon } from '../../workflow/components/Icon';
+import { Icon } from '@deep-sight/dp-iconfont';
 
 export const EndIcon = () => {
 	return <Icon name="zhongdian" />;

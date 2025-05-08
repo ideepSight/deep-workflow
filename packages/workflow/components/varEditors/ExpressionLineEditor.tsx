@@ -6,7 +6,7 @@ import { autocompletion, CompletionContext } from '@codemirror/autocomplete';
 import { EditorState, Transaction } from '@codemirror/state';
 import { validateExpression } from './lib/validate';
 import { Tooltip } from '@arco-design/web-react';
-import { Icon } from '../../../workflow/components/Icon';
+import { Icon } from '@deep-sight/dp-iconfont';
 import { useI18n } from '../../i18n';
 
 // 添加禁止换行的扩展

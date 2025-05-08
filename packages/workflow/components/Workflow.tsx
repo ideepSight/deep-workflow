@@ -5,10 +5,9 @@ import { nodeTypes, DPWorkfowContext, WorkfowContext, edgeTypes, DPControls, DPR
 import { DPWorkflow, DPWorkflowData } from '../lib';
 import { BaseNodePane } from './BaseNodePane';
 import { Delete } from './varEditors/lib/getHotkeyHandler';
-import { Icon } from './Icon';
 import { useI18n } from '../i18n';
+import { Icon } from '@deep-sight/dp-iconfont';
 
-import './Icon/index.less';
 import './index.less';
 
 type SelfProps = { dpWorkflow: DPWorkflow; onSave: (v: DPWorkflowData) => void; autoSave?: boolean };

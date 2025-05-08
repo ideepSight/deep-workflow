@@ -6,7 +6,7 @@ import { CodeEditor, NodeComponentProps } from '../../workflow';
 import { CodeNode } from '.';
 import _ from 'lodash';
 import { IconInfoCircleFill } from '@arco-design/web-react/icon';
-import { Icon } from '../../workflow/components/Icon';
+import { Icon } from '@deep-sight/dp-iconfont';
 import { InputVar } from './InputVar';
 import { useI18n } from '../../workflow/i18n';
 

@@ -3,7 +3,7 @@ import { Button, Message, Select, Tooltip } from '@arco-design/web-react';
 import './index.less';
 import { DPVar, DPVarType, EnableVar, SelectVar, SimpleExpression } from '../../workflow';
 import { ExpressionLineEditor } from '../../workflow/components/varEditors';
-import { Icon } from '../../workflow/components/Icon';
+import { Icon } from '@deep-sight/dp-iconfont';
 
 export type ExpValue = {
 	mode: 'simple' | 'advanced'; // 模式

@@ -40,6 +40,7 @@
 		"@codemirror/view": "^6.36.5",
 		"@dagrejs/dagre": "^1.1.4",
 		"@deep-sight/dp-event": "^1.0.0",
+		"@deep-sight/dp-iconfont": "^1.0.3",
 		"@uiw/react-codemirror": "^4.23.0",
 		"@xyflow/react": "^12.4.4",
 		"acorn": "^8.14.1",
