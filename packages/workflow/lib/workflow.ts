@@ -116,9 +116,11 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 	updateEdges(noHistory?: boolean) {
 		this._updateEdges(noHistory);
 	}
-
-	constructor(data: DPWorkflowData = {}) {
+	constructor(data?: DPWorkflowData) {
 		super();
+		data && this.load(data);
+	}
+	load(data: DPWorkflowData = {}) {
 		this.id = data.id || uuid();
 		this.title = data.title || '';
 		if (data.nodes?.length) {
