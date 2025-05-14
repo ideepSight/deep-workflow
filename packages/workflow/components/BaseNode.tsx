@@ -1,6 +1,6 @@
 import React, { memo, cloneElement, ReactElement, useContext, useEffect, useRef, Fragment } from 'react';
 import { BlockEnum, DPBaseNode, DPNodeInnerData } from '../lib/baseNode';
-import { Button, Popconfirm, Space, Spin, Tooltip } from '@arco-design/web-react';
+import { Badge, Button, Popconfirm, Space, Spin, Tooltip } from '@arco-design/web-react';
 import { IconDelete, IconExclamationCircle, IconInfo, IconPlayCircle, IconRecordStop } from '@arco-design/web-react/icon';
 import './index.less';
 import { WorkfowContext } from './context';
@@ -63,6 +63,11 @@ const BaseNodeInner: React.FC<
 						<IconExclamationCircle />
 					</Tooltip>
 				</div>
+			)}
+			{node.runningStatus === NodeRunningStatus.Succeeded && (
+				<Tooltip getPopupContainer={() => document.querySelector('.workflow-wrap')} content="运行成功">
+					<Badge status="success" style={{ marginLeft: 6, cursor: 'pointer' }} />
+				</Tooltip>
 			)}
 			<div className="base-node-bg">
 				<div className="base-node-inner">

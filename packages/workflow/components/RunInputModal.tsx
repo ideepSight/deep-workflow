@@ -2,10 +2,9 @@ import React, { useEffect, useImperativeHandle } from 'react';
 import { DPModalRender, DPModalWrapType } from './DPModal';
 import { Form, Input, Select } from '@arco-design/web-react';
 import { FormItemType, InputFieldData } from '../types';
-import { useI18n } from '../i18n';
+import { t } from 'i18next';
 
 export const RunInputModal = async (inputDatas: InputFieldData[]) => {
-	const { t } = useI18n();
 	const ModalInner: React.FC<DPModalWrapType> = ({ modalRef }) => {
 		const [form] = Form.useForm();
 		useImperativeHandle(modalRef, () => ({

@@ -53,7 +53,7 @@
 		padding: 20px;
 		box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
 		border-radius: 8px;
-		height: 90%;
+		height: 93%;
 		.top {
 			margin-bottom: 10px;
 			display: flex;
@@ -122,6 +122,7 @@
 	}
 	.error-info-p {
 		color: var(--color-text-2);
+		overflow: auto;
 		p {
 			span {
 				color: var(--color-text-3);
@@ -189,7 +190,7 @@
 			}
 			.base-node-inner {
 				box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
-				border: 2px solid rgb(var(--primary-4)) !important;
+				border: 2px solid rgb(var(--primary-6)) !important;
 			}
 			.base-handle::after {
 				border-radius: 50%;
@@ -214,7 +215,6 @@
 			.base-node-inner {
 				transition: all 0.2s;
 				box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
-				border: 2px solid var(--color-success-light-4);
 			}
 		}
 		.base-handle {
@@ -657,6 +657,7 @@
 		justify-content: start;
 		transform: translateY(220px);
 		transition: all 0.3s;
+		min-width: 400px;
 		&.open {
 			transform: translateY(0);
 		}
@@ -686,6 +687,7 @@
 			.log-node {
 				font-weight: bold;
 				cursor: pointer;
+				word-break: keep-all;
 				&:hover {
 					text-decoration: underline;
 				}

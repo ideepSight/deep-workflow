@@ -6,8 +6,7 @@ import { FormItemType, InputFieldData } from '../../../workflow';
 import { DPVarType } from '../../../workflow';
 import { SelectOptionSet } from './SelectOptionSet';
 import { SelectInputType } from './SelectInputType';
-import i18next from 'i18next';
-const t = i18next.t.bind(i18next);
+import { t } from 'i18next';
 
 const fieldTypeToVarType = (fieldType: FormItemType): DPVarType => {
 	switch (fieldType) {
@@ -45,7 +44,11 @@ export const InputAddModal = async (editValue?: InputFieldData) => {
 		return (
 			<div className={style['select-field']}>
 				<Form form={form} layout="vertical">
-					<Form.Item label={t('workflow:start.inputModal.fieldType')} field="fieldType" rules={[{ required: true, message: t('workflow:start.inputModal.select') }]}>
+					<Form.Item
+						label={t('workflow:start.inputModal.fieldType')}
+						field="fieldType"
+						rules={[{ required: true, message: t('workflow:start.inputModal.select') }]}
+					>
 						<SelectInputType />
 					</Form.Item>
 					<Form.Item

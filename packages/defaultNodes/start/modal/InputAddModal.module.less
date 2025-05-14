@@ -1,9 +1,7 @@
 
 .select-field-var-wrap {
-	display: flex;
-	flex-wrap: wrap;
+	display: grid;
 	grid-template-columns: repeat(3, minmax(0, 1fr));
-	gap: 0.5rem;
 	div.item {
 		margin-bottom: 10px;
 		display: flex;
@@ -16,7 +14,9 @@
 		border-radius: 4px;
 		cursor: pointer;
 		text-align: center;
-		width: calc(33.33% - 30px);
+		width: 90%;
+		margin: 0 auto 10px;
+		box-sizing: border-box;
 		&.selected {
 			background-color: var(--color-bg-1);
 			border-color: var(--color-primary-light-4);

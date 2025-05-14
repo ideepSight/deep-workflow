@@ -8,7 +8,7 @@ import { RunInputModal } from '../components/RunInputModal';
 import { FormItemType } from '../../workflow';
 import i18next from 'i18next';
 
-const t = i18next.t.bind(i18next);
+const t = i18next.t
 
 export enum BlockEnum {
 	Start = 'start',

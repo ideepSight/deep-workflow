@@ -189,7 +189,10 @@ const resources = {
 				condition: 'condition',
 				addCondition: 'Add Condition',
 				deleteCondition: 'Delete Condition',
-				elseDescription: 'If the condition is not met, execute the ELSE block',
+				expConfigError: 'Expression configuration error',
+				expRunError: 'Expression execution error:',
+				expRunFail: 'Expression execution failed: {{msg}}',
+				elseDescription: 'If the condition is not met, execute the ELSE block'
 			}
 		}
 	},
@@ -269,7 +272,7 @@ const resources = {
 				startRun: '开始运行',
 				runSuccess: '运行完成',
 				runFail: '运行失败，{{error}}',
-				errorMsg: '错误信息：{{msg}}',
+				errorMsg: '{{msg}}',
 				retrying: '运行失败，正在重试第{{count}}次,{{error}}',
 				retryFail: '重试{{max}}次后运行失败,{{error}}',
 				stopped: '中途停止'
@@ -383,6 +386,9 @@ const resources = {
 				condition: '条件',
 				addCondition: '添加条件',
 				deleteCondition: '删除条件',
+				expConfigError: '表达式配置错误, 请检查',
+				expRunError: '表达式执行错误:',
+				expRunFail: '表达式执行失败: {{msg}}',
 				elseDescription: '用于定义当 条件判断 不满足时应执行的逻辑。'
 			}
 		}
