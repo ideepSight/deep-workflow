@@ -1,6 +1,5 @@
-import { DPBaseNode, BlockEnum, DPNodeInnerData, DPVar, DPVarType, EnableVar, NodeRunningStatus } from '../../workflow';
+import { DPBaseNode, BlockEnum, DPNodeInnerData, DPVar, t, NodeRunningStatus } from '../../workflow';
 import { Loop, LoopIcon, LoopSet } from './Loop';
-import i18next from 'i18next';
 
 export type LoopNodeInnerData = DPNodeInnerData & {
 	isByVar: boolean;
@@ -77,7 +76,7 @@ export class LoopNode extends DPBaseNode<LoopNodeInnerData> {
 		if (this.isByVar) {
 			const loopVar = this.loopVar;
 			if (!loopVar) {
-				throw new Error(i18next.t('workflow:loop.varNotExist'));
+				throw new Error(t('workflow:loop.varNotExist'));
 			}
 			const loopCount = loopVar.value.length;
 			// 找到loopStart节点
@@ -120,8 +119,8 @@ export class LoopNode extends DPBaseNode<LoopNodeInnerData> {
 			const res = new Function(`{${Object.keys(context).join(', ')}}`, `return ${expression}`)(context);
 			return res;
 		} catch (error) {
-			console.error(i18next.t('workflow:loop.expRunError'), error);
-			throw new Error(i18next.t('workflow:loop.expRunFail', { msg: error.message }));
+			console.error(t('workflow:loop.expRunError'), error);
+			throw new Error(t('workflow:loop.expRunFail', { msg: error.message }));
 		}
 	}
 }
@@ -132,8 +131,8 @@ DPBaseNode.registerType({
 	iconColor: '#d712aa',
 	NodeComponent: Loop,
 	SetComponent: LoopSet,
-	label: i18next.t('workflow:loop.label'),
-	desc: i18next.t('workflow:loop.desc'),
+	label: t('workflow:loop.label'),
+	desc: t('workflow:loop.desc'),
 	group: 'sys',
 	width: 500,
 	height: 300

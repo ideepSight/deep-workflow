@@ -1,4 +1,4 @@
-import React, { createContext, useContext, ReactNode, useMemo } from 'react';
+import { createContext, useContext, ReactNode } from 'react';
 import i18next, { i18n as I18nInstance, InitOptions, TFunction } from 'i18next';
 import resources from './resources';
 
@@ -12,6 +12,12 @@ if (!i18next.isInitialized) {
 		fallbackLng: 'zh',
 		resources
 	});
+} else {
+	Object.keys(resources).forEach((lng) => {
+		Object.keys(resources[lng]).forEach((ns) => {
+			i18next.addResourceBundle(lng, ns, resources[lng][ns], true, true);
+		});
+	});
 }
 const I18nContext = createContext<I18nContextProps>({
 	i18n: i18next,
@@ -24,23 +30,34 @@ interface I18nProviderProps {
 	initOptions?: InitOptions;
 }
 
-export const I18nProvider: React.FC<I18nProviderProps> = ({ i18nInstance, children, initOptions }) => {
-	const i18n = useMemo(() => {
-		if (i18nInstance) return i18nInstance;
-		if (!i18next.isInitialized) {
-			i18next.init({
-				lng: 'zh',
-				fallbackLng: 'zh',
-				resources,
-				...initOptions
+export function createI18nProvider({ i18nInstance, initOptions }: Omit<I18nProviderProps, 'children'>) {
+	const getI18nInstance = (i18nInstance?: I18nInstance, initOptions?: InitOptions) => {
+		if (i18nInstance) {
+			Object.keys(resources).forEach((lng) => {
+				Object.keys(resources[lng]).forEach((ns) => {
+					i18nInstance.addResourceBundle(lng, ns, resources[lng][ns], true, true);
+				});
 			});
+			return i18nInstance;
+		} else {
+			if (!i18next.isInitialized) {
+				i18next.init({
+					lng: 'zh',
+					fallbackLng: 'zh',
+					resources,
+					...initOptions
+				});
+			}
+			return i18next;
 		}
-		return i18next;
-	}, [i18nInstance, initOptions]);
+	};
+	const i18n = getI18nInstance(i18nInstance, initOptions);
 	const t = i18n.t.bind(i18n);
-	return <I18nContext.Provider value={{ i18n, t }}>{children}</I18nContext.Provider>;
-};
+	return { i18n, t };
+}
 
 export function useI18n() {
 	return useContext(I18nContext);
 }
+
+export const t = i18next.t.bind(i18next);

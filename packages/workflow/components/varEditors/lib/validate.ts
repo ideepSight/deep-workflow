@@ -1,7 +1,6 @@
 import * as acorn from 'acorn';
 import * as walk from 'acorn-walk';
-import type { EnableVar } from '../../../index';
-import i18next from 'i18next';
+import { t, type EnableVar } from '../../../index';
 
 const innerKeywords = [
 	'true',
@@ -23,8 +22,6 @@ const innerKeywords = [
 ];
 
 const globalIdentifiers = typeof window !== 'undefined' ? Object.getOwnPropertyNames(window) : Object.getOwnPropertyNames(globalThis);
-
-const t = i18next.t.bind(i18next);
 
 export const validateExpression = (expr: string, enableVars: EnableVar[]) => {
 	// 使用 acorn 解析表达式

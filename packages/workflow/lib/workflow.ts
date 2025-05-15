@@ -8,8 +8,7 @@ import { DPVarData, DPVar } from './var';
 import { cloneDeep, debounce } from 'lodash';
 import { LoopNode } from '../../defaultNodes';
 import { DPHistory } from './history';
-import i18next from 'i18next';
-const t = i18next.t.bind(i18next);
+import { t } from '..';
 
 export enum ControlMode {
 	Pointer = 'pointer',

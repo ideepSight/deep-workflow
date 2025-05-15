@@ -1,7 +1,6 @@
-import { DPNodeInnerData, DPBaseNode, BlockEnum, DPVar, InputFieldData, NodeRunningStatus } from '../../workflow';
+import { DPNodeInnerData, DPBaseNode, BlockEnum, DPVar, InputFieldData, NodeRunningStatus, t } from '../../workflow';
 import { Start, StartIcon, StartSet } from './Start';
 import { RunInputModal } from '../../workflow/components/RunInputModal';
-import i18next from 'i18next';
 
 export type StartNodeInnerData = DPNodeInnerData & { inputFields: InputFieldData[] };
 
@@ -69,7 +68,7 @@ DPBaseNode.registerType({
 	icon: StartIcon,
 	iconColor: '#f79009',
 	width: 200,
-	label: i18next.t('workflow:start.registLabel'),
-	desc: i18next.t('workflow:start.registDesc'),
+	label: t('workflow:start.registLabel'),
+	desc: t('workflow:start.registDesc'),
 	group: 'sys'
 });

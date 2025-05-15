@@ -5,10 +5,7 @@ import { Node } from '@xyflow/react';
 import { DPVar, DPVarType } from './var';
 import type { DPWorkflow } from './workflow';
 import { RunInputModal } from '../components/RunInputModal';
-import { FormItemType } from '../../workflow';
-import i18next from 'i18next';
-
-const t = i18next.t
+import { FormItemType, t } from '../../workflow';
 
 export enum BlockEnum {
 	Start = 'start',

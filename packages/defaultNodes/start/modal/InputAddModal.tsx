@@ -2,11 +2,10 @@ import React, { useEffect, useImperativeHandle } from 'react';
 import { DPModalRender, DPModalWrapType } from '../../../workflow/components/DPModal';
 import { Checkbox, Form, Input, Select } from '@arco-design/web-react';
 import style from './InputAddModal.module.less';
-import { FormItemType, InputFieldData } from '../../../workflow';
+import { FormItemType, InputFieldData, t } from '../../../workflow';
 import { DPVarType } from '../../../workflow';
 import { SelectOptionSet } from './SelectOptionSet';
 import { SelectInputType } from './SelectInputType';
-import { t } from 'i18next';
 
 const fieldTypeToVarType = (fieldType: FormItemType): DPVarType => {
 	switch (fieldType) {

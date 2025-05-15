@@ -1,8 +1,7 @@
-import { DPBaseNode, BlockEnum, DPNodeInnerData, DPVar, DPVarType } from '../../workflow';
+import { DPBaseNode, BlockEnum, DPNodeInnerData, DPVar, DPVarType, t } from '../../workflow';
 import { Code, CodeIcon, CodeSet } from './Code';
 import * as acorn from 'acorn';
 import * as walk from 'acorn-walk';
-import i18next from 'i18next';
 
 export type CodeNodeInnerData = DPNodeInnerData & {
 	code: string;
@@ -21,7 +20,9 @@ export class CodeNode extends DPBaseNode<CodeNodeInnerData> {
 
 	init(data: CodeNodeInnerData) {
 		if (!data.code) {
-			data.code = `\n// ${i18next.t('workflow:code.codeComment')}\nfunction main() {\n\n  // ${i18next.t('workflow:code.outputComment')}\n  return {\n    output1: '${i18next.t('workflow:code.output1')}',\n    output2: '${i18next.t('workflow:code.output2')}'\n  }\n}\n`;
+			data.code = `\n// ${t('workflow:code.codeComment')}\nfunction main() {\n\n  // ${t('workflow:code.outputComment')}\n  return {\n    output1: '${t(
+				'workflow:code.output1'
+			)}',\n    output2: '${t('workflow:code.output2')}'\n  }\n}\n`;
 			this.addOutput({ key: 'output1', type: DPVarType.String });
 			this.addOutput({ key: 'output2', type: DPVarType.String });
 		}
@@ -87,8 +88,8 @@ export class CodeNode extends DPBaseNode<CodeNodeInnerData> {
 				v.value = res[v.key];
 			});
 		} catch (error) {
-			console.error(i18next.t('workflow:code.runError'), error);
-			throw new Error(i18next.t('workflow:code.runFail', { msg: error.message }));
+			console.error(t('workflow:code.runError'), error);
+			throw new Error(t('workflow:code.runFail', { msg: error.message }));
 		}
 	}
 	async runCode(code: string, context: any) {
@@ -108,7 +109,7 @@ DPBaseNode.registerType({
 	iconColor: '#296dff',
 	NodeComponent: Code,
 	SetComponent: CodeSet,
-	label: i18next.t('workflow:code.label'),
-	desc: i18next.t('workflow:code.desc'),
+	label: t('workflow:code.label'),
+	desc: t('workflow:code.desc'),
 	group: 'sys'
 });

@@ -1,8 +1,7 @@
-import { DPBaseNode, BlockEnum, DPNodeInnerData, NodeRunningStatus } from '../../workflow';
+import { DPBaseNode, BlockEnum, DPNodeInnerData, NodeRunningStatus, t } from '../../workflow';
 import { IfElse, IfElseIcon, IfElseSet } from './IfElse';
 import type { ExpValue } from './conditionExp';
 import { uuid } from 'short-uuid';
-import i18next from 'i18next';
 
 export type IfElseNodeInnerData = DPNodeInnerData & { conditions: { type: 'if' | 'else'; id: string; expValue?: ExpValue }[] };
 
@@ -42,7 +41,7 @@ export class IfElseNode extends DPBaseNode<IfElseNodeInnerData> {
 				let expression = c.expValue.expression; // "Start.one === Start.two"
 				if (c.expValue.mode === 'simple') {
 					if (!c.expValue.operator || !c.expValue.left || !c.expValue.right) {
-						throw new Error(i18next.t('workflow:ifElse.expConfigError'));
+						throw new Error(t('workflow:ifElse.expConfigError'));
 					}
 					expression = c.expValue.operator.replace('x', `${c.expValue.left}`).replace('y', `${c.expValue.right}`);
 				}
@@ -75,8 +74,8 @@ export class IfElseNode extends DPBaseNode<IfElseNodeInnerData> {
 			const res = new Function(`{${Object.keys(context).join(', ')}}`, `return ${expression}`)(context);
 			return res;
 		} catch (error) {
-			console.error(i18next.t('workflow:ifElse.expRunError'), error);
-			throw new Error(i18next.t('workflow:ifElse.expRunFail', { msg: error.message }));
+			console.error(t('workflow:ifElse.expRunError'), error);
+			throw new Error(t('workflow:ifElse.expRunFail', { msg: error.message }));
 		}
 	}
 }
@@ -88,7 +87,7 @@ DPBaseNode.registerType({
 	iconColor: '#06aed4',
 	NodeComponent: IfElse,
 	SetComponent: IfElseSet,
-	label: i18next.t('workflow:ifElse.label'),
-	desc: i18next.t('workflow:ifElse.desc'),
+	label: t('workflow:ifElse.label'),
+	desc: t('workflow:ifElse.desc'),
 	group: 'sys'
 });
