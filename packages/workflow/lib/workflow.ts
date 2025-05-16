@@ -160,7 +160,6 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 	}
 
 	save(cloneData?: DPWorkflowData) {
-		console.log('save');
 		this.emit('save', cloneData || this.data);
 		this._prevData = cloneData || (cloneDeep(this.data) as DPWorkflowData);
 	}

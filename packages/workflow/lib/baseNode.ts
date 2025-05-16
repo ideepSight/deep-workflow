@@ -349,7 +349,6 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 		this.singleRunning = true;
 		this.runlogs = [];
 		this.owner.runlogs = [];
-		console.log(this.owner.runlogs);
 
 		await new Promise((resolve) => {
 			setTimeout(() => {

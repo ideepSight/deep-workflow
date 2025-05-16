@@ -6,7 +6,7 @@ import { DPVarType } from '../../../workflow';
 import { Icon } from '@deep-sight/dp-iconfont';
 import { useI18n } from '../../i18n';
 
-type SelfProps = {
+export type SelectVarProps = {
 	enableVars: EnableVar[];
 	value?: DPVar | null;
 	onChange?: (varItem: DPVar | null) => void;
@@ -16,7 +16,7 @@ type SelfProps = {
 	empty?: string;
 };
 
-export const SelectVar: React.FC<SelfProps> = observer((props) => {
+export const SelectVar: React.FC<SelectVarProps> = observer((props) => {
 	const { enableVars, value, onChange, size, style, filterType, empty } = props;
 	const { t } = useI18n();
 	const handleChange = (key: string, node: DPBaseNode) => {
