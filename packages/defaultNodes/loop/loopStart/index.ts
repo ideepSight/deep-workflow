@@ -1,9 +1,15 @@
-import { DPBaseNode, BlockEnum, DPVar, DPVarType, t } from '../../../workflow';
+import { DPBaseNode, BlockEnum, DPVar, DPVarType, t, DPNodeData, DPWorkflow } from '../../../workflow';
 import { LoopStart } from './loopStart';
 import type { LoopNode } from '..';
 import { StartIcon } from '../../start/Start';
 
 export class LoopStartNode extends DPBaseNode {
+	get nodeData() {
+		return super.nodeData as DPNodeData;
+	}
+	get owner() {
+		return super.owner as DPWorkflow;
+	}
 	private _parentNode = this.owner?.dpNodes.find((node) => node.id === this.nodeData.parentId) as LoopNode;
 	get singleRunAble() {
 		return false;

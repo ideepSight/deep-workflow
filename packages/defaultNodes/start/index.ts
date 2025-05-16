@@ -1,10 +1,16 @@
-import { DPNodeInnerData, DPBaseNode, BlockEnum, DPVar, InputFieldData, NodeRunningStatus, t } from '../../workflow';
+import { DPNodeInnerData, DPBaseNode, BlockEnum, DPVar, InputFieldData, NodeRunningStatus, t, DPNodeData, DPWorkflow } from '../../workflow';
 import { Start, StartIcon, StartSet } from './Start';
 import { RunInputModal } from '../../workflow/components/RunInputModal';
 
 export type StartNodeInnerData = DPNodeInnerData & { inputFields: InputFieldData[] };
 
 export class StartNode extends DPBaseNode<StartNodeInnerData> {
+	get nodeData() {
+		return super.nodeData as DPNodeData<StartNodeInnerData>;
+	}
+	get owner() {
+		return super.owner as DPWorkflow;
+	}
 	get singleRunAble() {
 		return false;
 	}

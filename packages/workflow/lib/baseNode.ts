@@ -1,4 +1,4 @@
-import type { FC, ReactNode } from 'react';
+import type { FC } from 'react';
 import { DPEvent, observe } from '@deep-sight/dp-event';
 import { deepObserve, IDisposer } from 'mobx-utils';
 import { Node } from '@xyflow/react';
@@ -51,8 +51,8 @@ export type DPRegisterNode = {
 	desc: string;
 	icon: FC;
 	iconColor?: string;
-	type: BlockEnum;
-	model: new (owner: DPWorkflow, data?: DPNodeData) => DPBaseNode;
+	type: BlockEnum | string;
+	model: new (owner: DPWorkflow | INodeOwner, data?: DPNodeData | INodeData) => DPBaseNode;
 	NodeComponent: FC<NodeComponentProps>;
 	SetComponent?: FC<NodeComponentProps>;
 	group: 'hide' | 'sys' | 'ai' | 'autoTool' | 'platformApi' | 'custom';
@@ -64,7 +64,7 @@ export type LogData = { time: number; msg: string; type: 'info' | 'warning' | 'e
 
 export type EnableVar = { id: string; node: DPBaseNode; vars: DPVar[] };
 export type DPNodeInnerData = {
-	dpNodeType: BlockEnum;
+	dpNodeType: BlockEnum | string;
 	title?: string;
 	desc?: string;
 	inputs?: { key: string; type: DPVarType }[];
@@ -75,6 +75,20 @@ export type DPNodeInnerData = {
 };
 
 export type DPNodeData<T extends DPNodeInnerData = DPNodeInnerData> = Omit<Node<T>, 'id'> & { id?: string };
+
+export interface INodeOwner {
+	classType: 'DPWorkflow' | string;
+	runlogs: LogData[];
+	emit: (event: string, ...args: any[]) => void;
+}
+
+export interface INodeData<T extends DPNodeInnerData = DPNodeInnerData> {
+	id: string;
+	position?: { x: number; y: number };
+	parentId?: string;
+	data: T;
+	[key: string]: any;
+}
 
 type DPBaseNodeEvent = {
 	stoping: () => void;
@@ -87,9 +101,16 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 
 	private _disposer: IDisposer;
 
-	public owner: DPWorkflow;
+	private _owner: DPWorkflow | INodeOwner;
+	get owner() {
+		return this._owner;
+	}
+	set owner(val) {
+		this._owner = val;
+	}
+
 	@observe
-	private _nodeData: DPNodeData<T>;
+	private _nodeData: DPNodeData<T> | INodeData<T>;
 	@observe
 	public modified = false; // nodeData、data是否被修改过
 	@observe
@@ -144,10 +165,16 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 	}
 
 	get parentId() {
+		if (this.owner.classType !== 'DPWorkflow') {
+			throw new Error('node owner is not DPWorkflow');
+		}
 		return this.nodeData.parentId;
 	}
 	get parentNode() {
-		return this.owner.dpNodes.find((node) => node.id === this.nodeData.parentId);
+		if (this.owner.classType !== 'DPWorkflow') {
+			throw new Error('node owner is not DPWorkflow');
+		}
+		return (this.owner as DPWorkflow).dpNodes.find((node) => node.id === this.nodeData.parentId);
 	}
 
 	get data() {
@@ -164,21 +191,33 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 	}
 
 	get prevNodes() {
+		if (this.owner.classType !== 'DPWorkflow') {
+			throw new Error('node owner is not DPWorkflow');
+		}
+		const owner = this.owner as DPWorkflow;
 		// 可用被多个节点连接，所以是数组
-		const edges = this.owner.dpEdges.filter((edge) => edge.target === this.id);
-		return edges.map((edge) => this.owner.dpNodes.find((node) => node.id === edge.source));
+		const edges = owner.dpEdges.filter((edge) => edge.target === this.id);
+		return edges.map((edge) => owner.dpNodes.find((node) => node.id === edge.source));
 	}
 	get nextNodes() {
-		const edges = this.owner.dpEdges.filter((edge) => edge.data.source === this.id);
-		return edges.map((edge) => this.owner.dpNodes.find((node) => node.id === edge.target));
+		if (this.owner.classType !== 'DPWorkflow') {
+			throw new Error('node owner is not DPWorkflow');
+		}
+		const owner = this.owner as DPWorkflow;
+		const edges = owner.dpEdges.filter((edge) => edge.data.source === this.id);
+		return edges.map((edge) => owner.dpNodes.find((node) => node.id === edge.target));
 	}
 	get nextRunNode() {
 		return this._nextRunNode || this.nextNodes[0];
 	}
 	get enableVars() {
+		if (this.owner.classType !== 'DPWorkflow') {
+			return [];
+		}
+		const owner = this.owner as DPWorkflow;
 		// 递归获取连接到本节点的所有节点的变量，并按节点的title分组
 		let enableVars: EnableVar[] = [];
-		const nodes = this.owner.dpNodes.filter((node) => node.nextNodes.find((n) => n === this));
+		const nodes = owner.dpNodes.filter((node) => node.nextNodes.find((n) => n === this));
 		nodes.forEach((node) => {
 			enableVars.push({ id: node.id, node, vars: node.vars });
 			enableVars = enableVars.concat(node.enableVars);
@@ -235,10 +274,10 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 		return [];
 	}
 
-	constructor(owner: DPWorkflow, nodeData: DPNodeData<T>) {
+	constructor(owner: DPWorkflow | INodeOwner, nodeData: DPNodeData<T> | INodeData<T>) {
 		super();
 		this._nodeData = nodeData;
-		this.owner = owner;
+		this._owner = owner;
 		if (!this.data.retryInterval) {
 			this.data.retryInterval = 1000;
 		}
@@ -290,9 +329,13 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 	}
 
 	toCenter() {
-		this.owner.reactFlowIns.setCenter(this.nodeData.position.x + 100, this.nodeData.position.y + 200, {
+		if (this.owner.classType !== 'DPWorkflow') {
+			throw new Error('node owner is not DPWorkflow');
+		}
+		const owner = this.owner as DPWorkflow;
+		owner.reactFlowIns.setCenter(this.nodeData.position.x + 100, this.nodeData.position.y + 200, {
 			duration: 500,
-			zoom: this.owner.reactFlowIns.getZoom()
+			zoom: owner.reactFlowIns.getZoom()
 		});
 	}
 
@@ -380,7 +423,10 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 				}
 			}
 		}
-		if (this.owner.stoping) {
+		if (this.owner.classType !== 'DPWorkflow') {
+			return;
+		}
+		if ((this.owner as DPWorkflow).stoping) {
 			this.runlog = { time: Date.now(), msg: t('workflow:baseNode.stopped'), type: 'info' };
 			return;
 		}

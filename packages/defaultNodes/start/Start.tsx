@@ -15,7 +15,6 @@ export const StartIcon = () => {
 };
 
 export const Start: React.FC<NodeComponentProps<StartNode>> = observer(({ node }) => {
-	const { t } = useI18n();
 	return (
 		<div className="start-node-wrap">
 			<Handle type="source" id="start" className="base-handle" position={Position.Right} />

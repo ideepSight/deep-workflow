@@ -1,4 +1,4 @@
-import { DPBaseNode, BlockEnum, DPNodeInnerData, DPVar, t, NodeRunningStatus } from '../../workflow';
+import { DPBaseNode, BlockEnum, DPNodeInnerData, DPVar, t, NodeRunningStatus, DPWorkflow, DPNodeData } from '../../workflow';
 import { Loop, LoopIcon, LoopSet } from './Loop';
 
 export type LoopNodeInnerData = DPNodeInnerData & {
@@ -8,6 +8,12 @@ export type LoopNodeInnerData = DPNodeInnerData & {
 };
 
 export class LoopNode extends DPBaseNode<LoopNodeInnerData> {
+	get nodeData() {
+		return super.nodeData as DPNodeData<LoopNodeInnerData>;
+	}
+	get owner() {
+		return super.owner as DPWorkflow;
+	}
 	get singleRunAble() {
 		return true;
 	}
@@ -42,7 +48,7 @@ export class LoopNode extends DPBaseNode<LoopNodeInnerData> {
 	}
 
 	get childNodes() {
-		return this.owner.dpNodes.filter((node) => node.nodeData.parentId === this.id);
+		return (this.owner as DPWorkflow).dpNodes.filter((node) => node.nodeData.parentId === this.id);
 	}
 
 	get childEnableVars() {
@@ -80,7 +86,7 @@ export class LoopNode extends DPBaseNode<LoopNodeInnerData> {
 			}
 			const loopCount = loopVar.value.length;
 			// 找到loopStart节点
-			const loopStartNode = this.owner.dpNodes.find((node) => node.nodeConfig.type === BlockEnum.LoopStart && node.parentId === this.id);
+			const loopStartNode = (this.owner as DPWorkflow).dpNodes.find((node) => node.nodeConfig.type === BlockEnum.LoopStart && node.parentId === this.id);
 			for (let i = 0; i < loopCount; i++) {
 				const startVarIndex = loopStartNode.vars.find((v) => v.key === 'index');
 				const startVarItem = loopStartNode.vars.find((v) => v.key === 'item');
@@ -90,7 +96,7 @@ export class LoopNode extends DPBaseNode<LoopNodeInnerData> {
 			}
 		} else {
 			// 找到loopStart节点
-			const loopStartNode = this.owner.dpNodes.find((node) => node.nodeConfig.type === BlockEnum.LoopStart && node.parentId === this.id);
+			const loopStartNode = (this.owner as DPWorkflow).dpNodes.find((node) => node.nodeConfig.type === BlockEnum.LoopStart && node.parentId === this.id);
 			for (let i = 0; i < this.loopCount; i++) {
 				const startVarIndex = loopStartNode.vars.find((v) => v.key === 'index');
 				startVarIndex.value = i;

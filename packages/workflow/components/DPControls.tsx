@@ -1,5 +1,5 @@
 import { Button, Divider, Dropdown, Menu, Popover, Space, Tooltip } from '@arco-design/web-react';
-import { IconApps, IconPlusCircleFill, IconRedo, IconUndo, IconZoomIn, IconZoomOut } from '@arco-design/web-react/icon';
+import { IconApps, IconPlusCircleFill, IconZoomIn, IconZoomOut } from '@arco-design/web-react/icon';
 import { useReactFlow, useViewport } from '@xyflow/react';
 import React, { useCallback, useContext, useEffect } from 'react';
 import { WorkfowContext } from './context';
@@ -24,7 +24,7 @@ export const DPControls: React.FC = () => {
 	}, [reactFlowIns, workflowIns, zoomTo]);
 
 	const handleLayout = useCallback(() => {
-		const nodes = workflowIns.dpNodes.map((node) => node.nodeData);
+		const nodes = workflowIns.dpNodes.map((node) => node.nodeData) as DPNodeData[];
 		const edges = workflowIns.dpEdges.map((edge) => edge.data);
 		const layout = getLayoutByDagre(nodes, edges);
 		const rankMap = {} as Record<string, DPNodeData>;
@@ -118,10 +118,24 @@ export const DPControls: React.FC = () => {
 			</Button.Group>
 			<Button.Group className="control-group">
 				<Tooltip content={t('workflow:controls.undo')}>
-					<Button size="mini" type="text" className="big-icon" disabled={!workflowIns.history.undoEnable} onClick={handleUndo} icon={<Icon name="undo" />} />
+					<Button
+						size="mini"
+						type="text"
+						className="big-icon"
+						disabled={!workflowIns.history.undoEnable}
+						onClick={handleUndo}
+						icon={<Icon name="undo" />}
+					/>
 				</Tooltip>
 				<Tooltip content={t('workflow:controls.redo')}>
-					<Button size="mini" type="text" className="big-icon" disabled={!workflowIns.history.redoEnable} onClick={handleRedo} icon={<Icon name="redo" />} />
+					<Button
+						size="mini"
+						type="text"
+						className="big-icon"
+						disabled={!workflowIns.history.redoEnable}
+						onClick={handleRedo}
+						icon={<Icon name="redo" />}
+					/>
 				</Tooltip>
 			</Button.Group>
 			<Button.Group className="control-group">

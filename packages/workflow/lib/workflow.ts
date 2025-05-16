@@ -29,6 +29,7 @@ type DPWorkflowEvent = {
 	dataChange: () => void;
 };
 export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
+	classType = 'DPWorkflow';
 	id: string;
 	@observe
 	title: string;
@@ -97,14 +98,14 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 	setEdges(edges: DPEdgeData[]) {}
 	private _updateNodes = debounce((noHistory?: boolean) => {
 		const nodeDatas = this._dpNodes.map((node) => node.nodeData);
-		this.setNodes(nodeDatas);
+		this.setNodes(nodeDatas as DPNodeData[]);
 		!noHistory && this.history.addStep(); // 添加历史记录
 		this.emit('dataChange');
 	}, 50);
 
 	private _updateEdges = debounce((noHistory?: boolean) => {
 		const edgeDates = this._dpEdges.map((edge) => edge.data);
-		this.setEdges(edgeDates);
+		this.setEdges(edgeDates as DPEdgeData[]);
 		!noHistory && this.history.addStep(); // 添加历史记录
 		this.emit('dataChange');
 	}, 50);
@@ -145,12 +146,12 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 	}
 
 	private _handleAutoSave() {
-		this._prevData = cloneDeep(this.data);
+		this._prevData = cloneDeep(this.data) as DPWorkflowData;
 		this.on(
 			'dataChange',
 			debounce(() => {
 				if (!this._autoSave) return;
-				const cloneData = cloneDeep(this.data);
+				const cloneData = cloneDeep(this.data) as DPWorkflowData;
 				if (JSON.stringify(this._prevData) !== JSON.stringify(cloneData)) {
 					this.save(cloneData);
 				}
@@ -161,7 +162,7 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 	save(cloneData?: DPWorkflowData) {
 		console.log('save');
 		this.emit('save', cloneData || this.data);
-		this._prevData = cloneData || cloneDeep(this.data);
+		this._prevData = cloneData || (cloneDeep(this.data) as DPWorkflowData);
 	}
 
 	async run() {

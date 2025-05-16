@@ -9,10 +9,10 @@ export const EndIcon = () => {
 	return <Icon name="zhongdian" />;
 };
 
-export const End: React.FC<NodeComponentProps<EndNode>> = observer(() => {
+export const End: React.FC<NodeComponentProps<EndNode>> = observer(({ node }) => {
 	return (
 		<div>
-			<Handle type="target" className="base-handle" position={Position.Left} />
+			<Handle id={`${node.id}-target`} type="target" className="base-handle" position={Position.Left} />
 		</div>
 	);
 });

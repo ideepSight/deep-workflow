@@ -1,4 +1,4 @@
-import { DPBaseNode, BlockEnum, DPNodeInnerData, NodeRunningStatus, t } from '../../workflow';
+import { DPBaseNode, BlockEnum, DPNodeInnerData, NodeRunningStatus, t, DPNodeData, DPWorkflow } from '../../workflow';
 import { IfElse, IfElseIcon, IfElseSet } from './IfElse';
 import type { ExpValue } from './conditionExp';
 import { uuid } from 'short-uuid';
@@ -6,6 +6,12 @@ import { uuid } from 'short-uuid';
 export type IfElseNodeInnerData = DPNodeInnerData & { conditions: { type: 'if' | 'else'; id: string; expValue?: ExpValue }[] };
 
 export class IfElseNode extends DPBaseNode<IfElseNodeInnerData> {
+	get nodeData() {
+		return super.nodeData as DPNodeData<IfElseNodeInnerData>;
+	}
+	get owner() {
+		return super.owner as DPWorkflow;
+	}
 	get singleRunAble() {
 		return false;
 	}

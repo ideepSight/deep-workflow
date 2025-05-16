@@ -19,12 +19,12 @@ export const IfElse: React.FC<NodeComponentProps<IfElseNode>> = observer(({ node
 	const conditions = node.conditions.slice().sort((a, b) => (a.type === 'else' ? 1 : -1));
 	return (
 		<div className="if-node-wrap">
-			<Handle type="target" className="base-handle" position={Position.Left} />
+			<Handle id={`${node.id}-target`} type="target" className="base-handle" position={Position.Left} />
 			<div className="condition-list">
 				{conditions.map((c) => (
 					<div key={c.id} className="cond-name">
 						<span className="if-else-label">{c.type === 'if' ? t('workflow:ifElse.if') : t('workflow:ifElse.else')}</span>
-						<Handle id={c.id} type="source" className="base-handle" position={Position.Right} />
+						<Handle id={`${c.id}-source`} type="source" className="base-handle" position={Position.Right} />
 					</div>
 				))}
 			</div>
