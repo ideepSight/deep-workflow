@@ -19,7 +19,7 @@ type SelectOptionVarProps = Omit<SelectVarProps, 'value' | 'onChange'> & {
 
 export const SelectOptionVar: React.FC<SelectOptionVarProps> = (props) => {
 	const { enableVars, value, onChange, size = 'default', style, filterType, empty, options } = props;
-	const [mode, setMode] = useState<'var' | 'option'>('var');
+	const [mode, setMode] = useState<'var' | 'option'>(value.mode || 'option');
 	const [varValue, setVarValue] = useState<DPVar | null>(value?.varValue);
 	const [optionValue, setOptionValue] = useState<string | null>(value?.optionValue);
 
@@ -54,7 +54,7 @@ export const SelectOptionVar: React.FC<SelectOptionVarProps> = (props) => {
 					value={optionValue}
 					onChange={handleChangeOption}
 					options={options}
-                    allowClear
+					allowClear
 					placeholder={t('workflow:runInputModal.select')}
 				/>
 			)}
