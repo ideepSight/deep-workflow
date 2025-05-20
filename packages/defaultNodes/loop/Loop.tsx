@@ -47,7 +47,7 @@ export const Loop: React.FC<NodeComponentProps<LoopNode>> = observer(({ node }) 
 
 				<Popover
 					className="add-node-popover"
-					getPopupContainer={() => document.querySelector('.workflow-wrap')}
+					// getPopupContainer={() => document.querySelector('.workflow-wrap')}
 					content={<AddNodeMenu blackList={[BlockEnum.Loop]} parentNode={node} />}
 				>
 					<Button size="mini" type="outline" icon={<IconPlusCircleFill />}>

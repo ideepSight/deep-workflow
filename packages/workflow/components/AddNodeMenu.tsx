@@ -67,7 +67,6 @@ export const AddNodeMenu: React.FC<{ blackList?: string[]; parentNode?: DPBaseNo
 								<Tooltip
 									position="right"
 									className="node-item-tooltip"
-									getPopupContainer={() => document.querySelector('.workflow-wrap')}
 									content={
 										<>
 											<div className="node-icon-wrap" style={{ background: node.iconColor }}>

@@ -270,6 +270,8 @@ const resources = {
 			baseNode: {
 				cannotRunSingle: '节点不能独立运行',
 				startRun: '开始运行',
+				stop: '停止',
+				confirmDelete: '确定删除此节点吗？',
 				runSuccess: '运行完成',
 				runFail: '运行失败，{{error}}',
 				errorMsg: '{{msg}}',

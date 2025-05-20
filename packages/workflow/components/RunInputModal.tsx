@@ -29,12 +29,12 @@ export const RunInputModal = async (inputDatas: InputFieldData[]) => {
 						<React.Fragment key={item.fieldName}>
 							{item.fieldType === FormItemType.textInput && (
 								<Form.Item label={item.label} field={item.fieldName} rules={[{ required: item.required, message: t('workflow:runInputModal.input') }]}>
-									<Input placeholder={item.placeholder} maxLength={20} showWordLimit />
+									<Input placeholder={item.placeholder} maxLength={50} showWordLimit />
 								</Form.Item>
 							)}
 							{item.fieldType === FormItemType.paragraph && (
 								<Form.Item label={item.label} field={item.fieldName} rules={[{ required: item.required, message: t('workflow:runInputModal.input') }]}>
-									<Input.TextArea placeholder={item.placeholder} maxLength={200} showWordLimit />
+									<Input.TextArea placeholder={item.placeholder} maxLength={500} showWordLimit />
 								</Form.Item>
 							)}
 							{item.fieldType === FormItemType.number && (

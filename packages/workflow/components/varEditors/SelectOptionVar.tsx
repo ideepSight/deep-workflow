@@ -5,7 +5,7 @@ import { Button, Select, Tooltip } from '@arco-design/web-react';
 import { SelectVar, SelectVarProps, DPVar, t } from '../../../workflow';
 import { Icon } from '@deep-sight/dp-iconfont';
 
-type SelectOptionVarValue = {
+export type SelectOptionVarValue = {
 	mode: 'var' | 'option';
 	varValue?: DPVar | null;
 	optionValue?: string | null;
@@ -15,10 +15,11 @@ type SelectOptionVarProps = Omit<SelectVarProps, 'value' | 'onChange'> & {
 	value?: SelectOptionVarValue;
 	onChange?: (value: SelectOptionVarValue) => void;
 	options: { label: string; value: string }[];
+	notFoundContent?: React.ReactNode;
 };
 
 export const SelectOptionVar: React.FC<SelectOptionVarProps> = (props) => {
-	const { enableVars, value, onChange, size = 'default', style, filterType, empty, options } = props;
+	const { enableVars, value, onChange, size = 'default', style, filterType, empty, options, notFoundContent } = props;
 	const [mode, setMode] = useState<'var' | 'option'>(value.mode || 'option');
 	const [varValue, setVarValue] = useState<DPVar | null>(value?.varValue);
 	const [optionValue, setOptionValue] = useState<string | null>(value?.optionValue);
@@ -53,6 +54,8 @@ export const SelectOptionVar: React.FC<SelectOptionVarProps> = (props) => {
 					style={style}
 					value={optionValue}
 					onChange={handleChangeOption}
+					getPopupContainer={(node) => node?.parentElement}
+					notFoundContent={notFoundContent}
 					options={options}
 					allowClear
 					placeholder={t('workflow:runInputModal.select')}

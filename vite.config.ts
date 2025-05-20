@@ -1,5 +1,5 @@
 import { defineConfig, ConfigEnv, UserConfig } from 'vite';
-import react from '@vitejs/plugin-react-refresh';
+import react from '@vitejs/plugin-react';
 import dts from 'vite-plugin-dts';
 
 // https://vitejs.dev/config/
@@ -16,7 +16,6 @@ export default defineConfig((params: ConfigEnv): UserConfig => {
 		}
 	};
 
-	console.log('build package', params);
 	// 当目标为 packages 时，使用库构建配置
 	if (params.mode === 'lib') {
 		return {

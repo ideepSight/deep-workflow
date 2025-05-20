@@ -6,7 +6,7 @@ import type { DPWorkflow } from './workflow';
 export enum DPVarType {
 	String = 'string',
 	Number = 'number',
-	// Boolean = 'boolean',
+	Boolean = 'boolean',
 	Object = 'object',
 	ArrayString = 'array<string>',
 	ArrayNumber = 'array<number>',

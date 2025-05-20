@@ -34,7 +34,7 @@ const BaseNodeInner: React.FC<
 						{node.singleRunAble && (
 							<Tooltip content={node.singleRunning ? t('workflow:baseNode.stop') : t('workflow:nodePane.runStep')}>
 								{node.singleRunning ? (
-									<Button type="secondary" shape="circle" size="mini" icon={<IconRecordStop />} onClick={() => node.stop()} />
+									<Button type="secondary" shape="circle" size="mini" status="danger" icon={<IconRecordStop />} onClick={() => node.stop()} />
 								) : (
 									<Button type="secondary" shape="circle" size="mini" icon={<IconPlayCircle />} onClick={() => node.runSingle()} />
 								)}
@@ -66,7 +66,7 @@ const BaseNodeInner: React.FC<
 			)}
 			{node.runningStatus === NodeRunningStatus.Succeeded && (
 				<Tooltip getPopupContainer={() => document.querySelector('.workflow-wrap')} content="运行成功">
-					<Badge status="success" style={{ marginLeft: 6, cursor: 'pointer' }} />
+					<Badge status="success" style={{ marginLeft: 6, position: 'absolute', top: -16, cursor: 'pointer' }} />
 				</Tooltip>
 			)}
 			<div className="base-node-bg">
