@@ -14,7 +14,7 @@ export const DefineVar: React.FC<{
 	disabled?: boolean;
 	onChange: (value: ValueType) => void;
 	enableVars?: EnableVar[];
-}> = ({ value, onChange, disabled, enableVars, empty, rule }) => {
+}> = ({ value, onChange, disabled, enableVars, empty, rule = {} }) => {
 	const [localValue, setLocalValue] = useState<ValueType>(value);
 	const [errorMsg, setErrorMsg] = useState<string>('');
 
@@ -26,10 +26,13 @@ export const DefineVar: React.FC<{
 
 	const handleChangeInput = async (res: ValueType) => {
 		let emsg = '';
-		const validator = new DPValidator([rule]);
+		const validator = new DPValidator([
+			rule,
+			{ required: true, message: t('workflow:vars.noEmpty') },
+			{ pattern: /^[a-zA-Z_\u4e00-\u9fa5$][a-zA-Z0-9_\u4e00-\u9fa5$]*$/, message: t('workflow:nodePane.titlePattern') }
+		]);
 		try {
 			await validator.validate(res.key);
-			onChange && onChange(res);
 		} catch (error) {
 			emsg = error?.errors[0].message;
 		} finally {
@@ -48,9 +51,13 @@ export const DefineVar: React.FC<{
 					status={errorMsg ? 'error' : null}
 					defaultValue={localValue.key}
 					onChange={(key) => {
-						const res = { ...localValue, key }
+						const res = { ...localValue, key };
 						setLocalValue(res);
-						handleChangeInput(res)
+						handleChangeInput(res);
+					}}
+					onBlur={() => {
+						handleChangeInput(localValue);
+						!errorMsg && onChange && onChange(localValue);
 					}}
 				/>
 				<SelectVar
