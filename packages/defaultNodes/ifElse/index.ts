@@ -29,7 +29,7 @@ export class IfElseNode extends DPBaseNode<IfElseNodeInnerData> {
 	}
 
 	addCondition() {
-		this.data.conditions.unshift({ type: 'if', id: uuid(), expValue: { mode: 'simple' } });
+		this.data.conditions.push({ type: 'if', id: uuid(), expValue: { mode: 'simple' } });
 	}
 
 	delCondition(id: string) {

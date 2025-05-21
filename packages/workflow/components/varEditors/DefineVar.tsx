@@ -3,18 +3,22 @@ import React, { useState } from 'react';
 import { DPVar, DPVarType, EnableVar } from '../../lib';
 import { Icon } from '@deep-sight/dp-iconfont';
 import { SelectVar } from './SelectVar';
+import { t } from '../../i18n';
 
 type ValueType = { key?: string; type?: DPVarType; expression?: string };
 export const DefineVar: React.FC<{
 	value: ValueType;
+	empty?: string;
 	disabled?: boolean;
 	onChange: (value: ValueType) => void;
 	enableVars?: EnableVar[];
-}> = ({ value, onChange, disabled, enableVars }) => {
+}> = ({ value, onChange, disabled, enableVars, empty }) => {
 	const [localValue, setLocalValue] = useState<ValueType>(value);
 
 	const handleSelectVar = (varItem: DPVar | null) => {
-		setLocalValue({ ...localValue, type: varItem.type, expression: varItem.fullKey });
+		const res = { ...localValue, type: varItem?.type, expression: varItem?.fullKey };
+		setLocalValue(res);
+		onChange && onChange(res);
 	};
 
 	return (
@@ -33,7 +37,13 @@ export const DefineVar: React.FC<{
 						onChange && onChange(localValue);
 					}}
 				/>
-				<SelectVar enableVars={enableVars} style={{ flex: 1 }} size="small" onChange={handleSelectVar} />
+				<SelectVar
+					empty={empty || t('workflow:vars.connectVarNode')}
+					enableVars={enableVars}
+					style={{ flex: 1 }}
+					size="small"
+					onChange={handleSelectVar}
+				/>
 			</Space>
 		</div>
 	);

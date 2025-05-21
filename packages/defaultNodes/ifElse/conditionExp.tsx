@@ -40,20 +40,25 @@ export const ConditionExp: React.FC<ConditionExpProps> = ({ enableVars = [], val
 			Message.warning('复杂类型请使用高级表达式');
 			return;
 		}
-		if (varItemRight) {
-			onChange && onChange({ mode, left: `${varItemLeft.owner.title}.${varItemLeft.key}`, right: varItemRight, operator });
-		}
+		onChange && onChange({ mode, left: `${varItem.owner.title}.${varItem.key}`, right: varItemRight, operator });
 		setVarItemLeft(varItem);
 	};
 
 	const handleChangeVarRight = (varItem: string) => {
-		setVarItemRight(varItem);
-		onChange && onChange({ mode, left: `${varItemLeft.owner.title}.${varItemLeft.key}`, right: varItem, operator });
+		if (varItem) {
+			setVarItemRight(varItem);
+			onChange && onChange({ mode, left: varItemLeft ? `${varItemLeft.owner.title}.${varItemLeft.key}` : null, right: varItem, operator });
+		}
 	};
 
 	const handleChangeExpression = (expression: string) => {
 		setExpression(expression);
 		onChange && onChange({ mode, expression });
+	};
+
+	const handleChangeOperator = (value: string) => {
+		setOperator(value);
+		onChange && onChange({ mode, left: varItemLeft ? `${varItemLeft.owner.title}.${varItemLeft.key}` : null, right: varItemRight, operator });
 	};
 
 	return (
@@ -64,7 +69,7 @@ export const ConditionExp: React.FC<ConditionExpProps> = ({ enableVars = [], val
 						<div className="condition-left">
 							<SelectVar enableVars={enableVars} value={varItemLeft} onChange={handleChangeVarLeft} />
 							{varItemLeft?.type === DPVarType.Number ? (
-								<Select className="condition-select" defaultValue="x === y" onChange={(value) => setOperator(value)} value={operator}>
+								<Select className="condition-select" defaultValue="x === y" onChange={handleChangeOperator} value={operator}>
 									<Select.Option value="x === y">=</Select.Option>
 									<Select.Option value="x !== y">≠</Select.Option>
 									<Select.Option value="x < y">&lt;</Select.Option>
@@ -75,7 +80,7 @@ export const ConditionExp: React.FC<ConditionExpProps> = ({ enableVars = [], val
 									<Select.Option value="x !== ''">不为空</Select.Option>
 								</Select>
 							) : (
-								<Select className="condition-select" defaultValue="x === y" onChange={(value) => setOperator(value)} value={operator}>
+								<Select className="condition-select" defaultValue="x === y" onChange={handleChangeOperator} value={operator}>
 									<Select.Option value="x === y">相等</Select.Option>
 									<Select.Option value="x !== y">不相等</Select.Option>
 									<Select.Option value="x.indexOf(y) > 0">包含</Select.Option>

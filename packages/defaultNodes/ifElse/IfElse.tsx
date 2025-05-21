@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite';
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { Handle, Position } from '@xyflow/react';
 import './index.less';
 import { NodeComponentProps } from '../../workflow';
@@ -16,7 +16,12 @@ export const IfElseIcon = () => {
 
 export const IfElse: React.FC<NodeComponentProps<IfElseNode>> = observer(({ node }) => {
 	const { t } = useI18n();
-	const conditions = node.conditions.slice().sort((a, b) => (a.type === 'else' ? 1 : -1));
+	const conditionElse = node.conditions.filter((c) => c.type === 'else');
+	const conditions = [...node.conditions.filter((c) => c.type === 'if'), ...conditionElse];
+	useEffect(() => {
+		node.owner.updateEdges(true);
+		node.owner.updateNodes(true);
+	}, [conditions.length, node.owner]);
 	return (
 		<div className="if-node-wrap">
 			<Handle id={`${node.id}-target`} type="target" className="base-handle" position={Position.Left} />

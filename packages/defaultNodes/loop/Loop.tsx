@@ -127,7 +127,8 @@ export const LoopSet: React.FC<NodeComponentProps<LoopNode>> = observer(({ node 
 								<div key={outVar.key} className="var-item-wrap">
 									<DefineVar
 										enableVars={node.childEnableVars}
-										value={outVar}
+										value={outVar.data}
+										empty={t('workflow:vars.noChildOutputVar')}
 										onChange={(v) => {
 											outVar.key = v.key;
 											outVar.type = v.type;
