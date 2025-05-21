@@ -18,7 +18,7 @@ export const InputVar: React.FC<{
 		onChange && onChange(v);
 	};
 	return (
-		<div className="var-item-block input-item">
+		<div className="var-item-block input-item" style={{ display: 'flex', gap: 4, justifyContent: 'space-between', width: '100%' }}>
 			<Space size={4}>
 				<Input
 					prefix={<Icon className="var-fx" name="huanjingbianliang" />}
@@ -32,7 +32,7 @@ export const InputVar: React.FC<{
 			<Space className="var-type" size={2}>
 				<Select
 					size="small"
-					style={{ flex: 1 }}
+					style={{ flex: 1, width: 130 }}
 					disabled={disabled}
 					value={localValue.type}
 					onChange={(v) => {
