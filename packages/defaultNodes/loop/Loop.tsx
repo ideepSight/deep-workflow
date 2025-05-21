@@ -129,6 +129,17 @@ export const LoopSet: React.FC<NodeComponentProps<LoopNode>> = observer(({ node 
 										enableVars={node.childEnableVars}
 										value={outVar.data}
 										empty={t('workflow:vars.noChildOutputVar')}
+										rule={{
+											validator: (_, value, cb) => {
+												if (!value) {
+													cb(t('workflow:vars.noEmpty'));
+												}
+												if(node.outputs.find((v, i) => i !== index && v.key === value)) {
+													cb(t('workflow:vars.noRepeat'));
+												}
+												return true;
+											}
+										}}
 										onChange={(v) => {
 											outVar.key = v.key;
 											outVar.type = v.type;

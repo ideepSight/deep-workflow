@@ -132,7 +132,7 @@
 			display: flex;
 		}
 		.error {
-			color: var(--color-danger-light-4);
+			color: rgb(var(--red-6));
 		}
 	}
 	.base-node-wrap {
@@ -167,7 +167,7 @@
 			cursor: pointer;
 			width: 20px;
 			.arco-icon {
-				color: var(--color-danger-light-4);
+				color: rgb(var(--red-6));
 				margin-top: 5px;
 			}
 		}
@@ -209,7 +209,7 @@
 			.base-node-inner {
 				transition: all 0.2s;
 				box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
-				border: 2px solid var(--color-danger-light-4);
+				border: 2px solid rgb(var(--red-6));
 			}
 		}
 		&.succeeded {
@@ -259,7 +259,7 @@
 			padding-top: 8px;
 			box-shadow: 0 1px 2px 1px rgba(0, 0, 0, 0.1);
 			&.error {
-				border-color: #ff4d4f;
+				border-color: rgb(var(--red-6));
 			}
 		}
 	}
@@ -294,7 +294,7 @@
 		overflow: hidden;
 		display: flex;
 		&:hover {
-			color: #ff4d4f;
+			color: rgb(var(--red-6));
 		}
 		svg {
 			transform: scale(1.2);
@@ -338,7 +338,7 @@
 		padding-right: 6px;
 	}
 	.error-title {
-		color: #ff4d4f;
+		color: rgb(var(--red-6));
 		font-size: 12px;
 		margin-left: 14px;
 	}
@@ -364,14 +364,19 @@
 		border: 1px solid var(--color-border-2);
 		border-radius: 8px;
 		padding: 6px 10px;
-		display: flex;
-		gap: 8px;
+		// display: flex;
+		// gap: 8px;
+		// justify-content: space-between;
 		align-items: center;
 		cursor: pointer;
 		transition: box-shadow 0.3s;
 		box-shadow: 0 0 0 0 var(--color-border-2);
-		justify-content: space-between;
 		overflow: hidden;
+		.input-err-msg {
+			color: rgb(var(--red-6));
+			font-size: 11px;
+			margin-top: 2px;
+		}
 		.btns {
 			visibility: hidden;
 		}

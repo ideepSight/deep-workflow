@@ -4,21 +4,37 @@ import { DPVar, DPVarType, EnableVar } from '../../lib';
 import { Icon } from '@deep-sight/dp-iconfont';
 import { SelectVar } from './SelectVar';
 import { t } from '../../i18n';
+import { DPRuleItem, DPValidator } from '../../validator';
 
 type ValueType = { key?: string; type?: DPVarType; expression?: string };
 export const DefineVar: React.FC<{
 	value: ValueType;
 	empty?: string;
+	rule?: DPRuleItem;
 	disabled?: boolean;
 	onChange: (value: ValueType) => void;
 	enableVars?: EnableVar[];
-}> = ({ value, onChange, disabled, enableVars, empty }) => {
+}> = ({ value, onChange, disabled, enableVars, empty, rule }) => {
 	const [localValue, setLocalValue] = useState<ValueType>(value);
+	const [errorMsg, setErrorMsg] = useState<string>('');
 
 	const handleSelectVar = (varItem: DPVar | null) => {
 		const res = { ...localValue, type: varItem?.type, expression: varItem?.fullKey };
 		setLocalValue(res);
 		onChange && onChange(res);
+	};
+
+	const handleChangeInput = async (res: ValueType) => {
+		let emsg = '';
+		const validator = new DPValidator([rule]);
+		try {
+			await validator.validate(res.key);
+			onChange && onChange(res);
+		} catch (error) {
+			emsg = error?.errors[0].message;
+		} finally {
+			setErrorMsg(emsg);
+		}
 	};
 
 	return (
@@ -29,12 +45,12 @@ export const DefineVar: React.FC<{
 					size="small"
 					disabled={disabled}
 					style={{ width: 120 }}
+					status={errorMsg ? 'error' : null}
 					defaultValue={localValue.key}
 					onChange={(key) => {
-						setLocalValue({ ...localValue, key });
-					}}
-					onBlur={() => {
-						onChange && onChange(localValue);
+						const res = { ...localValue, key }
+						setLocalValue(res);
+						handleChangeInput(res)
 					}}
 				/>
 				<SelectVar
@@ -46,6 +62,7 @@ export const DefineVar: React.FC<{
 					onChange={handleSelectVar}
 				/>
 			</div>
+			{errorMsg && <div className="input-err-msg">{errorMsg}</div>}
 		</div>
 	);
 };

@@ -193,6 +193,12 @@ const resources = {
 				expRunError: 'Expression execution error:',
 				expRunFail: 'Expression execution failed: {{msg}}',
 				elseDescription: 'If the condition is not met, execute the ELSE block'
+			},
+			vars: {
+				noChildOutputVar: 'Please connect to a node with variables first',
+				connectVarNode: 'Please connect to a node with variables first',
+				noEmpty: 'Cannot be empty',
+				noRepeat: 'Cannot repeat'
 			}
 		}
 	},
@@ -396,6 +402,8 @@ const resources = {
 			vars: {
 				noChildOutputVar: '请先连接有变量的子节点',
 				connectVarNode: '请先连接有变量的节点',
+				noEmpty: '名称不能为空',
+				noRepeat: '名称不能重复'
 			}
 		}
 	}

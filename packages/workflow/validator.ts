@@ -18,7 +18,7 @@ interface InternalRuleItem extends Omit<RuleItem, 'validator'> {
 
 type ExecuteValidator = (rule: InternalRuleItem, value: any, callback: (error?: string[]) => void, source: ValidateSource, options: ValidateOption) => void;
 
-export type DPRuleItem<T> = Omit<RuleItem, 'type'> & { type?: RuleType | T };
+export type DPRuleItem<T = RuleItem> = Omit<RuleItem, 'type'> & { type?: RuleType | T };
 
 export type DPRuleType = 'path';
 
