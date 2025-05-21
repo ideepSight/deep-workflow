@@ -23,7 +23,7 @@ export const DefineVar: React.FC<{
 
 	return (
 		<div className="var-item-block input-item">
-			<Space size={4} style={{ justifyContent: 'space-between' }}>
+			<div style={{ display: 'flex', gap: 4, justifyContent: 'space-between', width: '100%' }}>
 				<Input
 					prefix={<Icon className="var-fx" name="huanjingbianliang" />}
 					size="small"
@@ -42,9 +42,10 @@ export const DefineVar: React.FC<{
 					enableVars={enableVars}
 					style={{ flex: 1 }}
 					size="small"
+					value={localValue.expression}
 					onChange={handleSelectVar}
 				/>
-			</Space>
+			</div>
 		</div>
 	);
 };

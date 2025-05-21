@@ -1,4 +1,4 @@
-import { DPBaseNode, BlockEnum, DPNodeInnerData, NodeRunningStatus, t, DPNodeData, DPWorkflow } from '../../workflow';
+import { DPBaseNode, BlockEnum, DPNodeInnerData, NodeRunningStatus, t, DPNodeData, DPWorkflow, toContext } from '../../workflow';
 import { IfElse, IfElseIcon, IfElseSet } from './IfElse';
 import type { ExpValue } from './conditionExp';
 import { uuid } from 'short-uuid';
@@ -70,13 +70,7 @@ export class IfElseNode extends DPBaseNode<IfElseNodeInnerData> {
 	private runExpression(expression: string): boolean {
 		try {
 			// 创建一个沙盒运行环境 并提供变量上下文
-			const context = this.enableVars.reduce((acc, { node, vars }) => {
-				acc[node.title] = vars.reduce((varAcc, v) => {
-					varAcc[v.key] = v.value;
-					return varAcc;
-				}, {});
-				return acc;
-			}, {});
+			const context = toContext(this.enableVars)
 			const res = new Function(`{${Object.keys(context).join(', ')}}`, `return ${expression}`)(context);
 			return res;
 		} catch (error) {

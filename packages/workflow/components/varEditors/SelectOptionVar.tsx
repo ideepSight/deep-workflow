@@ -1,13 +1,13 @@
 // 下拉选择或者变量选择
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Button, Select, Tooltip } from '@arco-design/web-react';
-import { SelectVar, SelectVarProps, DPVar, t } from '../../../workflow';
+import { SelectVar, SelectVarProps, DPVar, t, toFlatEnableVars } from '../../../workflow';
 import { Icon } from '@deep-sight/dp-iconfont';
 
 export type SelectOptionVarValue = {
 	mode: 'var' | 'option';
-	varValue?: DPVar | null;
+	innerValue?: DPVar | string | null; // 支持传 expression
 	optionValue?: string | null;
 };
 
@@ -21,12 +21,12 @@ type SelectOptionVarProps = Omit<SelectVarProps, 'value' | 'onChange'> & {
 export const SelectOptionVar: React.FC<SelectOptionVarProps> = (props) => {
 	const { enableVars, value, onChange, size = 'default', style, filterType, empty, options, notFoundContent } = props;
 	const [mode, setMode] = useState<'var' | 'option'>(value.mode || 'option');
-	const [varValue, setVarValue] = useState<DPVar | null>(value?.varValue);
+	const [varValue, setVarValue] = useState<DPVar | string | null>(value?.innerValue);
 	const [optionValue, setOptionValue] = useState<string | null>(value?.optionValue);
 
 	const handleChangeVar = (varItem: DPVar | null) => {
 		setVarValue(varItem);
-		onChange?.({ ...value, varValue: varItem });
+		onChange?.({ ...value, innerValue: varItem });
 		setOptionValue(null);
 	};
 

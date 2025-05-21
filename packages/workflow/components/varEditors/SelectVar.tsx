@@ -1,14 +1,14 @@
 import { observer } from 'mobx-react-lite';
 import React, { useMemo } from 'react';
-import { Empty, Select, Space } from '@arco-design/web-react';
+import { Empty, Select, Space, Tooltip } from '@arco-design/web-react';
 import type { DPBaseNode, DPVar, EnableVar } from '../../../workflow';
-import { DPVarType } from '../../../workflow';
+import { DPVarType, toFlatEnableVars } from '../../../workflow';
 import { Icon } from '@deep-sight/dp-iconfont';
 import { useI18n } from '../../i18n';
 
 export type SelectVarProps = {
 	enableVars: EnableVar[];
-	value?: DPVar | null;
+	value?: DPVar | string | null; // 支持传 expression
 	onChange?: (varItem: DPVar | null) => void;
 	size?: 'small' | 'default';
 	style?: React.CSSProperties;
@@ -34,6 +34,16 @@ export const SelectVar: React.FC<SelectVarProps> = observer((props) => {
 		});
 		return res;
 	}, [enableVars, filterType]);
+
+	const valueVar = useMemo(() => {
+		if (!value) return null;
+		if (typeof value === 'string') {
+			const flatEnableVars = toFlatEnableVars(enableVars);
+			const varItem = flatEnableVars.find((v) => v.varFullkey === value)?.value;
+			return varItem;
+		}
+		return value;
+	}, [enableVars, value]);
 	return (
 		<Select
 			size={size}
@@ -43,7 +53,7 @@ export const SelectVar: React.FC<SelectVarProps> = observer((props) => {
 			getPopupContainer={() => document.querySelector('.workflow-wrap')}
 			allowClear
 			notFoundContent={<Empty description={enableVars.length ? empty : t('workflow:selectVar.connectVarNode')} />}
-			defaultValue={value?.key}
+			defaultValue={valueVar?.key}
 			placeholder={t('workflow:selectVar.selectVar')}
 			style={{ minWidth: 160, ...style }}
 			onChange={(key, option) => handleChange(key, Array.isArray(option) ? option.map((o) => o.extra)[0] : option?.extra)}
@@ -51,19 +61,38 @@ export const SelectVar: React.FC<SelectVarProps> = observer((props) => {
 				if (option) {
 					const dpNode = option?.extra;
 					return (
-						<Space className="var-item-home" size={4}>
-							<Space size={2}>
-								{dpNode.nodeConfig.icon && dpNode.nodeConfig.icon({})}
-								{dpNode.title}
-							</Space>
-							<b>/</b>
-							<div className="var-item">
-								<Space size={4}>
-									<Icon className="var-fx" name="huanjingbianliang" />
-									{option.value}
+						<Tooltip
+							getPopupContainer={() => document.querySelector('.workflow-wrap')}
+							content={
+								<Space className="var-item-home" size={4}>
+									<Space size={2}>
+										{dpNode.nodeConfig.icon && dpNode.nodeConfig.icon({})}
+										{dpNode.title}
+									</Space>
+									<b>/</b>
+									<div className="var-item">
+										<Space size={4}>
+											<Icon className="var-fx" name="huanjingbianliang" />
+											{option.value}
+										</Space>
+									</div>
 								</Space>
-							</div>
-						</Space>
+							}
+						>
+							<Space className="var-item-home" size={4}>
+								<Space size={2}>
+									{dpNode.nodeConfig.icon && dpNode.nodeConfig.icon({})}
+									{dpNode.title}
+								</Space>
+								<b>/</b>
+								<div className="var-item">
+									<Space size={4}>
+										<Icon className="var-fx" name="huanjingbianliang" />
+										{option.value}
+									</Space>
+								</div>
+							</Space>
+						</Tooltip>
 					);
 				}
 				return <>{value}</>;

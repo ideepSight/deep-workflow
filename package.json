@@ -26,6 +26,8 @@
 		"prettier:fix": "npm run prettier -- --write",
 		"format": "npm run prettier:fix && npm run lint:fix",
 		"predeploy": "npm run build",
+		"iconfont": "get-iconfont --main font_3957965_yxss3xbk7gg",
+		"prepare": "npm run iconfont",
 		"deploy": "gh-pages -d docs"
 	},
 	"peerDependencies": {
@@ -74,7 +76,7 @@
 		"prettier": "^2.4.1",
 		"request": "^2.88.2",
 		"typescript": "^5.1.0",
-		"vite": "^5.2.11",
+		"vite": "5.2.11",
 		"vite-plugin-dts": "^4.5.3",
 		"vite-plugin-externals": "^0.6.2",
 		"vite-plugin-html": "^3.2.0",

@@ -1,4 +1,16 @@
-import { DPBaseNode, BlockEnum, DPNodeInnerData, DPVar, t, NodeRunningStatus, DPWorkflow, DPNodeData } from '../../workflow';
+import {
+	DPBaseNode,
+	BlockEnum,
+	DPNodeInnerData,
+	DPVar,
+	t,
+	NodeRunningStatus,
+	DPWorkflow,
+	DPNodeData,
+	toContext,
+	toFlatEnableVars,
+	DPVarType
+} from '../../workflow';
 import { Loop, LoopIcon, LoopSet } from './Loop';
 
 export type LoopNodeInnerData = DPNodeInnerData & {
@@ -30,14 +42,7 @@ export class LoopNode extends DPBaseNode<LoopNodeInnerData> {
 		this.data.loopCount = val;
 	}
 	get loopVar() {
-		return this.enableVars
-			.flatMap(({ node, vars }) =>
-				vars.map((varItem) => ({
-					varFullkey: `${node.title}.${varItem.key}`,
-					value: varItem
-				}))
-			)
-			.find((v) => v.varFullkey === this.data.loopVar.varFullkey)?.value;
+		return toFlatEnableVars(this.enableVars).find((v) => v.varFullkey === this.data.loopVar.varFullkey)?.value;
 	}
 	set loopVar(varItem: DPVar | null) {
 		this.data.loopVar.varFullkey = varItem ? `${varItem.owner.title}.${varItem.key}` : '';
@@ -84,7 +89,7 @@ export class LoopNode extends DPBaseNode<LoopNodeInnerData> {
 			if (!loopVar) {
 				throw new Error(t('workflow:loop.varNotExist'));
 			}
-			const loopCount = loopVar.value.length;
+			const loopCount = loopVar.type === DPVarType.Number ? loopVar : loopVar.value.length;
 			// 找到loopStart节点
 			const loopStartNode = (this.owner as DPWorkflow).dpNodes.find((node) => node.nodeConfig.type === BlockEnum.LoopStart && node.parentId === this.id);
 			for (let i = 0; i < loopCount; i++) {
@@ -115,13 +120,7 @@ export class LoopNode extends DPBaseNode<LoopNodeInnerData> {
 	private runExpression(expression: string): boolean {
 		try {
 			// 创建一个沙盒运行环境 并提供变量上下文
-			const context = this.childEnableVars.reduce((acc, { node, vars }) => {
-				acc[node.title] = vars.reduce((varAcc, v) => {
-					varAcc[v.key] = v.value;
-					return varAcc;
-				}, {});
-				return acc;
-			}, {});
+			const context = toContext(this.childEnableVars);
 			const res = new Function(`{${Object.keys(context).join(', ')}}`, `return ${expression}`)(context);
 			return res;
 		} catch (error) {

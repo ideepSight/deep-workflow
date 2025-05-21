@@ -1,3 +1,4 @@
+export * from './lib/varUtils';
 export * from './lib/validate';
 export * from './SelectVar';
 export * from './SimpleExpression';

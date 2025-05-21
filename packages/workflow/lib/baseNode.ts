@@ -5,7 +5,7 @@ import { Node } from '@xyflow/react';
 import { DPVar, DPVarType } from './var';
 import type { DPWorkflow } from './workflow';
 import { RunInputModal } from '../components/RunInputModal';
-import { FormItemType, t } from '../../workflow';
+import { FormItemType, formToContext, t, toContext } from '../../workflow';
 
 export enum BlockEnum {
 	Start = 'start',
@@ -248,26 +248,13 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 				);
 				if (res && Object.keys(res).length) {
 					// 把res的 {'Start.one': 1}转成 {Start:{one: 1}}
-					const context = Object.entries(res).reduce((acc, [key, value]) => {
-						const [nodeName, varName] = key.split('.');
-						if (!acc[nodeName]) {
-							acc[nodeName] = {};
-						}
-						acc[nodeName][varName] = value;
-						return acc;
-					}, {});
+					const context = formToContext(res);
 					return context;
 				}
 			}
 			return {};
 		}
-		return this.enableVars.reduce((acc, { node, vars }) => {
-			acc[node.title] = vars.reduce((varAcc, v) => {
-				varAcc[v.key] = v.value;
-				return varAcc;
-			}, {});
-			return acc;
-		}, {});
+		return toContext(this.enableVars);
 	}
 	// 节点自行决定独立运行时需要手动赋值的变量
 	get runSingleNeedAssignVars(): DPVar[] {

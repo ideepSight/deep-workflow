@@ -165,6 +165,7 @@
 			display: block !important;
 			text-align: left;
 			cursor: pointer;
+			width: 20px;
 			.arco-icon {
 				color: var(--color-danger-light-4);
 				margin-top: 5px;
@@ -370,6 +371,7 @@
 		transition: box-shadow 0.3s;
 		box-shadow: 0 0 0 0 var(--color-border-2);
 		justify-content: space-between;
+		overflow: hidden;
 		.btns {
 			visibility: hidden;
 		}
@@ -409,7 +411,8 @@
 	}
 	.var-fx {
 		color: rgb(var(--primary-7));
-		vertical-align: -2px;
+		height: 1em;
+		line-height: 1;
 		i {
 			font-size: 13px;
 		}
@@ -494,7 +497,7 @@
 			align-items: center;
 			padding-top: 2px;
 			padding-bottom: 2px;
-			height: 32px;
+			min-height: 32px;
 			.prefix-icon {
 				width: 15px;
 				cursor: pointer;
@@ -656,6 +659,9 @@
 		display: flex;
 		gap: 6px;
 		align-items: center;
+	}
+	input:read-only {
+		cursor: default;
 	}
 }
 .node-item-tooltip {
