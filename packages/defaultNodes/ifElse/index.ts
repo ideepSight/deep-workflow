@@ -16,7 +16,8 @@ export class IfElseNode extends DPBaseNode<IfElseNodeInnerData> {
 		return false;
 	}
 	get conditions() {
-		return this.data.conditions;
+		// type为if排在前面
+		return [...this.data.conditions.filter((c) => c.type === 'if'), ...this.data.conditions.filter((c) => c.type === 'else')];
 	}
 
 	init(data: IfElseNodeInnerData) {
@@ -52,7 +53,8 @@ export class IfElseNode extends DPBaseNode<IfElseNodeInnerData> {
 					expression = c.expValue.operator.replace('x', `${c.expValue.left}`).replace('y', `${c.expValue.right}`);
 				}
 				// 执行表达式 创建一个沙盒运行环境
-				const res = this.runExpression(expression);
+				const context = toContext(this.enableVars);
+				const res = this.runExpression(expression, context);
 				if (res) {
 					this.runningStatus = NodeRunningStatus.Succeeded;
 					const edge = this.owner.dpEdges.find((edge) => edge.data.sourceHandle === c.id);
@@ -62,20 +64,10 @@ export class IfElseNode extends DPBaseNode<IfElseNodeInnerData> {
 			} else {
 				this.runningStatus = NodeRunningStatus.Succeeded;
 				const edge = this.owner.dpEdges.find((edge) => edge.data.sourceHandle === c.id);
+				if (!edge) throw new Error(t('workflow:ifElse.elseEdgeNotFound'));
 				this._nextRunNode = this.owner.dpNodes.find((node) => node.id === edge.target);
 				return;
 			}
-		}
-	}
-	private runExpression(expression: string): boolean {
-		try {
-			// 创建一个沙盒运行环境 并提供变量上下文
-			const context = toContext(this.enableVars)
-			const res = new Function(`{${Object.keys(context).join(', ')}}`, `return ${expression}`)(context);
-			return res;
-		} catch (error) {
-			console.error(t('workflow:ifElse.expRunError'), error);
-			throw new Error(t('workflow:ifElse.expRunFail', { msg: error.message }));
 		}
 	}
 }

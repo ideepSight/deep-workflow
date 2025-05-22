@@ -22,7 +22,7 @@ export const ConditionExp: React.FC<ConditionExpProps> = ({ enableVars = [], val
 	const leftItem = enableVars.find((v) => v.node.title === splitLeft?.[0])?.node.vars.find((v) => v.key === splitLeft?.[1]);
 
 	const [varItemLeft, setVarItemLeft] = useState<DPVar | null>(leftItem || null);
-	const [operator, setOperator] = useState<string>(value?.operator || 'x === y');
+	const [operator, setOperator] = useState<string>(value?.operator || 'x == y');
 	const [varItemRight, setVarItemRight] = useState<string | null>(value?.right);
 	const [expression, setExpression] = useState<string | null>(value?.expression);
 	const [mode, setMode] = useState<'simple' | 'advanced'>(value?.mode || 'simple');
@@ -69,26 +69,26 @@ export const ConditionExp: React.FC<ConditionExpProps> = ({ enableVars = [], val
 						<div className="condition-left">
 							<SelectVar enableVars={enableVars} value={varItemLeft} onChange={handleChangeVarLeft} />
 							{varItemLeft?.type === DPVarType.Number ? (
-								<Select className="condition-select" defaultValue="x === y" onChange={handleChangeOperator} value={operator}>
-									<Select.Option value="x === y">=</Select.Option>
-									<Select.Option value="x !== y">≠</Select.Option>
+								<Select className="condition-select" defaultValue="x == y" onChange={handleChangeOperator} value={operator}>
+									<Select.Option value="x == y">=</Select.Option>
+									<Select.Option value="x != y">≠</Select.Option>
 									<Select.Option value="x < y">&lt;</Select.Option>
 									<Select.Option value="x > y">&gt;</Select.Option>
 									<Select.Option value="x <= y">≤</Select.Option>
 									<Select.Option value="x >= y">≥</Select.Option>
-									<Select.Option value="x === ''">为空</Select.Option>
-									<Select.Option value="x !== ''">不为空</Select.Option>
+									<Select.Option value="x == ''">为空</Select.Option>
+									<Select.Option value="x != ''">不为空</Select.Option>
 								</Select>
 							) : (
-								<Select className="condition-select" defaultValue="x === y" onChange={handleChangeOperator} value={operator}>
-									<Select.Option value="x === y">相等</Select.Option>
-									<Select.Option value="x !== y">不相等</Select.Option>
+								<Select className="condition-select" defaultValue="x == y" onChange={handleChangeOperator} value={operator}>
+									<Select.Option value="x == y">相等</Select.Option>
+									<Select.Option value="x != y">不相等</Select.Option>
 									<Select.Option value="x.indexOf(y) > 0">包含</Select.Option>
 									<Select.Option value="x.indexOf(y) < 0">不包含</Select.Option>
 									<Select.Option value="x.indexOf(y) === 0">开始是</Select.Option>
 									<Select.Option value="x.indexOf(y) === x.length - 1">结束是</Select.Option>
-									<Select.Option value="x === ''">为空</Select.Option>
-									<Select.Option value="x !== ''">不为空</Select.Option>
+									<Select.Option value="x == ''">为空</Select.Option>
+									<Select.Option value="x != ''">不为空</Select.Option>
 								</Select>
 							)}
 						</div>

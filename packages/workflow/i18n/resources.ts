@@ -38,7 +38,7 @@ const resources = {
 				maxRetry: 'Max retry times',
 				times: 'times',
 				retryInterval: 'Retry interval',
-				seconds: 'seconds'
+				seconds: 'millisecond'
 			},
 			expressionLine: {
 				error: 'Expression error',
@@ -157,7 +157,8 @@ const resources = {
 				desc: 'Run a piece of code',
 				outputVar: 'Output Variables',
 				outputTip: 'No configuration required, automatically obtained from return in code',
-				noOutput: 'No output fields'
+				noOutput: 'No output fields',
+				outputReadonlyTip: 'Output variables are read-only'
 			},
 			loop: {
 				varNotExist: 'Loop variable does not exist',
@@ -192,7 +193,8 @@ const resources = {
 				expConfigError: 'Expression configuration error',
 				expRunError: 'Expression execution error:',
 				expRunFail: 'Expression execution failed: {{msg}}',
-				elseDescription: 'If the condition is not met, execute the ELSE block'
+				elseDescription: 'If the condition is not met, execute the ELSE block',
+				elseEdgeNotFound: 'Else edge not found'
 			},
 			vars: {
 				noChildOutputVar: 'Please connect to a node with variables first',
@@ -241,7 +243,7 @@ const resources = {
 				maxRetry: '最大重试次数',
 				times: '次',
 				retryInterval: '重试间隔',
-				seconds: '秒'
+				seconds: '毫秒'
 			},
 			expressionLine: {
 				error: '表达式错误',
@@ -362,7 +364,8 @@ const resources = {
 				desc: '运行一段代码',
 				outputVar: '输出变量',
 				outputTip: '无需配置，自动从代码里的 return 中获取',
-				noOutput: '暂无输出字段'
+				noOutput: '暂无输出字段',
+				outputReadonlyTip: '自动从代码里的 return 中获取的参数不可修改'
 			},
 			loop: {
 				varNotExist: '循环变量不存在',
@@ -397,7 +400,8 @@ const resources = {
 				expConfigError: '表达式配置错误, 请检查',
 				expRunError: '表达式执行错误:',
 				expRunFail: '表达式执行失败: {{msg}}',
-				elseDescription: '用于定义当 条件判断 不满足时应执行的逻辑。'
+				elseDescription: '用于定义当 条件判断 不满足时应执行的逻辑。',
+				elseEdgeNotFound: '没有找到 否则 连线'
 			},
 			vars: {
 				noChildOutputVar: '请先连接有变量的子节点',

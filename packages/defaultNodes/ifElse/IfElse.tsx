@@ -29,7 +29,7 @@ export const IfElse: React.FC<NodeComponentProps<IfElseNode>> = observer(({ node
 				{conditions.map((c) => (
 					<div key={c.id} className="cond-name">
 						<span className="if-else-label">{c.type === 'if' ? t('workflow:ifElse.if') : t('workflow:ifElse.else')}</span>
-						<Handle id={`${c.id}-source`} type="source" className="base-handle" position={Position.Right} />
+						<Handle id={`${c.id}`} type="source" className="base-handle" position={Position.Right} />
 					</div>
 				))}
 			</div>
@@ -40,16 +40,15 @@ export const IfElse: React.FC<NodeComponentProps<IfElseNode>> = observer(({ node
 export const IfElseSet: React.FC<NodeComponentProps<IfElseNode>> = observer(({ node }) => {
 	const { t } = useI18n();
 	const enableVars = node.enableVars.reverse();
-
+	const ifConditions = node.conditions.filter((c) => c.type === 'if');
 	return (
 		<div className="custom-node-set-wrap if-else-node">
-			{node.conditions
-				.filter((c) => c.type === 'if')
-				.map((c) => (
-					<Fragment key={c.id}>
-						<div className="condition-if">
-							<b className="handle-name">{t('workflow:ifElse.if')}</b>
-							<ConditionExp enableVars={enableVars} value={c.expValue} onChange={(v) => (c.expValue = v)} />
+			{ifConditions.map((c) => (
+				<Fragment key={c.id}>
+					<div className="condition-if">
+						<b className="handle-name">{t('workflow:ifElse.if')}</b>
+						<ConditionExp enableVars={enableVars} value={c.expValue} onChange={(v) => (c.expValue = v)} />
+						{ifConditions.length > 1 && (
 							<Tooltip content={t('workflow:ifElse.deleteCondition')}>
 								<Button
 									type="secondary"
@@ -60,9 +59,10 @@ export const IfElseSet: React.FC<NodeComponentProps<IfElseNode>> = observer(({ n
 									onClick={() => node.delCondition(c.id)}
 								/>
 							</Tooltip>
-						</div>
-					</Fragment>
-				))}
+						)}
+					</div>
+				</Fragment>
+			))}
 			<Tooltip content={t('workflow:ifElse.addCondition')}>
 				<Button type="secondary" size="mini" icon={<IconPlus className="btn-gray-icon" />} className="add-btn" onClick={() => node.addCondition()} />
 			</Tooltip>

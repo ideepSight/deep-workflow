@@ -112,21 +112,10 @@ export class LoopNode extends DPBaseNode<LoopNodeInnerData> {
 		const outputs = this.outputs;
 		for (let i = 0; i < outputs.length; i++) {
 			const output = outputs[i];
-			output.value = this.runExpression(output.expression);
+			const context = toContext(this.childEnableVars);
+			output.value = this.runExpression(output.expression, context);
 		}
 		this.runningStatus = NodeRunningStatus.Succeeded;
-	}
-
-	private runExpression(expression: string): boolean {
-		try {
-			// 创建一个沙盒运行环境 并提供变量上下文
-			const context = toContext(this.childEnableVars);
-			const res = new Function(`{${Object.keys(context).join(', ')}}`, `return ${expression}`)(context);
-			return res;
-		} catch (error) {
-			console.error(t('workflow:loop.expRunError'), error);
-			throw new Error(t('workflow:loop.expRunFail', { msg: error.message }));
-		}
 	}
 }
 DPBaseNode.registerType({

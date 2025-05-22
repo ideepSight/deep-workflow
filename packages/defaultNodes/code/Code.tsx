@@ -1,11 +1,11 @@
 import { observer } from 'mobx-react-lite';
 import React, { useState, useCallback, Fragment } from 'react';
-import { Empty, Tooltip } from '@arco-design/web-react';
+import { Button, Empty, Tooltip } from '@arco-design/web-react';
 import { Handle, Position } from '@xyflow/react';
-import { CodeEditor, NodeComponentProps } from '../../workflow';
+import { CodeEditor, DefineVar, NodeComponentProps } from '../../workflow';
 import { CodeNode } from '.';
 import _ from 'lodash';
-import { IconInfoCircleFill } from '@arco-design/web-react/icon';
+import { IconDelete, IconInfoCircleFill, IconPlus } from '@arco-design/web-react/icon';
 import { Icon } from '@deep-sight/dp-iconfont';
 import { InputVar } from './InputVar';
 import { useI18n } from '../../workflow/i18n';
@@ -53,22 +53,73 @@ export const CodeSet: React.FC<NodeComponentProps<CodeNode>> = observer(({ node 
 					<IconInfoCircleFill className="info-icon" />
 				</Tooltip>
 				<br />
-				<div className="var-list">
-					{node.outputs.map((outVar) => {
+				<div className="out-var-list">
+					{node.codeOutputs.map((outVar) => {
 						return (
 							<Fragment key={outVar.key}>
-								<InputVar
-									value={{ key: outVar.key, type: outVar.type }}
-									readonlyKey
-									onChange={(v) => {
-										outVar.key = v.key;
-										outVar.type = v.type;
-									}}
-								/>
+								<Tooltip content={t('workflow:code.outputReadonlyTip')} position="left">
+									<div>
+										<InputVar
+											value={{ key: outVar.key, type: outVar.type }}
+											readonlyKey
+											onChange={(v) => {
+												outVar.key = v.key;
+												outVar.type = v.type;
+											}}
+										/>
+									</div>
+								</Tooltip>
 							</Fragment>
 						);
 					})}
-					{node.outputs.length === 0 && <Empty description={t('workflow:code.noOutput')} />}
+					{node.outputs.map((outVar, index) => {
+						return (
+							<div key={outVar.key} className="var-item-wrap">
+								<DefineVar
+									enableVars={node.hasSelfEnableVars}
+									value={outVar.data}
+									rule={{
+										validator: (_, value, cb) => {
+											if (!value) {
+												cb('不能为空');
+											}
+											if ([...node.codeOutputs, ...node.outputs].find((v, i) => i !== index && v.key === value)) {
+												cb('名称不能重复');
+											}
+											return true;
+										}
+									}}
+									onChange={(v) => {
+										outVar.key = v.key;
+										outVar.type = v.type;
+										outVar.expression = v.expression;
+									}}
+								/>
+								<Button
+									type="secondary"
+									className="del-btn"
+									size="mini"
+									status="danger"
+									shape="circle"
+									icon={<IconDelete />}
+									onClick={() => node.removeOutput(index)}
+								/>
+							</div>
+						);
+					})}
+					{!node.outputs.length && !node.codeOutputs.length ? (
+						<Empty
+							description={
+								<Button onClick={() => node.addOutput()} icon={<IconPlus className="btn-gray-icon" />}>
+									添加变量
+								</Button>
+							}
+						/>
+					) : (
+						<Button style={{ marginTop: 10 }} onClick={() => node.addOutput()} icon={<IconPlus className="btn-gray-icon" />}>
+							添加变量
+						</Button>
+					)}
 				</div>
 			</div>
 		</div>

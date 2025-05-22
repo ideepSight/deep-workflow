@@ -19,29 +19,32 @@ export const InputVar: React.FC<{
 		onChange && onChange(v);
 	};
 	return (
-		<div className="var-item-block input-item" style={{ display: 'flex', gap: 4, justifyContent: 'space-between', width: '100%' }}>
-			<Space size={4}>
-				<Input
-					prefix={<Icon className="var-fx" name="huanjingbianliang" />}
-					size="small"
-					disabled={disabled}
-					style={{ width: 200 }}
-					readOnly={readonlyKey}
-					defaultValue={localValue.key}
-				/>
-			</Space>
-			<Space className="var-type" size={2}>
-				<Select
-					size="small"
-					style={{ flex: 1, width: 130 }}
-					disabled={disabled || readonlyType}
-					value={localValue.type}
-					onChange={(v) => {
-						handleChange({ ...localValue, type: v });
-					}}
-					options={getDPVarTypeOptions()}
-				/>
-			</Space>
+		<div className="input-var-wrap" style={{ display: 'flex', gap: 8, alignItems: 'center', width: '100%' }}>
+			<div className="var-item-block input-item" style={{ display: 'flex', gap: 4, justifyContent: 'space-between', width: '100%' }}>
+				<Space size={4}>
+					<Input
+						prefix={<Icon className="var-fx" name="huanjingbianliang" />}
+						size="small"
+						disabled={disabled}
+						style={{ width: 120 }}
+						readOnly={readonlyKey}
+						defaultValue={localValue.key}
+					/>
+				</Space>
+				<Space className="var-type" size={2}>
+					<Select
+						size="small"
+						style={{ flex: 1, minWidth: 100 }}
+						disabled={disabled || readonlyType}
+						value={localValue.type}
+						onChange={(v) => {
+							handleChange({ ...localValue, type: v });
+						}}
+						options={getDPVarTypeOptions()}
+					/>
+				</Space>
+			</div>
+			<div className="default-btns" style={{ width: 24 }}></div>
 		</div>
 	);
 };

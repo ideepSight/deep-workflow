@@ -5,7 +5,7 @@ import { Node } from '@xyflow/react';
 import { DPVar, DPVarType } from './var';
 import type { DPWorkflow } from './workflow';
 import { RunInputModal } from '../components/RunInputModal';
-import { FormItemType, formToContext, t, toContext } from '../../workflow';
+import { FormItemType, formToContext, t, toContext, toFlatEnableVars } from '../../workflow';
 
 export enum BlockEnum {
 	Start = 'start',
@@ -259,7 +259,32 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 	}
 	// 节点自行决定独立运行时需要手动赋值的变量
 	get runSingleNeedAssignVars(): DPVar[] {
-		return [];
+		const needAssignVars: DPVar[] = [];
+		const flatEnableVars = toFlatEnableVars(this.enableVars);
+		// 使用正则找出this.inputs 和所有flatEnableVars中varFullkey相等的变量名
+		const reg = new RegExp(`\\b(${flatEnableVars.map((v) => v.varFullkey).join('|')})\\b`, 'g');
+		const matchs = this.inputs
+			.map((v) => v.expression)
+			.join(';')
+			.match(reg);
+		if (matchs) {
+			matchs.forEach((v) => {
+				const findit = flatEnableVars.find((fv) => fv.varFullkey === v);
+				findit && needAssignVars.push(findit.value);
+			});
+		}
+		// 使用正则找出this.outputs的expression里和flatEnableVars中varFullkey相等的变量名
+		const matchs2 = this.outputs
+			.map((v) => v.expression)
+			.join(';')
+			.match(reg);
+		if (matchs2) {
+			matchs2.forEach((v) => {
+				const findit = flatEnableVars.find((fv) => fv.varFullkey === v);
+				findit && needAssignVars.push(findit.value);
+			});
+		}
+		return needAssignVars;
 	}
 
 	constructor(owner: DPWorkflow | INodeOwner, nodeData: DPNodeData<T> | INodeData<T>) {
@@ -421,6 +446,17 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 			return;
 		}
 		await this.nextRunNode?.run();
+	}
+
+	runExpression(expression: string, context: Record<string, any> = {}) {
+		try {
+			// 创建一个沙盒运行环境 并提供变量上下文
+			const res = new Function(`{${Object.keys(context).join(', ')}}`, `return ${expression}`)(context);
+			return res;
+		} catch (error) {
+			console.error(t('workflow:ifElse.expRunError'), error);
+			throw new Error(t('workflow:ifElse.expRunFail', { msg: error.message }));
+		}
 	}
 
 	abstract runSelf(): Promise<void>;
