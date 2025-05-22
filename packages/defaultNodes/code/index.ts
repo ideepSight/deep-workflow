@@ -92,7 +92,7 @@ export class CodeNode extends DPBaseNode<CodeNodeInnerData> {
 			throw new Error(t('workflow:code.runFail', { msg: error.message }));
 		}
 	}
-	async runCode(code: string, context: any) {
+	async runCode(code: string, context: unknown) {
 		const fn = new Function(
 			`{${Object.keys(context).join(', ')}}`,
 			`${code}

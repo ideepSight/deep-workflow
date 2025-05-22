@@ -11,10 +11,11 @@ export const DefineVar: React.FC<{
 	value: ValueType;
 	empty?: string;
 	rule?: DPRuleItem;
+	readonlyKey?: boolean;
 	disabled?: boolean;
 	onChange: (value: ValueType) => void;
 	enableVars?: EnableVar[];
-}> = ({ value, onChange, disabled, enableVars, empty, rule = {} }) => {
+}> = ({ value, onChange, disabled, enableVars, empty, rule = {}, readonlyKey = false }) => {
 	const [localValue, setLocalValue] = useState<ValueType>(value);
 	const [errorMsg, setErrorMsg] = useState<string>('');
 
@@ -47,6 +48,7 @@ export const DefineVar: React.FC<{
 					prefix={<Icon className="var-fx" name="huanjingbianliang" />}
 					size="small"
 					disabled={disabled}
+					readOnly={readonlyKey}
 					style={{ width: 120 }}
 					status={errorMsg ? 'error' : null}
 					defaultValue={localValue.key}

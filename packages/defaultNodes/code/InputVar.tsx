@@ -8,9 +8,10 @@ type ValueType = { key?: string; type?: DPVarType };
 export const InputVar: React.FC<{
 	value: ValueType;
 	readonlyKey?: boolean;
+	readonlyType?: boolean;
 	disabled?: boolean;
 	onChange: (value: ValueType) => void;
-}> = ({ value, onChange, readonlyKey, disabled }) => {
+}> = ({ value, onChange, readonlyKey, readonlyType, disabled }) => {
 	const [localValue, setLocalValue] = useState<ValueType>(value);
 
 	const handleChange = (v: ValueType) => {
@@ -33,7 +34,7 @@ export const InputVar: React.FC<{
 				<Select
 					size="small"
 					style={{ flex: 1, width: 130 }}
-					disabled={disabled}
+					disabled={disabled || readonlyType}
 					value={localValue.type}
 					onChange={(v) => {
 						handleChange({ ...localValue, type: v });
