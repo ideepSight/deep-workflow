@@ -325,6 +325,8 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 		this._inputs.push(new DPVar(this.data.inputs[this.data.inputs.length - 1], this));
 	}
 	removeInput(index: number) {
+		const varIndex = this._vars.findIndex((v) => v.key === this.data.inputs[index].key);
+		this._vars.splice(varIndex, 1);
 		this.data.inputs.splice(index, 1);
 		this._inputs.splice(index, 1);
 	}
@@ -337,6 +339,8 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 		this._outputs.push(new DPVar(this.data.outputs[this.data.outputs.length - 1], this));
 	}
 	removeOutput(index: number) {
+		const varIndex = this._vars.findIndex((v) => v.key === this.data.outputs[index].key);
+		this._vars.splice(varIndex, 1);
 		this.data.outputs.splice(index, 1);
 		this._outputs.splice(index, 1);
 	}
