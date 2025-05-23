@@ -2,7 +2,7 @@ import React, { useEffect, useImperativeHandle } from 'react';
 import { DPModalRender, DPModalWrapType } from '../../../workflow/components/DPModal';
 import { Checkbox, Form, Input, Select } from '@arco-design/web-react';
 import style from './InputAddModal.module.less';
-import { FormItemType, InputFieldData, t } from '../../../workflow';
+import { DPBaseNode, FormItemType, InputFieldData, t } from '../../../workflow';
 import { DPVarType } from '../../../workflow';
 import { SelectOptionSet } from './SelectOptionSet';
 import { SelectInputType } from './SelectInputType';
@@ -25,7 +25,7 @@ const fileTypes = {
 	video: ['MP4', 'MOV', 'MPEG', 'WEBM']
 };
 
-export const InputAddModal = async (editValue?: InputFieldData) => {
+export const InputAddModal = async (node: DPBaseNode, editValue?: InputFieldData) => {
 	const ModalInner: React.FC<DPModalWrapType> = ({ modalRef }) => {
 		const [form] = Form.useForm();
 		useImperativeHandle(modalRef, () => ({
@@ -62,6 +62,8 @@ export const InputAddModal = async (editValue?: InputFieldData) => {
 								validator(value, callback) {
 									if (!/^[a-zA-Z_\u4e00-\u9fa5$][a-zA-Z0-9_\u4e00-\u9fa5$]*$/.test(value)) {
 										callback(t('workflow:start.inputModal.pattern'));
+									} else if (!node.vars.findIndex((v) => v.key === value)) {
+										callback(t('workflow:vars.noRepeat'));
 									} else {
 										callback();
 									}

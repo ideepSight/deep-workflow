@@ -39,13 +39,13 @@ export const Start: React.FC<NodeComponentProps<StartNode>> = observer(({ node }
 export const StartSet: React.FC<NodeComponentProps<StartNode>> = observer(({ node }) => {
 	const { t } = useI18n();
 	const handleAdd = async () => {
-		const res = await InputAddModal();
+		const res = await InputAddModal(node);
 		if (res) {
 			node.addInputFields(res);
 		}
 	};
 	const handleEdit = async (item: InputFieldData) => {
-		const res = await InputAddModal(item);
+		const res = await InputAddModal(node, item);
 		if (res) {
 			node.updateInput(item, res);
 		}

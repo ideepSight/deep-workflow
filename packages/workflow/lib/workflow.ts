@@ -20,7 +20,7 @@ export type DPWorkflowData = {
 	title?: string;
 	nodes?: DPNodeData[];
 	edges?: DPEdgeData[];
-	vars?: DPVarData[]; // 全局变量还没实现完，貌似没啥用
+	// vars?: DPVarData[]; // 全局变量还没实现完，貌似没啥用
 };
 
 type DPWorkflowEvent = {
@@ -37,8 +37,8 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 	private _dpNodes: DPBaseNode[] = [];
 	@observe
 	private _dpEdges: DPBaseEdge[] = [];
-	@observe
-	private _vars: DPVar[] = []; // 全局变量还没实现完，貌似没啥用
+	// @observe
+	// private _vars: DPVar[] = []; // 全局变量还没实现完，貌似没啥用
 	@observe
 	controlMode: 'pointer' | 'hand' = 'hand';
 	@observe
@@ -73,8 +73,8 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 			id: this.id,
 			title: this.title,
 			nodes: this._dpNodes.map((node) => node.nodeData),
-			edges: this._dpEdges.map((edge) => edge.data),
-			vars: this._vars.map((varItem) => varItem.data)
+			edges: this._dpEdges.map((edge) => edge.data)
+			// vars: this._vars.map((varItem) => varItem.data)
 		};
 	}
 	get dpNodes() {
@@ -91,9 +91,9 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 		this._dpEdges = val;
 		this.updateEdges(true);
 	}
-	get vars() {
-		return this._vars;
-	}
+	// get vars() {
+	// 	return this._vars;
+	// }
 	setNodes(nodes: DPNodeData[]) {}
 	setEdges(edges: DPEdgeData[]) {}
 	private _updateNodes = debounce((noHistory?: boolean) => {
@@ -139,7 +139,7 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 		if (data.edges) {
 			this._dpEdges = data.edges.map((edgeData) => new DPBaseEdge(edgeData));
 		}
-		this._vars = data.vars ? data.vars.map((varData) => new DPVar(varData, this)) : [];
+		// this._vars = data.vars ? data.vars.map((varData) => new DPVar(varData, this)) : [];
 		setTimeout(() => {
 			this._handleAutoSave();
 		}, 500);
@@ -194,12 +194,12 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 		this.dpNodes.forEach((node) => node.runningStatus === NodeRunningStatus.Running && node.stop());
 	}
 
-	addVar(varData: DPVarData) {
-		this._vars.push(new DPVar(varData, this));
-	}
-	delVar(key: string) {
-		this._vars = this._vars.filter((varItem) => varItem.key !== key);
-	}
+	// addVar(varData: DPVarData) {
+	// 	this._vars.push(new DPVar(varData, this));
+	// }
+	// delVar(key: string) {
+	// 	this._vars = this._vars.filter((varItem) => varItem.key !== key);
+	// }
 
 	addNode(nodeData: DPNodeData) {
 		nodeData.id = nodeData.id || uuid();
