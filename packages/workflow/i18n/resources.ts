@@ -57,6 +57,7 @@ const resources = {
 			},
 			selectVar: {
 				connectVarNode: 'Please connect a node with variables first',
+
 				selectVar: 'Select variable'
 			},
 			runInputModal: {
@@ -200,7 +201,10 @@ const resources = {
 				noChildOutputVar: 'Please connect to a node with variables first',
 				connectVarNode: 'Please connect to a node with variables first',
 				noEmpty: 'Cannot be empty',
-				noRepeat: 'Cannot repeat'
+				noRepeat: 'Cannot repeat',
+				selectOption: 'Select Option',
+				selectVar: 'Select Variable',
+				selectInput: 'Select Input'
 			}
 		}
 	},
@@ -262,6 +266,7 @@ const resources = {
 			},
 			selectVar: {
 				connectVarNode: '请先连接有变量的节点',
+
 				selectVar: '选择变量'
 			},
 			runInputModal: {
@@ -407,7 +412,10 @@ const resources = {
 				noChildOutputVar: '请先连接有变量的子节点',
 				connectVarNode: '请先连接有变量的节点',
 				noEmpty: '名称不能为空',
-				noRepeat: '名称不能重复'
+				noRepeat: '名称不能重复',
+				selectOption: '切换选项选择',
+				selectVar: '切换变量选择',
+				selectInput: '切换输入'
 			}
 		}
 	}

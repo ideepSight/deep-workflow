@@ -61,7 +61,7 @@ export const SelectOptionVar: React.FC<SelectOptionVarProps> = (props) => {
 					placeholder={t('workflow:runInputModal.select')}
 				/>
 			)}
-			<Tooltip content={mode === 'var' ? '切换选项选择' : '切换变量选择'}>
+			<Tooltip content={mode === 'var' ? t('workflow:enableVars.selectOption') : t('workflow:enableVars.selectVar')}>
 				<Button
 					size="mini"
 					type="text"

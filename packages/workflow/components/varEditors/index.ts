@@ -6,3 +6,4 @@ export * from './ExpressionLineEditor';
 export * from './CodeEditor';
 export * from './DefineVar';
 export * from './SelectOptionVar';
+export * from './SelectInputVar';
