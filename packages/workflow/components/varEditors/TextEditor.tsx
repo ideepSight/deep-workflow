@@ -1,34 +1,23 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import type { EnableVar } from '../../../workflow';
 import CodeMirror from '@uiw/react-codemirror';
-import { javascript, javascriptLanguage } from '@codemirror/lang-javascript';
-import { autocompletion, CompletionContext, completeFromList } from '@codemirror/autocomplete';
-import { validateCode } from './lib/validate';
-import { useI18n } from '../../i18n';
+import { autocompletion, CompletionContext } from '@codemirror/autocomplete';
 
-interface CodeEditorProps {
+interface TextEditorProps {
 	enableVars: EnableVar[];
 	value?: string;
-	onChange?: (expression: string) => void;
+	onChange?: (text: string) => void;
 }
 
-export const CodeEditor: React.FC<CodeEditorProps> = ({ enableVars, value = '', onChange }) => {
-	const [expression, setExpression] = useState(value);
-	const [errMsg, setErrorMsg] = useState('');
-	const { t } = useI18n();
+export const TextEditor: React.FC<TextEditorProps> = ({ enableVars, value = '', onChange }) => {
+	const [text, setText] = useState(value);
 
 	const handleInputChange = useCallback(
 		(v: string) => {
-			setExpression(v);
-			try {
-				validateCode(v, enableVars);
-				setErrorMsg('');
-				onChange(v);
-			} catch (error) {
-				setErrorMsg(typeof error === 'string' ? error : t('workflow:codeEditor.error'));
-			}
+			setText(v);
+			onChange(v);
 		},
-		[onChange, enableVars, t]
+		[onChange]
 	);
 
 	// 合并自定义补全函数
@@ -94,20 +83,18 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({ enableVars, value = '', 
 	return (
 		<div className="code-editor">
 			<div className="arco-mentions arco-mentions-align-textarea expression-input">
-				<div className={`${errMsg ? 'arco-input-error' : ''} arco-input  arco-input-size-default`}>
-					<p>JavaScript</p>
+				<div className={`arco-input  arco-input-size-default`}>
+					<p>文本内容</p>
 					<div className="arco-select-view">
 						<div className="arco-select-inner">
 							<span className="arco-select-view-selector">
 								<CodeMirror
 									minHeight="150px"
-									value={expression}
+									value={text}
 									extensions={[
-										javascript(),
-										javascriptLanguage.data.of({
-											autocomplete: customAutocomplete
-										}),
-										autocompletion()
+										autocompletion({
+											override: [customAutocomplete]
+										})
 									]}
 									onChange={handleInputChange}
 									className="dp-auto-complete"
@@ -116,7 +103,6 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({ enableVars, value = '', 
 						</div>
 					</div>
 				</div>
-				{errMsg && <div className="error-msg">{errMsg}</div>}
 			</div>
 		</div>
 	);

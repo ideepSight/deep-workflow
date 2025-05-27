@@ -55,7 +55,7 @@ export const SelectInputVar: React.FC<SelectInputVarProps> = (props) => {
 					placeholder={t('workflow:simpleExpression.input')}
 				/>
 			)}
-			<Tooltip content={mode === 'var' ? t('workflow:enableVars.selectInput') : t('workflow:enableVars.selectVar')}>
+			<Tooltip content={mode === 'var' ? t('workflow:vars.selectInput') : t('workflow:vars.selectVar')}>
 				<Button
 					size="mini"
 					type="text"

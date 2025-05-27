@@ -26,7 +26,7 @@
 		"prettier:fix": "npm run prettier -- --write",
 		"format": "npm run prettier:fix && npm run lint:fix",
 		"predeploy": "npm run build",
-		"iconfont": "get-iconfont --main font_3957965_yxss3xbk7gg",
+		"iconfont": "get-iconfont --main font_3957965_zkdgn3z9z3",
 		"prepare": "npm run iconfont",
 		"deploy": "gh-pages -d docs"
 	},

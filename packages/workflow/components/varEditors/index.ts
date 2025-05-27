@@ -7,3 +7,4 @@ export * from './CodeEditor';
 export * from './DefineVar';
 export * from './SelectOptionVar';
 export * from './SelectInputVar';
+export * from './TextEditor';
