@@ -13,6 +13,15 @@ export const toFlatEnableVars = (enableVars: EnableVar[]): FlatEnableVarType[] =
 	);
 };
 
+export const fullKeyGetVar = (fullKey: string, enableVars: EnableVar[]): DPVar | null => {
+	const [nodeName, varName] = fullKey.split('.');
+	const node = enableVars.find(({ node }) => node.title === nodeName);
+	if (!node) return null;
+	const varItem = node.vars.find((v) => v.key === varName);
+	if (!varItem) return null;
+	return varItem;
+};
+
 // eg. { Start: {one: 1, two: 2}, Code: {three: 3, four: 4} }
 export const toContext = (enableVars: EnableVar[]): Record<string, DPVar> => {
 	return enableVars.reduce((acc, { node, vars }) => {

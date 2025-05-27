@@ -1,4 +1,4 @@
-import { DPBaseNode, DPNodeInnerData, DPVarData, DPVarType } from '@deep-sight/workflow';
+import { DPBaseNode, DPNodeInnerData, DPVarData, DPVarType, fullKeyGetVar } from '@deep-sight/workflow';
 import { CozeComponent, CozeIcon, CozeSet } from './CozeComponent';
 import { observe } from '@deep-sight/dp-event';
 import { CozeAPI, COZE_CN_BASE_URL, RoleType, OpenSpaceData, ListBotData, ChatStatus } from '@coze/api';
@@ -68,13 +68,22 @@ export class CozeNode extends DPBaseNode<CozeInnerData> {
 		if (!this.data.botId || !this.data.chatContent) {
 			throw new Error('请先选择智能体，并输入对话内容');
 		}
+		// chatContent 要正则匹配大括号里的变量：{Start.one}
+		const chatContent = this.data.chatContent.replace(/\{(.+?)\}/g, (_, p1) => {
+			const varItem = fullKeyGetVar(p1, this.enableVars);
+			if (varItem) {
+				return varItem.value;
+			} else {
+				throw new Error(`变量${p1}不存在`);
+			}
+		});
 		const res = await this.coze.chat.createAndPoll({
 			bot_id: this.data.botId,
 			additional_messages: [
 				{
 					role: RoleType.User,
 					content_type: 'text',
-					content: this.data.chatContent
+					content: chatContent
 				}
 			]
 		});

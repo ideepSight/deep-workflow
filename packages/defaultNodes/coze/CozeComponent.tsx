@@ -39,7 +39,13 @@ export const CozeSet: React.FC<NodeComponentProps<CozeNode>> = observer(({ node 
 				>
 					<IconInfoCircleFill className="info-icon" />
 				</Tooltip>
-				<Input value={node.data.accessToken} onBlur={(e) => (node.accessToken = e.target.value)} allowClear placeholder="请输入访问令牌" />
+				<Input
+					value={node.accessToken}
+					onChange={(v) => (node.data.accessToken = v)}
+					onBlur={(e) => (node.accessToken = e.target.value)}
+					allowClear
+					placeholder="请输入访问令牌"
+				/>
 			</div>
 			<br />
 			<div className="input-var-wrap">
@@ -73,13 +79,7 @@ export const CozeSet: React.FC<NodeComponentProps<CozeNode>> = observer(({ node 
 			<br />
 			<div className="input-var-wrap">
 				<b className="handle-name">对话内容</b>
-				<Tooltip
-					content={
-						<>
-							变量使用：{`{{varName}}`} <br /> 符号&quot;/&quot;可呼出变量
-						</>
-					}
-				>
+				<Tooltip content={<>变量使用：{`{Start.one}`}</>}>
 					<IconInfoCircleFill className="info-icon" />
 				</Tooltip>
 				<TextEditor enableVars={enableVars} value={node.data.chatContent} onChange={(v) => (node.data.chatContent = v)} />
