@@ -35,3 +35,10 @@ export const formToContext = (formValues: Record<string, string | number>): Reco
 		return acc;
 	}, {});
 };
+
+export const getVarExpression = (varValue: DPVar | string | null): string => {
+	if (typeof varValue === 'string') {
+		return varValue;
+	}
+	return varValue?.expression || '';
+};

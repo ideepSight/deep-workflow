@@ -5,7 +5,7 @@ import { SelectVar, SelectVarProps, DPVar, t } from '../../../workflow';
 import { Icon } from '@deep-sight/dp-iconfont';
 
 export type SelectInputVarValue = {
-	mode: 'var' | 'option';
+	mode: 'var' | 'input';
 	innerValue?: DPVar | string | null; // 支持传 expression
 	inputValue?: string | null;
 };
@@ -17,7 +17,7 @@ type SelectInputVarProps = Omit<SelectVarProps, 'value' | 'onChange'> & {
 
 export const SelectInputVar: React.FC<SelectInputVarProps> = (props) => {
 	const { enableVars, value, onChange, size = 'default', style, filterType, empty } = props;
-	const [mode, setMode] = useState<'var' | 'option'>(value?.mode || 'option');
+	const [mode, setMode] = useState<'var' | 'input'>(value?.mode || 'input');
 	const [varValue, setVarValue] = useState<DPVar | string | null>(value?.innerValue);
 	const [inputValue, setInputValue] = useState<string | null>(value?.inputValue);
 
@@ -61,7 +61,7 @@ export const SelectInputVar: React.FC<SelectInputVarProps> = (props) => {
 					type="text"
 					className="change-mode"
 					onClick={() => {
-						setMode(mode === 'var' ? 'option' : 'var');
+						setMode(mode === 'var' ? 'input' : 'var');
 					}}
 					icon={<Icon name="duoxunhuan" />}
 				/>
