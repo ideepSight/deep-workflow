@@ -13,10 +13,19 @@ export const CozeIcon = () => {
 };
 
 export const CozeComponent: React.FC<NodeComponentProps<CozeNode>> = observer(({ node }) => {
+	const botItem = node.bots?.space_bots.find((item) => item.bot_id === node.data.botId);
 	return (
 		<div>
 			<Handle id={`${node.id}-target`} type="target" className="base-handle" position={Position.Left} />
 			<Handle id={`${node.id}-source`} type="source" className="base-handle" position={Position.Right} />
+			{botItem && (
+				<div className="coze-bot">
+					<div style={{ display: 'flex', alignItems: 'center', gap: 6, margin: 6, lineHeight: '22px' }}>
+						<Image style={{ display: 'flex' }} preview={false} src={botItem.icon_url} width={16} height={16} />
+						<span>{botItem.bot_name}</span>
+					</div>
+				</div>
+			)}
 		</div>
 	);
 });
