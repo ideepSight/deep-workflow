@@ -60,7 +60,6 @@
 		"short-uuid": "^5.2.0"
 	},
 	"devDependencies": {
-		"@coze/api": "^1.2.0",
 		"@types/lodash": "^4.14.191",
 		"@types/node": "^20.14.2",
 		"@types/react": "18.2.0",
