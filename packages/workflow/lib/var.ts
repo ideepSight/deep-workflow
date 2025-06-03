@@ -1,7 +1,6 @@
 import { DPEvent, observe } from '@deep-sight/dp-event';
 import type { DPBaseNode } from './baseNode';
-import type { DPWorkflow } from './workflow';
-import { IArrayDidChange, Lambda, observe as mObserve } from 'mobx';
+import type { IArrayDidChange, Lambda } from 'mobx';
 import { deepObserve } from 'mobx-utils';
 
 // 定义 DPVarData 类型

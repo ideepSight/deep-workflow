@@ -49,7 +49,9 @@ export default defineConfig((params: ConfigEnv): UserConfig => {
 						'@codemirror/state',
 						'@codemirror/view',
 						'@dagrejs/dagre',
-						'@uiw/react-codemirror'
+						'@uiw/react-codemirror',
+						'@deep-sight/dp-event',
+						'@deep-sight/dp-iconfont'
 					],
 					output: {
 						globals: {
@@ -74,7 +76,9 @@ export default defineConfig((params: ConfigEnv): UserConfig => {
 							'@codemirror/state': 'State',
 							'@codemirror/view': 'View',
 							'@dagrejs/dagre': 'Dagre',
-							'@uiw/react-codemirror': 'ReactCodemirror'
+							'@uiw/react-codemirror': 'ReactCodemirror',
+							'@deep-sight/dp-event': 'DpEvent',
+							'@deep-sight/dp-iconfont': 'DpIconfont'
 						}
 					}
 				}
