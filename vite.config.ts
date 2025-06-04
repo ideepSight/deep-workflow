@@ -2,14 +2,23 @@ import { defineConfig, ConfigEnv, UserConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import dts from 'vite-plugin-dts';
 
+const externalMap = {
+	react: 'React',
+	'react-dom': 'ReactDOM',
+	'react/jsx-runtime': 'ReactJSXRuntime',
+	'@arco-design/web-react': 'ArcoDesign',
+	'@xyflow/react': 'ReactFlow',
+	mobx: 'mobx',
+	'mobx-react-lite': 'mobxReactLite',
+	'@deep-sight/dp-event': 'DeepEvent',
+	'@deep-sight/dp-iconfont': 'DeepIconfont'
+};
+
 // https://vitejs.dev/config/
 export default defineConfig((params: ConfigEnv): UserConfig => {
 	const { command, mode, ...env } = params;
 	const baseConfig = {
 		base: './',
-		resolve: {
-			alias: [{ find: '@deep-sight/workflow', replacement: '/packages/workflow' }]
-		},
 		plugins: [react(), dts({ exclude: ['src', 'packages/defaultNodes'] })],
 		server: {
 			port: 5175
@@ -21,20 +30,16 @@ export default defineConfig((params: ConfigEnv): UserConfig => {
 		return {
 			...baseConfig,
 			build: {
+				emptyOutDir: true, // 清空输出目录,
 				lib: {
 					entry: 'packages/workflow/index.ts',
-					name: 'deep-workflow',
-					fileName: (format) => `deep-workflow.${format}.js`
+					name: 'DeepWorkflow',
+					fileName: (format) => `deep-workflow.${format}.js`,
+					formats: ['iife'] // 输出为可挂载到 window 的格式
 				},
 				rollupOptions: {
 					external: [
-						'react',
-						'react-dom',
-						'react/jsx-runtime',
-						'@arco-design/web-react',
-						'@xyflow/react',
-						'mobx',
-						'mobx-react-lite',
+						...Object.keys(externalMap),
 						'lodash',
 						'classnames',
 						'acorn',
@@ -50,18 +55,16 @@ export default defineConfig((params: ConfigEnv): UserConfig => {
 						'@codemirror/view',
 						'@dagrejs/dagre',
 						'@uiw/react-codemirror',
-						'@deep-sight/dp-event',
-						'@deep-sight/dp-iconfont'
 					],
 					output: {
+						assetFileNames: (assetInfo) => {
+							if (assetInfo.name?.endsWith('.css')) {
+								return 'deep-workflow.css';
+							}
+							return '[name].[ext]';
+						},
 						globals: {
-							react: 'React',
-							'react-dom': 'ReactDOM',
-							'react/jsx-runtime': 'ReactJSXRuntime',
-							'@arco-design/web-react': 'ArcoDesign',
-							'@xyflow/react': 'ReactFlow',
-							mobx: 'mobx',
-							'mobx-react-lite': 'mobxReactLite',
+							...externalMap,
 							lodash: '_',
 							classnames: 'classNames',
 							acorn: 'acorn',
@@ -77,8 +80,6 @@ export default defineConfig((params: ConfigEnv): UserConfig => {
 							'@codemirror/view': 'View',
 							'@dagrejs/dagre': 'Dagre',
 							'@uiw/react-codemirror': 'ReactCodemirror',
-							'@deep-sight/dp-event': 'DpEvent',
-							'@deep-sight/dp-iconfont': 'DpIconfont'
 						}
 					}
 				}
@@ -89,6 +90,9 @@ export default defineConfig((params: ConfigEnv): UserConfig => {
 	// 默认使用普通应用构建配置
 	return {
 		...baseConfig,
+		resolve: {
+			alias: [{ find: '@deep-sight/workflow', replacement: '/packages/workflow' }]
+		},
 		build: {
 			outDir: params.mode === 'lib' ? 'dist' : 'docs/dist',
 			sourcemap: true

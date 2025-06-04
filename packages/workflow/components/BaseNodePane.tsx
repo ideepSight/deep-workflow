@@ -6,7 +6,6 @@ import { BlockEnum, DPBaseNode } from '../lib';
 import { WorkfowContext } from './context';
 import { IconClose, IconDelete, IconPlayCircle, IconRecordStop } from '@arco-design/web-react/icon';
 import { useI18n } from '../i18n';
-import { StartNode } from '@deep-sight/defaultNodes';
 
 export const BaseNodePane: React.FC = observer(() => {
 	const { workflowIns } = useContext(WorkfowContext);

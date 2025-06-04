@@ -7,7 +7,7 @@ import { CodeNode } from '.';
 import _ from 'lodash';
 import { IconDelete, IconInfoCircleFill, IconPlus } from '@arco-design/web-react/icon';
 import { Icon } from '@deep-sight/dp-iconfont';
-import { InputVar } from './InputVar';
+import { InputVar } from '../../workflow/components/varEditors/InputVar';
 import { useI18n } from '../../workflow/i18n';
 
 export const CodeIcon = () => {

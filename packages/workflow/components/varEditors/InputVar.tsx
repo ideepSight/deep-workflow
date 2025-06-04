@@ -1,8 +1,8 @@
 import { Input, Select, Space } from '@arco-design/web-react';
 import React, { useState } from 'react';
-import { DPVarType } from '../../workflow/lib';
+import type { DPVarType } from '../../lib';
 import { Icon } from '@deep-sight/dp-iconfont';
-import { getDPVarTypeOptions } from '../../workflow/utils';
+import { getDPVarTypeOptions } from '../../utils';
 
 type ValueType = { key?: string; type?: DPVarType };
 export const InputVar: React.FC<{
