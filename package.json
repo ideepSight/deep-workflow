@@ -1,6 +1,6 @@
 {
 	"name": "@deep-sight/workflow",
-	"version": "1.0.7",
+	"version": "1.0.8",
 	"description": "类dify、coze流程图，包含变量、判断、代码块、循环等，支持自由扩展节点，适用大模型、AI Agent等场景。",
 	"author": "deep-sight",
 	"license": "Apache-2.0",
@@ -19,6 +19,7 @@
 		"dev": "vite",
 		"build": "vite build",
 		"build:lib": "vite build --mode lib",
+		"build:iife": "vite build --mode iife",
 		"serve": "vite preview",
 		"lint": "npx eslint src",
 		"lint:fix": "npm run lint -- --fix",

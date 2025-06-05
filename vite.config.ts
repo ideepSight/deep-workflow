@@ -35,6 +35,31 @@ export default defineConfig((params: ConfigEnv): UserConfig => {
 					entry: 'packages/workflow/index.ts',
 					name: 'DeepWorkflow',
 					fileName: (format) => `deep-workflow.${format}.js`,
+				},
+				rollupOptions: {
+					external: [...Object.keys(externalMap)],
+					output: {
+						assetFileNames: (assetInfo) => {
+							if (assetInfo.name?.endsWith('.css')) {
+								return 'deep-workflow.css';
+							}
+							return '[name].[ext]';
+						},
+						globals: externalMap
+					}
+				}
+			}
+		};
+	}
+	if (params.mode === 'iife') {
+		return {
+			...baseConfig,
+			build: {
+				emptyOutDir: false, // 清空输出目录,
+				lib: {
+					entry: 'packages/workflow/index.ts',
+					name: 'DeepWorkflow',
+					fileName: (format) => `deep-workflow.${format}.js`,
 					formats: ['iife'] // 输出为可挂载到 window 的格式
 				},
 				rollupOptions: {

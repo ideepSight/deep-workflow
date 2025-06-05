@@ -22,7 +22,7 @@
 		"declaration": true,
 		"declarationDir": "./types",
 		"paths": {
-			"@deep-sight/*": ["packages/*"]
+			// "@deep-sight/*": ["packages/*"]
 		}
 	},
 	"include": ["./src", "packages"],
