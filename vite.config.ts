@@ -38,24 +38,7 @@ export default defineConfig((params: ConfigEnv): UserConfig => {
 					formats: ['iife'] // 输出为可挂载到 window 的格式
 				},
 				rollupOptions: {
-					external: [
-						...Object.keys(externalMap),
-						'lodash',
-						'classnames',
-						'acorn',
-						'acorn-walk',
-						'dayjs',
-						'short-uuid',
-						'@codemirror/autocomplete',
-						'@codemirror/lang-javascript',
-						'@codemirror/lang-json',
-						'@codemirror/language',
-						'@codemirror/search',
-						'@codemirror/state',
-						'@codemirror/view',
-						'@dagrejs/dagre',
-						'@uiw/react-codemirror',
-					],
+					external: [...Object.keys(externalMap)],
 					output: {
 						assetFileNames: (assetInfo) => {
 							if (assetInfo.name?.endsWith('.css')) {
@@ -63,24 +46,7 @@ export default defineConfig((params: ConfigEnv): UserConfig => {
 							}
 							return '[name].[ext]';
 						},
-						globals: {
-							...externalMap,
-							lodash: '_',
-							classnames: 'classNames',
-							acorn: 'acorn',
-							'acorn-walk': 'acornWalk',
-							dayjs: 'dayjs',
-							'short-uuid': 'shortUuid',
-							'@codemirror/autocomplete': 'Autocomplete',
-							'@codemirror/lang-javascript': 'LangJavascript',
-							'@codemirror/lang-json': 'LangJson',
-							'@codemirror/language': 'Language',
-							'@codemirror/search': 'Search',
-							'@codemirror/state': 'State',
-							'@codemirror/view': 'View',
-							'@dagrejs/dagre': 'Dagre',
-							'@uiw/react-codemirror': 'ReactCodemirror',
-						}
+						globals: externalMap
 					}
 				}
 			}
