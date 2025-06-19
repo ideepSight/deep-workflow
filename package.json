@@ -12,6 +12,7 @@
 	"types": "dist/workflow/index.d.ts",
 	"main": "dist/deep-workflow.umd.js",
 	"module": "dist/deep-workflow.es.js",
+	"unpkg": "dist/deep-workflow.iife.js",
 	"files": [
 		"dist"
 	],
