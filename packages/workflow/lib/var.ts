@@ -17,6 +17,7 @@ export enum DPVarType {
 export type DPVarData = {
 	key: string;
 	value?: any;
+	description?: string;
 	defaultValue?: string;
 	type: DPVarType;
 	expression?: string;
