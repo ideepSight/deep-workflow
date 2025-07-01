@@ -3,6 +3,7 @@ export * from './lib/validate';
 export * from './lib/getHotkeyHandler';
 export * from './CodeEditor';
 export * from './CodeEditorPy';
+export * from './CodeEditorJson';
 export * from './DefineVar';
 export * from './ExpressionLineEditor';
 export * from './InputVar';
