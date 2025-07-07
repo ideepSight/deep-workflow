@@ -21,14 +21,14 @@ export const CodeEditorPy: React.FC<CodeEditorProps> = ({ enableVars, value = ''
 		(v: string) => {
 			setExpression(v);
 			try {
-				validateCode(v, enableVars);
+				// validateCode(v, enableVars);
 				setErrorMsg('');
 				onChange(v);
 			} catch (error) {
 				setErrorMsg(typeof error === 'string' ? error : t('workflow:codeEditor.error'));
 			}
 		},
-		[onChange, enableVars, t]
+		[onChange, t]
 	);
 
 	// 合并自定义补全函数
