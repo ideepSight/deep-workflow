@@ -3,7 +3,7 @@ import { DPEvent, observe } from '@deep-sight/dp-event';
 import { deepObserve, IDisposer } from 'mobx-utils';
 import { Node } from '@xyflow/react';
 import { DPVar, DPVarType } from './var';
-import type { DPWorkflow } from './workflow';
+import type { DPWorkflow, NodeTypeItems } from './workflow';
 import { RunInputModal } from '../components/RunInputModal';
 import { FormItemType, formToContext, t, toContext, toFlatEnableVars } from '../../workflow';
 
@@ -58,6 +58,7 @@ export type DPRegisterNode = {
 	group: 'hide' | 'sys' | 'ai' | 'autoTool' | 'platformApi' | 'custom';
 	width?: number;
 	height?: number;
+	supportMCP?: boolean;
 };
 
 export type LogData = { time: number; msg: string; type: 'info' | 'warning' | 'error' };
@@ -79,11 +80,12 @@ export type DPNodeData<T extends DPNodeInnerData = DPNodeInnerData> = Omit<Node<
 export interface INodeOwner {
 	classType: 'DPWorkflow' | string;
 	runlogs: LogData[];
+	NodeTypeItems: typeof NodeTypeItems;
 	emit: (event: string, ...args: any[]) => void;
 }
 
 export interface INodeData<T extends DPNodeInnerData = DPNodeInnerData> {
-	id: string;
+	id?: string;
 	position?: { x: number; y: number };
 	parentId?: string;
 	data: T;
@@ -93,12 +95,8 @@ export interface INodeData<T extends DPNodeInnerData = DPNodeInnerData> {
 type DPBaseNodeEvent = {
 	stoping: () => void;
 };
-export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> extends DPEvent<DPBaseNodeEvent> {
-	static types: { [type: string]: DPRegisterNode } = {};
-	static registerType(item: DPRegisterNode) {
-		DPBaseNode.types[item.type] = item;
-	}
 
+export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> extends DPEvent<DPBaseNodeEvent> {
 	private _disposer: IDisposer;
 
 	private _owner: DPWorkflow | INodeOwner;
@@ -188,7 +186,7 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 		return this._nodeData.data.title;
 	}
 	get nodeConfig() {
-		return DPBaseNode.types[this.data.dpNodeType];
+		return this.owner.NodeTypeItems.types[this.data.dpNodeType];
 	}
 
 	get prevNodes() {
@@ -463,5 +461,5 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 		}
 	}
 
-	abstract runSelf(): Promise<void>;
+	abstract runSelf(): Promise<any>;
 }

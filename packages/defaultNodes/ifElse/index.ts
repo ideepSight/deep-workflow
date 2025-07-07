@@ -1,4 +1,4 @@
-import { DPBaseNode, BlockEnum, DPNodeInnerData, NodeRunningStatus, t, DPNodeData, DPWorkflow, toContext } from '../../workflow';
+import { DPBaseNode, BlockEnum, DPNodeInnerData, NodeRunningStatus, t, DPNodeData, DPWorkflow, toContext, NodeTypeItems } from '../../workflow';
 import { IfElse, IfElseIcon, IfElseSet } from './IfElse';
 import type { ExpValue } from './conditionExp';
 import { uuid } from 'short-uuid';
@@ -72,7 +72,7 @@ export class IfElseNode extends DPBaseNode<IfElseNodeInnerData> {
 	}
 }
 
-DPBaseNode.registerType({
+NodeTypeItems.registerType({
 	type: BlockEnum.IfElse,
 	model: IfElseNode,
 	icon: IfElseIcon,

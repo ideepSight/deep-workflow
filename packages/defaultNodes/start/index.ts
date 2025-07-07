@@ -1,4 +1,4 @@
-import { DPNodeInnerData, DPBaseNode, BlockEnum, DPVar, InputFieldData, NodeRunningStatus, t, DPNodeData, DPWorkflow } from '../../workflow';
+import { DPNodeInnerData, DPBaseNode, BlockEnum, DPVar, InputFieldData, NodeRunningStatus, t, DPNodeData, DPWorkflow, NodeTypeItems } from '../../workflow';
 import { Start, StartIcon, StartSet } from './Start';
 import { RunInputModal } from '../../workflow/components/RunInputModal';
 
@@ -63,7 +63,7 @@ export class StartNode extends DPBaseNode<StartNodeInnerData> {
 		}
 	}
 }
-DPBaseNode.registerType({
+NodeTypeItems.registerType({
 	type: BlockEnum.Start,
 	model: StartNode,
 	NodeComponent: Start,

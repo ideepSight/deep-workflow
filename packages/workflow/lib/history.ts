@@ -1,4 +1,4 @@
-import { DPWorkflow } from '.';
+import { DPWorkflow, NodeTypeItems } from '.';
 import { DPEvent, observe } from '@deep-sight/dp-event';
 import { DPBaseNode } from './baseNode';
 import { DPBaseEdge } from './baseEdge';
@@ -43,7 +43,7 @@ export class DPHistory extends DPEvent {
 		const currentState = {
 			nodes: dpNodes.map((node) => {
 				// 创建新的DPBaseNode实例并克隆数据
-				const clonedNode = new DPBaseNode.types[node.data.dpNodeType].model(null, cloneDeep(node.nodeData));
+				const clonedNode = new NodeTypeItems.types[node.data.dpNodeType].model(null, cloneDeep(node.nodeData));
 				return clonedNode;
 			}),
 			edges: this.owner.dpEdges.map((edge) => {

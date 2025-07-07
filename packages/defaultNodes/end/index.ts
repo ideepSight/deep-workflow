@@ -1,4 +1,4 @@
-import { DPBaseNode, BlockEnum, t } from '../../workflow';
+import { DPBaseNode, BlockEnum, t, NodeTypeItems } from '../../workflow';
 import { End, EndIcon } from './End';
 
 export class EndNode extends DPBaseNode {
@@ -7,7 +7,7 @@ export class EndNode extends DPBaseNode {
 	}
 	async runSelf(): Promise<void> {}
 }
-DPBaseNode.registerType({
+NodeTypeItems.registerType({
 	type: BlockEnum.End,
 	model: EndNode,
 	icon: EndIcon,

@@ -1,5 +1,5 @@
 import { observe } from '@deep-sight/dp-event';
-import { DPBaseNode, BlockEnum, DPNodeInnerData, DPVar, DPVarType, t, DPVarData, toContext, toFlatEnableVars } from '../../workflow';
+import { DPBaseNode, BlockEnum, DPNodeInnerData, DPVar, DPVarType, t, DPVarData, toContext, toFlatEnableVars, NodeTypeItems } from '../../workflow';
 import { Code, CodeIcon, CodeSet } from './Code';
 import * as acorn from 'acorn';
 import * as walk from 'acorn-walk';
@@ -50,7 +50,6 @@ export class CodeNode extends DPBaseNode<CodeNodeInnerData> {
 			!this._codeOutputs && (this._codeOutputs = []);
 			this._codeOutputs.push(new DPVar(v, this));
 		});
-		console.log(this._codeOutputs);
 	}
 
 	setCodeOutputVars(val: string) {
@@ -151,7 +150,7 @@ export class CodeNode extends DPBaseNode<CodeNodeInnerData> {
 		return fn(context);
 	}
 }
-DPBaseNode.registerType({
+NodeTypeItems.registerType({
 	type: BlockEnum.Code,
 	model: CodeNode,
 	icon: CodeIcon,

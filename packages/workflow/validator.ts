@@ -63,7 +63,6 @@ export class DPValidator<T = RuleItem> {
 }
 
 DPValidator.register<DPRuleType>('path', (rule, value, callback, source, options) => {
-	console.log(rule, value, source, options, 'rule, value, source, options');
 	const errors: string[] = [];
 	const validate = rule.required || (!rule.required && source.hasOwnProperty(rule.field));
 	if (validate) {

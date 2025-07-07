@@ -6,7 +6,7 @@ import './index.less';
 import { WorkfowContext } from './context';
 import { observer } from 'mobx-react-lite';
 import { Node } from '@xyflow/react';
-import { DPWorkflow, NodeRunningStatus } from '../lib';
+import { DPWorkflow, NodeRunningStatus, NodeTypeItems } from '../lib';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
 import { useI18n } from '../i18n';
@@ -15,7 +15,7 @@ const BaseNodeInner: React.FC<
 	Node<DPNodeInnerData> & { children: ReactElement; node: DPBaseNode<DPNodeInnerData>; nodeRef: React.RefObject<HTMLDivElement>; workflowIns: DPWorkflow }
 > = observer((props) => {
 	const { id, data, children, node, workflowIns, nodeRef } = props;
-	const baseInfo = DPBaseNode.types[data.dpNodeType];
+	const baseInfo = NodeTypeItems.types[data.dpNodeType];
 	const { t } = useI18n();
 
 	return (
@@ -87,7 +87,7 @@ const BaseNodeInner: React.FC<
 const BaseNode = (props: Node<DPNodeInnerData>) => {
 	const { workflowIns } = useContext(WorkfowContext);
 	const nodeData = props.data;
-	const NodeComponent = DPBaseNode.types[nodeData.dpNodeType].NodeComponent;
+	const NodeComponent = NodeTypeItems.types[nodeData.dpNodeType].NodeComponent;
 	const node = workflowIns.dpNodes.find((n) => n.id === props.id);
 	const nodeRef = useRef<HTMLDivElement>(null);
 

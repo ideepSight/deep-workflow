@@ -1,6 +1,6 @@
 import { DPEvent, observe } from '@deep-sight/dp-event';
 import type { Connection, ReactFlowInstance } from '@xyflow/react';
-import { BlockEnum, DPBaseNode, DPNodeData, LogData, NodeRunningStatus } from './baseNode';
+import { BlockEnum, DPBaseNode, DPNodeData, DPRegisterNode, LogData, NodeRunningStatus } from './baseNode';
 import { uuid } from 'short-uuid';
 import { DPBaseEdge, DPEdgeData } from './baseEdge';
 import { Message } from '@arco-design/web-react';
@@ -9,6 +9,13 @@ import { cloneDeep, debounce } from 'lodash';
 import { LoopNode } from '../../defaultNodes';
 import { DPHistory } from './history';
 import { t } from '..';
+
+export const NodeTypeItems = {
+	types: {} as { [type: string]: DPRegisterNode },
+	registerType(item: DPRegisterNode) {
+		NodeTypeItems.types[item.type] = item;
+	}
+};
 
 export enum ControlMode {
 	Pointer = 'pointer',
@@ -30,6 +37,7 @@ type DPWorkflowEvent = {
 };
 export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 	classType = 'DPWorkflow';
+	NodeTypeItems = NodeTypeItems;
 	id: string;
 	@observe
 	title: string;
@@ -125,8 +133,8 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 		this.title = data.title || '';
 		if (data.nodes?.length) {
 			this._dpNodes = data.nodes.map((nodeData) => {
-				DPBaseNode.types[nodeData.data.dpNodeType] || console.error(`Node type ${nodeData.data.dpNodeType} not registered`);
-				return new DPBaseNode.types[nodeData.data.dpNodeType].model(this, nodeData);
+				NodeTypeItems.types[nodeData.data.dpNodeType] || console.error(`Node type ${nodeData.data.dpNodeType} not registered`);
+				return new NodeTypeItems.types[nodeData.data.dpNodeType].model(this, nodeData);
 			});
 		} else {
 			this.addNode({
@@ -204,7 +212,7 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 	addNode(nodeData: DPNodeData) {
 		nodeData.id = nodeData.id || uuid();
 		nodeData.type = 'custom';
-		const nodeConfig = DPBaseNode.types[nodeData.data.dpNodeType];
+		const nodeConfig = NodeTypeItems.types[nodeData.data.dpNodeType];
 		if (!nodeConfig) console.error(`Node type ${nodeData.data.dpNodeType} not registered`);
 
 		if (nodeConfig.group !== 'hide') {
@@ -224,7 +232,7 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 				nodeData.data.title = `${nodeData.data.title}2`;
 			}
 		}
-		const newNode = new DPBaseNode.types[nodeData.data.dpNodeType].model(this, nodeData);
+		const newNode = new NodeTypeItems.types[nodeData.data.dpNodeType].model(this, nodeData);
 		this._dpNodes.push(newNode);
 		this.updateNodes();
 		return newNode;

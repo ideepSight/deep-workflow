@@ -31,9 +31,9 @@ export const CodeEditorJson: React.FC<CodeEditorProps> = ({ value = '', onChange
 		<div className="code-editor">
 			<div className="arco-mentions arco-mentions-align-textarea expression-input">
 				<div className={`${errMsg ? 'arco-input-error' : ''} arco-input  arco-input-size-default`}>
-					<p>JSON</p>
+					<p style={{ margin: 0 }}>JSON</p>
 					<div className="arco-select-view">
-						<div className="arco-select-inner">
+						<div className="arco-select-inner" style={{ width: '100%' }}>
 							<span className="arco-select-view-selector">
 								<CodeMirror
 									minHeight="150px"

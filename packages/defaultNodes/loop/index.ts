@@ -9,7 +9,8 @@ import {
 	DPNodeData,
 	toContext,
 	toFlatEnableVars,
-	DPVarType
+	DPVarType,
+	NodeTypeItems
 } from '../../workflow';
 import { Loop, LoopIcon, LoopSet } from './Loop';
 
@@ -118,7 +119,7 @@ export class LoopNode extends DPBaseNode<LoopNodeInnerData> {
 		this.runningStatus = NodeRunningStatus.Succeeded;
 	}
 }
-DPBaseNode.registerType({
+NodeTypeItems.registerType({
 	type: BlockEnum.Loop,
 	model: LoopNode,
 	icon: LoopIcon,
