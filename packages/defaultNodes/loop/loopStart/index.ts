@@ -1,4 +1,4 @@
-import { DPBaseNode, BlockEnum, DPVar, DPVarType, t, DPNodeData, DPWorkflow, NodeTypeItems } from '../../../workflow';
+import { DPBaseNode, BlockEnum, DPVar, DPVarType, t, DPNodeData, DPWorkflow } from '../../../workflow';
 import { LoopStart } from './loopStart';
 import type { LoopNode } from '..';
 import { StartIcon } from '../../start/Start';
@@ -45,7 +45,7 @@ export class LoopStartNode extends DPBaseNode {
 	async runSelf(): Promise<void> {}
 }
 
-NodeTypeItems.registerType({
+export default {
 	type: BlockEnum.LoopStart,
 	model: LoopStartNode,
 	icon: StartIcon,
@@ -55,4 +55,4 @@ NodeTypeItems.registerType({
 	label: t('workflow:loopStart.label'),
 	desc: '',
 	group: 'hide'
-});
+};

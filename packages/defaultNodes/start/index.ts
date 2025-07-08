@@ -1,4 +1,4 @@
-import { DPNodeInnerData, DPBaseNode, BlockEnum, DPVar, InputFieldData, NodeRunningStatus, t, DPNodeData, DPWorkflow, NodeTypeItems } from '../../workflow';
+import { DPNodeInnerData, DPBaseNode, BlockEnum, DPVar, InputFieldData, NodeRunningStatus, t, DPNodeData, DPWorkflow } from '../../workflow';
 import { Start, StartIcon, StartSet } from './Start';
 import { RunInputModal } from '../../workflow/components/RunInputModal';
 
@@ -40,7 +40,7 @@ export class StartNode extends DPBaseNode<StartNodeInnerData> {
 			defaultValue: inputData.defaultValue
 		};
 		const input = this.data.inputFields.find((item) => item.fieldName === item.fieldName);
-		Object.assign(input, inputData)
+		Object.assign(input, inputData);
 	}
 	removeInputFields(input: InputFieldData): void {
 		const index = this.data.inputFields.findIndex((item) => item.fieldName === input.fieldName);
@@ -63,7 +63,8 @@ export class StartNode extends DPBaseNode<StartNodeInnerData> {
 		}
 	}
 }
-NodeTypeItems.registerType({
+
+export default {
 	type: BlockEnum.Start,
 	model: StartNode,
 	NodeComponent: Start,
@@ -74,4 +75,4 @@ NodeTypeItems.registerType({
 	label: t('workflow:start.registLabel'),
 	desc: t('workflow:start.registDesc'),
 	group: 'sys'
-});
+};

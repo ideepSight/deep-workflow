@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useMemo } from 'react';
 import './index.less';
 import { observer } from 'mobx-react-lite';
 import { Button, Divider, Empty, Input, InputNumber, Popconfirm, Space, Spin, Switch, Tooltip } from '@arco-design/web-react';
-import { BlockEnum, DPBaseNode, NodeTypeItems } from '../lib';
+import { BlockEnum, DPBaseNode } from '../lib';
 import { WorkfowContext } from './context';
 import { IconClose, IconDelete, IconPlayCircle, IconRecordStop } from '@arco-design/web-react/icon';
 import { useI18n } from '../i18n';
@@ -23,7 +23,7 @@ export const BaseNodePane: React.FC = observer(() => {
 	const baseInfo = useMemo(() => {
 		// 仅在 activeNode 发生变化时重新计算
 		if (!activeNode) return null;
-		return NodeTypeItems.types[activeNode.nodeData.data.dpNodeType];
+		return DPBaseNode.types[activeNode.nodeData.data.dpNodeType];
 	}, [activeNode]);
 
 	if (!baseInfo) {

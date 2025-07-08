@@ -2,13 +2,13 @@ import React, { Fragment, useContext } from 'react';
 import { WorkfowContext } from './context';
 import { Tooltip, Space } from '@arco-design/web-react';
 import { uuid } from 'short-uuid';
-import { BlockEnum, DPBaseNode, DPRegisterNode, NodeTypeItems } from '../lib';
+import { BlockEnum, DPBaseNode, DPRegisterNode } from '../lib';
 import { useI18n } from '../i18n';
 
 export const AddNodeMenu: React.FC<{ blackList?: string[]; parentNode?: DPBaseNode }> = ({ blackList = [], parentNode }) => {
 	const { workflowIns } = useContext(WorkfowContext);
 	const { t } = useI18n();
-	const nodeTypes = Object.values(NodeTypeItems.types).filter((node) => !blackList.includes(node.type) && node.type !== BlockEnum.Start);
+	const nodeTypes = Object.values(DPBaseNode.types).filter((node) => !blackList.includes(node.type) && node.type !== BlockEnum.Start);
 	const groups = {
 		sys: nodeTypes.filter((node) => node.group === 'sys'),
 		ai: nodeTypes.filter((node) => node.group === 'ai'),

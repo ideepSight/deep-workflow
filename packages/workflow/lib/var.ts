@@ -60,6 +60,12 @@ export class DPVar extends DPEvent {
 	set expression(val) {
 		this._data.expression = val;
 	}
+	get description() {
+		return this._data.description;
+	}
+	set description(val) {
+		this._data.description = val;
+	}
 	get owner() {
 		return this._owner;
 	}

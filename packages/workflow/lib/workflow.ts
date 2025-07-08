@@ -10,13 +10,6 @@ import { LoopNode } from '../../defaultNodes';
 import { DPHistory } from './history';
 import { t } from '..';
 
-export const NodeTypeItems = {
-	types: {} as { [type: string]: DPRegisterNode },
-	registerType(item: DPRegisterNode) {
-		NodeTypeItems.types[item.type] = item;
-	}
-};
-
 export enum ControlMode {
 	Pointer = 'pointer',
 	Hand = 'hand'
@@ -37,7 +30,7 @@ type DPWorkflowEvent = {
 };
 export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 	classType = 'DPWorkflow';
-	NodeTypeItems = NodeTypeItems;
+	NodeTypeItemTypes = DPBaseNode.types;
 	id: string;
 	@observe
 	title: string;
@@ -133,8 +126,8 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 		this.title = data.title || '';
 		if (data.nodes?.length) {
 			this._dpNodes = data.nodes.map((nodeData) => {
-				NodeTypeItems.types[nodeData.data.dpNodeType] || console.error(`Node type ${nodeData.data.dpNodeType} not registered`);
-				return new NodeTypeItems.types[nodeData.data.dpNodeType].model(this, nodeData);
+				DPBaseNode.types[nodeData.data.dpNodeType] || console.error(`Node type ${nodeData.data.dpNodeType} not registered`);
+				return new DPBaseNode.types[nodeData.data.dpNodeType].model(this, nodeData);
 			});
 		} else {
 			this.addNode({
@@ -212,7 +205,7 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 	addNode(nodeData: DPNodeData) {
 		nodeData.id = nodeData.id || uuid();
 		nodeData.type = 'custom';
-		const nodeConfig = NodeTypeItems.types[nodeData.data.dpNodeType];
+		const nodeConfig = DPBaseNode.types[nodeData.data.dpNodeType];
 		if (!nodeConfig) console.error(`Node type ${nodeData.data.dpNodeType} not registered`);
 
 		if (nodeConfig.group !== 'hide') {
@@ -232,7 +225,7 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 				nodeData.data.title = `${nodeData.data.title}2`;
 			}
 		}
-		const newNode = new NodeTypeItems.types[nodeData.data.dpNodeType].model(this, nodeData);
+		const newNode = new DPBaseNode.types[nodeData.data.dpNodeType].model(this, nodeData);
 		this._dpNodes.push(newNode);
 		this.updateNodes();
 		return newNode;
