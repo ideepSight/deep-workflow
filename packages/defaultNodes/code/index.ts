@@ -150,7 +150,7 @@ export class CodeNode extends DPBaseNode<CodeNodeInnerData> {
 		return fn(context);
 	}
 }
-export default {
+DPBaseNode.registerType({
 	type: BlockEnum.Code,
 	model: CodeNode,
 	icon: CodeIcon,
@@ -160,4 +160,4 @@ export default {
 	label: t('workflow:code.label'),
 	desc: t('workflow:code.desc'),
 	group: 'sys'
-};
+});

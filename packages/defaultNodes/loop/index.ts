@@ -118,7 +118,7 @@ export class LoopNode extends DPBaseNode<LoopNodeInnerData> {
 		this.runningStatus = NodeRunningStatus.Succeeded;
 	}
 }
-export default {
+DPBaseNode.registerType({
 	type: BlockEnum.Loop,
 	model: LoopNode,
 	icon: LoopIcon,
@@ -130,4 +130,4 @@ export default {
 	group: 'sys',
 	width: 500,
 	height: 300
-};
+});

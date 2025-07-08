@@ -64,7 +64,7 @@ export class StartNode extends DPBaseNode<StartNodeInnerData> {
 	}
 }
 
-export default {
+DPBaseNode.registerType({
 	type: BlockEnum.Start,
 	model: StartNode,
 	NodeComponent: Start,
@@ -75,4 +75,4 @@ export default {
 	label: t('workflow:start.registLabel'),
 	desc: t('workflow:start.registDesc'),
 	group: 'sys'
-};
+});

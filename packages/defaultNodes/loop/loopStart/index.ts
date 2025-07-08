@@ -45,7 +45,7 @@ export class LoopStartNode extends DPBaseNode {
 	async runSelf(): Promise<void> {}
 }
 
-export default {
+DPBaseNode.registerType({
 	type: BlockEnum.LoopStart,
 	model: LoopStartNode,
 	icon: StartIcon,
@@ -55,4 +55,4 @@ export default {
 	label: t('workflow:loopStart.label'),
 	desc: '',
 	group: 'hide'
-};
+});

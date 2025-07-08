@@ -7,7 +7,7 @@ export class EndNode extends DPBaseNode {
 	}
 	async runSelf(): Promise<void> {}
 }
-export default {
+DPBaseNode.registerType({
 	type: BlockEnum.End,
 	model: EndNode,
 	icon: EndIcon,
@@ -17,4 +17,4 @@ export default {
 	label: t('workflow:end.label'),
 	desc: t('workflow:end.desc'),
 	group: 'sys'
-};
+});

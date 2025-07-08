@@ -72,7 +72,7 @@ export class IfElseNode extends DPBaseNode<IfElseNodeInnerData> {
 	}
 }
 
-export default {
+DPBaseNode.registerType({
 	type: BlockEnum.IfElse,
 	model: IfElseNode,
 	icon: IfElseIcon,
@@ -82,4 +82,4 @@ export default {
 	label: t('workflow:ifElse.label'),
 	desc: t('workflow:ifElse.desc'),
 	group: 'sys'
-};
+});
