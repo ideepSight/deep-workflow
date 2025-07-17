@@ -1,6 +1,10 @@
 const resources = {
 	en: {
 		workflow: {
+			error: {
+				title: 'Error',
+				nodeTypeNotRegistered: 'Node type {{nodeType}} not registered'
+			},
 			save: 'Save',
 			run: 'Run',
 			node: {
@@ -210,7 +214,12 @@ const resources = {
 	},
 	zh: {
 		workflow: {
+			error: {
+				title: '错误',
+				nodeTypeNotRegistered: '节点 {{nodeType}} 未注册'
+			},
 			save: '保存',
+			delNode: '删除节点',
 			run: '运行',
 			node: {
 				startOnlyOne: '开始节点或结束节点只能有一个',

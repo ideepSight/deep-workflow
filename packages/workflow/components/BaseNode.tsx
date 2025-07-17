@@ -1,6 +1,6 @@
 import React, { memo, cloneElement, ReactElement, useContext, useEffect, useRef, Fragment } from 'react';
 import { BlockEnum, DPBaseNode, DPNodeInnerData } from '../lib/baseNode';
-import { Badge, Button, Popconfirm, Space, Spin, Tooltip } from '@arco-design/web-react';
+import { Badge, Button, Message, Modal, Popconfirm, Space, Spin, Tooltip } from '@arco-design/web-react';
 import { IconDelete, IconExclamationCircle, IconInfo, IconPlayCircle, IconRecordStop } from '@arco-design/web-react/icon';
 import './index.less';
 import { WorkfowContext } from './context';
@@ -10,12 +10,19 @@ import { DPWorkflow, NodeRunningStatus } from '../lib';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
 import { useI18n } from '../i18n';
+import { ErrorReason } from './ErrorReason';
+import { t } from 'i18next';
 
 const BaseNodeInner: React.FC<
 	Node<DPNodeInnerData> & { children: ReactElement; node: DPBaseNode<DPNodeInnerData>; nodeRef: React.RefObject<HTMLDivElement>; workflowIns: DPWorkflow }
 > = observer((props) => {
 	const { id, data, children, node, workflowIns, nodeRef } = props;
 	const baseInfo = DPBaseNode.types[data.dpNodeType];
+
+	if (!baseInfo) {
+		throw new Error(`Node type ${data.dpNodeType} not registered`);
+	}
+
 	const { t } = useI18n();
 
 	return (
@@ -87,7 +94,7 @@ const BaseNodeInner: React.FC<
 const BaseNode = (props: Node<DPNodeInnerData>) => {
 	const { workflowIns } = useContext(WorkfowContext);
 	const nodeData = props.data;
-	const NodeComponent = DPBaseNode.types[nodeData.dpNodeType].NodeComponent;
+	const NodeComponent = DPBaseNode.types[nodeData.dpNodeType]?.NodeComponent;
 	const node = workflowIns.dpNodes.find((n) => n.id === props.id);
 	const nodeRef = useRef<HTMLDivElement>(null);
 
@@ -104,7 +111,20 @@ const BaseNode = (props: Node<DPNodeInnerData>) => {
 	}
 
 	if (!NodeComponent) {
-		console.error(`Node type ${nodeData.dpNodeType} not registered`);
+		Modal.error({
+			title: t('workflow:error.title'),
+			content: <ErrorReason reason={new Error(t('workflow:error.nodeTypeNotRegistered').replace('{{nodeType}}', nodeData.dpNodeType))} />,
+			okText: t('workflow:delNode'),
+			maskClosable: false,
+			cancelButtonProps: {
+				style: {
+					display: 'none'
+				}
+			},
+			onOk: () => {
+				workflowIns.delNode(props.id);
+			}
+		});
 		return null;
 	}
 

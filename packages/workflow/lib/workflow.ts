@@ -126,7 +126,9 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 		this.title = data.title || '';
 		if (data.nodes?.length) {
 			this._dpNodes = data.nodes.map((nodeData) => {
-				DPBaseNode.types[nodeData.data.dpNodeType] || console.error(`Node type ${nodeData.data.dpNodeType} not registered`);
+				if (!DPBaseNode.types[nodeData.data.dpNodeType]) {
+					throw new Error(`Node type ${nodeData.data.dpNodeType} not registered`);
+				}
 				return new DPBaseNode.types[nodeData.data.dpNodeType].model(this, nodeData);
 			});
 		} else {
@@ -206,7 +208,7 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 		nodeData.id = nodeData.id || uuid();
 		nodeData.type = 'custom';
 		const nodeConfig = DPBaseNode.types[nodeData.data.dpNodeType];
-		if (!nodeConfig) console.error(`Node type ${nodeData.data.dpNodeType} not registered`);
+		if (!nodeConfig) throw new Error(`Node type ${nodeData.data.dpNodeType} not registered`);
 
 		if (nodeConfig.group !== 'hide') {
 			// start、end节点只能有一个

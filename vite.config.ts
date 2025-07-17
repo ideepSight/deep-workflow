@@ -58,6 +58,7 @@ export default defineConfig((params: ConfigEnv): UserConfig => {
 	if (params.mode === 'iife') {
 		return {
 			...baseConfig,
+			plugins: [],
 			build: {
 				emptyOutDir: false, // 清空输出目录,
 				// 不混淆代码
@@ -68,6 +69,7 @@ export default defineConfig((params: ConfigEnv): UserConfig => {
 					fileName: (format) => `deep-workflow.${format}.js`,
 					formats: ['iife'] // 输出为可挂载到 window 的格式
 				},
+				outDir: isDev ? '../dist/renderer/' : 'dist',
 				rollupOptions: {
 					external: [...Object.keys(externalMap)],
 					output: {

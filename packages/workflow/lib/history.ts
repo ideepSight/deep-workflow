@@ -43,6 +43,9 @@ export class DPHistory extends DPEvent {
 		const currentState = {
 			nodes: dpNodes.map((node) => {
 				// 创建新的DPBaseNode实例并克隆数据
+				if (!DPBaseNode.types[node.data.dpNodeType]) {
+					throw new Error(`Node type ${node.data.dpNodeType} not registered`);
+				}
 				const clonedNode = new DPBaseNode.types[node.data.dpNodeType].model(null, cloneDeep(node.nodeData));
 				return clonedNode;
 			}),
