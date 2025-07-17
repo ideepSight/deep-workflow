@@ -2,11 +2,15 @@ import { defineConfig, ConfigEnv, UserConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import dts from 'vite-plugin-dts';
 
+// 获取命令行参数
+const isDev = process.env.myArg === 'development';
+console.log('isDev', isDev);
+
 const externalMap = {
 	react: 'React',
 	'react-dom': 'ReactDOM',
 	'react/jsx-runtime': 'ReactJSXRuntime',
-	'@arco-design/web-react': 'ArcoDesign',
+	...(!isDev && { '@arco-design/web-react': 'ArcoDesign' }),
 	'@xyflow/react': 'ReactFlow',
 	mobx: 'mobx',
 	'mobx-react-lite': 'mobxReactLite',
@@ -34,7 +38,7 @@ export default defineConfig((params: ConfigEnv): UserConfig => {
 				lib: {
 					entry: 'packages/workflow/index.ts',
 					name: 'DeepWorkflow',
-					fileName: (format) => `deep-workflow.${format}.js`,
+					fileName: (format) => `deep-workflow.${format}.js`
 				},
 				rollupOptions: {
 					external: [...Object.keys(externalMap)],
@@ -56,6 +60,8 @@ export default defineConfig((params: ConfigEnv): UserConfig => {
 			...baseConfig,
 			build: {
 				emptyOutDir: false, // 清空输出目录,
+				// 不混淆代码
+				minify: false,
 				lib: {
 					entry: 'packages/workflow/index.ts',
 					name: 'DeepWorkflow',
