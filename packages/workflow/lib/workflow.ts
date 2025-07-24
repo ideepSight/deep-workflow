@@ -220,12 +220,14 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 				}
 			}
 
-			nodeData.data.title = nodeData.data.title || nodeConfig.label;
-			// 如果有重名则加 2
-			const existNode = this._dpNodes.find((node) => node.title === nodeData.data.title);
-			if (existNode) {
-				nodeData.data.title = `${nodeData.data.title}2`;
+			let counter = 2;
+			let newTitle = nodeData.data.title || nodeConfig.label;
+			while (this._dpNodes.some(node => node.title === newTitle)) {
+				newTitle = `${nodeData.data.title || nodeConfig.label}${counter}`;
+				counter++;
 			}
+			nodeData.data.title = newTitle;
+
 		}
 		const newNode = new DPBaseNode.types[nodeData.data.dpNodeType].model(this, nodeData);
 		this._dpNodes.push(newNode);
@@ -329,3 +331,4 @@ export class DPWorkflow extends DPEvent<DPWorkflowEvent> {
 		});
 	}
 }
+
