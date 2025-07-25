@@ -112,7 +112,7 @@ export class DPVar extends DPEvent {
 			}
 		}
 		if (!isFound) {
-			throw new Error('var not observed');
+			console.error('var not observed');
 		}
 	}
 }

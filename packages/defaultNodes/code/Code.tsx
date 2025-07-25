@@ -83,7 +83,7 @@ export const CodeSet: React.FC<NodeComponentProps<CodeNode>> = observer(({ node 
 											if (!value) {
 												cb('不能为空');
 											}
-											if ([...node.codeOutputs, ...node.outputs].find((v, i) => i !== index && v.key === value)) {
+											if (node.outputs.find((v, i) => i !== index && v.key === value) || node.codeOutputs.find((v) => v.key === value)) {
 												cb('名称不能重复');
 											}
 											return true;
