@@ -5,6 +5,7 @@ const resources = {
 				title: 'Error',
 				nodeTypeNotRegistered: 'Node type {{nodeType}} not registered'
 			},
+			cancelRun: 'User cancelled the run',
 			save: 'Save',
 			run: 'Run',
 			node: {
@@ -218,6 +219,7 @@ const resources = {
 				title: '错误',
 				nodeTypeNotRegistered: '节点 {{nodeType}} 未注册'
 			},
+			cancelRun: '用户取消了运行',
 			save: '保存',
 			delNode: '删除节点',
 			run: '运行',
@@ -267,16 +269,16 @@ const resources = {
 				error: '表达式错误',
 				supportSimple: '支持输入简易表达式',
 				varTip: '符号"/"可呼出变量',
-				connectVarNode: '请先连接有变量的节点',
+				connectVarNode: '无变量来源',
 				input: '请输入'
 			},
 			codeEditor: {
 				error: '代码错误'
 			},
 			selectVar: {
-				connectVarNode: '请先连接有变量的节点',
+				connectVarNode: '无变量来源',
 
-				selectVar: '选择变量'
+				selectVar: '使用变量'
 			},
 			runInputModal: {
 				input: '请输入',
@@ -419,7 +421,7 @@ const resources = {
 			},
 			vars: {
 				noChildOutputVar: '请先连接有变量的子节点',
-				connectVarNode: '请先连接有变量的节点',
+				connectVarNode: '无变量来源',
 				noEmpty: '名称不能为空',
 				noRepeat: '名称不能重复',
 				selectOption: '切换选项选择',

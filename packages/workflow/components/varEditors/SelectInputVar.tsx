@@ -23,7 +23,7 @@ export const SelectInputVar: React.FC<SelectInputVarProps> = (props) => {
 
 	const handleChangeVar = (varItem: DPVar | null) => {
 		setVarValue(varItem);
-		onChange?.({ ...value, innerValue: varItem });
+		onChange?.({ ...value, innerValue: varItem?.fullKey });
 		setInputValue(null);
 	};
 
@@ -61,7 +61,9 @@ export const SelectInputVar: React.FC<SelectInputVarProps> = (props) => {
 					type="text"
 					className="change-mode"
 					onClick={() => {
-						setMode(mode === 'var' ? 'input' : 'var');
+						const newMode = mode === 'var' ? 'input' : 'var';
+						setMode(newMode);
+						onChange?.({ ...value, mode: newMode });
 					}}
 					icon={<Icon name="duoxunhuan" />}
 				/>

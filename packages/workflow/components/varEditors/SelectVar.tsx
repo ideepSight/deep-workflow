@@ -40,6 +40,9 @@ export const SelectVar: React.FC<SelectVarProps> = observer((props) => {
 		if (typeof value === 'string') {
 			const flatEnableVars = toFlatEnableVars(enableVars);
 			const varItem = flatEnableVars.find((v) => v.varFullkey === value)?.value;
+			if (!varItem) {
+				onChange(null); // 没有找到变量，清除原有值
+			}
 			return varItem;
 		}
 		return value;

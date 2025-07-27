@@ -238,23 +238,21 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 			if (this.runSingleNeedAssignVars.length) {
 				const res = await RunInputModal(
 					this.runSingleNeedAssignVars.map((v) => {
-						let fieldType = FormItemType.textInput;
-						if (v.type === DPVarType.Number) {
-							fieldType = FormItemType.number;
-						}
+						const fieldType = v.formInfo?.fieldType || (v.type === DPVarType.Number ? FormItemType.number : FormItemType.textInput);
 						return {
 							fieldType,
 							fieldName: `${v.owner.title}.${v.key}`,
-							label: v.key,
+							label: v.name || v.key,
 							varType: v.type,
-							required: true
+							...v.formInfo
 						};
 					})
 				);
 				if (res && Object.keys(res).length) {
-					// 把res的 {'Start.one': 1}转成 {Start:{one: 1}}
-					const context = formToContext(res);
-					return context;
+					// res 为 {Start:{one: 1}}
+					return res;
+				} else {
+					throw new Error(t('workflow:cancelRun'));
 				}
 			}
 			return {};

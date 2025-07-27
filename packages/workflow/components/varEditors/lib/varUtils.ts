@@ -45,9 +45,16 @@ export const formToContext = (formValues: Record<string, string | number>): Reco
 	}, {});
 };
 
-export const getVarExpression = (varValue: DPVar | string | null): string => {
+export const getVarValue = (varValue: DPVar | string, context) => {
+	let expression: string;
 	if (typeof varValue === 'string') {
-		return varValue;
+		expression = varValue;
+	} else if (varValue instanceof DPVar) {
+		expression = varValue.fullKey;
 	}
-	return varValue?.expression || '';
+	if (expression) {
+		const res = new Function(`{${Object.keys(context).join(', ')}}`, `return ${expression}`)(context);
+		return res;
+	}
+	return null;
 };

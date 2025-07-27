@@ -1,0 +1,9 @@
+{
+	"name": "@deep-sight/node-downloader",
+	"author": "DeepSight",
+	"license": "Apache-2.0",
+	"displayName": "下载器",
+	"description": "通过链接下载文件到本地",
+	"icon": "https://www.ideepauto.com/public/logo.png",
+	"version": "1.0.4"
+}

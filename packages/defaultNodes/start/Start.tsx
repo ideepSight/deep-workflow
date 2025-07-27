@@ -7,7 +7,7 @@ import './index.less';
 import { Icon } from '@deep-sight/dp-iconfont';
 import { IconDelete, IconEdit, IconPlus } from '@arco-design/web-react/icon';
 import { StartNode } from '.';
-import { InputFieldData, NodeComponentProps } from '../../workflow';
+import { DPVar, InputFieldData, NodeComponentProps } from '../../workflow';
 import { useI18n } from '../../workflow/i18n';
 
 export const StartIcon = () => {
@@ -20,12 +20,12 @@ export const Start: React.FC<NodeComponentProps<StartNode>> = observer(({ node }
 			<Handle type="source" id="start" className="base-handle" position={Position.Right} />
 			{!!node.inputFields.length && (
 				<div className="var-list">
-					{node.inputFields.map(({ input }) => {
+					{node.inputFields.map((input) => {
 						return (
-							<div key={input.fieldName} className="var-item input-item">
+							<div key={input.key} className="var-item input-item">
 								<Space size={4}>
 									<Icon className="var-fx" name="huanjingbianliang" />
-									<div>{input.fieldName}</div>
+									<div>{input.name}</div>
 								</Space>
 							</div>
 						);
@@ -44,10 +44,16 @@ export const StartSet: React.FC<NodeComponentProps<StartNode>> = observer(({ nod
 			node.addInputFields(res);
 		}
 	};
-	const handleEdit = async (item: InputFieldData) => {
-		const res = await InputAddModal(node, item);
+	const handleEdit = async (varItem: DPVar) => {
+		const res = await InputAddModal(node, {
+			fieldName: varItem.key,
+			varType: varItem.type,
+			// options: varItem.formInfo.options,
+			// filetypes: varItem.formInfo.filetypes,
+			...varItem.formInfo
+		});
 		if (res) {
-			node.updateInput(item, res);
+			node.updateInput(varItem, res);
 		}
 	};
 	return (
@@ -56,9 +62,10 @@ export const StartSet: React.FC<NodeComponentProps<StartNode>> = observer(({ nod
 				<b>{t('workflow:start.inputField')}</b>
 			</Space>
 			<div className="out-var-list">
-				{node.inputFields.map(({ input }) => {
+				{node.inputFields.map((input) => {
+					const varItem = node.vars.find((item) => item.key === input.key);
 					return (
-						<div key={input.fieldName} className="var-item-block input-item">
+						<div key={input.key} className="var-item-block input-item">
 							<Space size={4}>
 								<Icon className="var-fx" name="huanjingbianliang" />
 								<Tooltip
@@ -70,47 +77,47 @@ export const StartSet: React.FC<NodeComponentProps<StartNode>> = observer(({ nod
 											data={[
 												{
 													label: t('workflow:start.varType'),
-													value: <Tag>{input.varType}</Tag>
+													value: <Tag>{input.type}</Tag>
 												},
 												{
 													label: t('workflow:start.fieldType'),
-													value: <Tag>{input.fieldType}</Tag>
+													value: <Tag>{input.formInfo.fieldType}</Tag>
 												},
 												{
 													label: t('workflow:start.varName'),
-													value: <Tag>{input.fieldName}</Tag>
+													value: <Tag>{input.name}</Tag>
 												},
 												{
 													label: t('workflow:start.label'),
-													value: <Tag>{input.label}</Tag>
+													value: <Tag>{input.formInfo.label}</Tag>
 												},
 												{
 													label: t('workflow:start.defaultValue'),
-													value: input.defaultValue ? <Tag>{input.defaultValue}</Tag> : t('workflow:start.none')
+													value: input.formInfo.defaultValue ? <Tag>{input.formInfo.defaultValue}</Tag> : t('workflow:start.none')
 												},
 												{
 													label: t('workflow:start.placeholder'),
-													value: input.placeholder ? <Tag>{input.placeholder}</Tag> : t('workflow:start.none')
+													value: input.formInfo.placeholder ? <Tag>{input.formInfo.placeholder}</Tag> : t('workflow:start.none')
 												},
 												{
 													label: t('workflow:start.required'),
-													value: <Tag>{input.required ? t('workflow:start.yes') : t('workflow:start.no')}</Tag>
+													value: <Tag>{input.formInfo.required ? t('workflow:start.yes') : t('workflow:start.no')}</Tag>
 												}
 											]}
 										/>
 									}
 								>
-									<div>{input.fieldName}</div>
+									<div>{input.name}</div>
 								</Tooltip>
 							</Space>
 							<Space className="btns" size={2}>
-								<Button type="text" shape="round" size="mini" onClick={() => handleEdit(input)} icon={<IconEdit />} />
+								<Button type="text" shape="round" size="mini" onClick={() => handleEdit(varItem)} icon={<IconEdit />} />
 								<Button
 									type="text"
 									shape="round"
 									status="danger"
 									size="mini"
-									onClick={() => node.removeInputFields(input)}
+									onClick={() => node.removeInputFields(varItem)}
 									icon={<IconDelete />}
 								/>
 							</Space>

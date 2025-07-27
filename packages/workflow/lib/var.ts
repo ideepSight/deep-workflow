@@ -2,6 +2,8 @@ import { DPEvent, observe } from '@deep-sight/dp-event';
 import type { DPBaseNode } from './baseNode';
 import type { IArrayDidChange, Lambda } from 'mobx';
 import { deepObserve } from 'mobx-utils';
+import type { FormItemProps } from '@arco-design/web-react';
+import type { FormItemType, InputFieldData } from '../types';
 
 // 定义 DPVarData 类型
 export enum DPVarType {
@@ -17,9 +19,10 @@ export enum DPVarType {
 export type DPVarData = {
 	key: string;
 	value?: any;
+	name?: string;
 	description?: string;
-	defaultValue?: string;
 	type: DPVarType;
+	formInfo?: FormItemProps & { fieldType: FormItemType; label?: string; options?: { id: string; label: string }[]; filetypes?: string[] };
 	expression?: string;
 };
 export class DPVar extends DPEvent {
@@ -60,11 +63,23 @@ export class DPVar extends DPEvent {
 	set expression(val) {
 		this._data.expression = val;
 	}
+	get name() {
+		return this._data.name;
+	}
+	set name(val) {
+		this._data.name = val;
+	}
 	get description() {
 		return this._data.description;
 	}
 	set description(val) {
 		this._data.description = val;
+	}
+	get formInfo() {
+		return this._data.formInfo;
+	}
+	set formInfo(val) {
+		this._data.formInfo = val;
 	}
 	get owner() {
 		return this._owner;
@@ -112,7 +127,17 @@ export class DPVar extends DPEvent {
 			}
 		}
 		if (!isFound) {
-			console.error('var not observed');
+			console.warn('var not observed, need delete by yourself');
 		}
+	}
+
+	toFormData(): InputFieldData {
+		return {
+			fieldName: this.key,
+			varType: this.type,
+			// options: this.formInfo.options,
+			// filetypes: this.formInfo.filetypes,
+			...this.formInfo
+		};
 	}
 }

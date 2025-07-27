@@ -111,7 +111,10 @@ export class CodeNode extends DPBaseNode<CodeNodeInnerData> {
 		const needAssignVars: DPVar[] = super.runSingleNeedAssignVars;
 		const flatEnableVars = toFlatEnableVars(this.enableVars);
 		// 使用正则找出this.code所有flatEnableVars中varFullkey相等的变量名
-		const reg = new RegExp(`\\b(${flatEnableVars.map((v) => v.varFullkey).join('|')})\\b`, 'g');
+		function escapeRegExp(str: string) {
+		    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+		}
+		const reg = new RegExp(`(?<!\\w)(${flatEnableVars.map((v) => escapeRegExp(v.varFullkey)).join('|')})(?!\\w)`, 'g');
 		const matchs = this.code.match(reg);
 		if (matchs) {
 			matchs.forEach((v) => {
