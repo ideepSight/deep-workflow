@@ -100,7 +100,7 @@ const BaseNode = (props: Node<DPNodeInnerData>) => {
 
 	useEffect(() => {
 		const height = nodeRef?.current?.clientHeight;
-		const width = nodeRef?.current?.clientWidth;
+		const width = nodeRef?.current?.clientWidth || 200;
 
 		Object.assign(node.nodeData, { width, height, parentId: props.parentId });
 		// eslint-disable-next-line react-hooks/exhaustive-deps

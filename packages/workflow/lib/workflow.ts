@@ -1,14 +1,14 @@
 import { DPEvent, observe } from '@deep-sight/dp-event';
 import type { Connection, ReactFlowInstance } from '@xyflow/react';
-import { BlockEnum, DPBaseNode, DPNodeData, DPRegisterNode, LogData, NodeRunningStatus } from './baseNode';
+import { BlockEnum, DPBaseNode, DPNodeData, LogData, NodeRunningStatus } from './baseNode';
 import { uuid } from 'short-uuid';
 import { DPBaseEdge, DPEdgeData } from './baseEdge';
 import { Message } from '@arco-design/web-react';
-import { DPVarData, DPVar } from './var';
 import { cloneDeep, debounce } from 'lodash';
 import { LoopNode } from '../../defaultNodes';
 import { DPHistory } from './history';
 import { t } from '..';
+import '../../defaultNodes';
 
 export enum ControlMode {
 	Pointer = 'pointer',
