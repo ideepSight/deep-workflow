@@ -106,6 +106,9 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 	private _disposer: IDisposer;
 
 	private _owner: DPWorkflow | INodeOwner;
+
+	isInMCP = false;
+
 	get owner() {
 		return this._owner;
 	}
@@ -235,27 +238,30 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 	async getContext() {
 		if (this.singleRunning) {
 			// runSingleNeedAssignVars需要输入框填写才能独立运行
-			if (this.runSingleNeedAssignVars.length) {
-				const res = await RunInputModal(
-					this.runSingleNeedAssignVars.map((v) => {
-						const fieldType = v.formInfo?.fieldType || (v.type === DPVarType.Number ? FormItemType.number : FormItemType.textInput);
-						return {
-							fieldType,
-							fieldName: `${v.owner.title}.${v.key}`,
-							label: v.name || v.key,
-							varType: v.type,
-							...v.formInfo
-						};
-					})
-				);
-				if (res && Object.keys(res).length) {
-					// res 为 {Start:{one: 1}}
-					return res;
-				} else {
-					throw new Error(t('workflow:cancelRun'));
-				}
+			if (!this.runSingleNeedAssignVars.length) {
+				return {};
 			}
-			return {};
+			if (this.isInMCP) {
+				return {};
+			}
+			const res = await RunInputModal(
+				this.runSingleNeedAssignVars.map((v) => {
+					const fieldType = v.formInfo?.fieldType || (v.type === DPVarType.Number ? FormItemType.number : FormItemType.textInput);
+					return {
+						fieldType,
+						fieldName: `${v.owner.title}.${v.key}`,
+						label: v.name || v.key,
+						varType: v.type,
+						...v.formInfo
+					};
+				})
+			);
+			if (res && Object.keys(res).length) {
+				// res 为 {Start:{one: 1}}
+				return res;
+			} else {
+				throw new Error(t('workflow:cancelRun'));
+			}
 		}
 		return toContext(this.enableVars);
 	}
@@ -372,7 +378,7 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 		await new Promise((resolve) => {
 			setTimeout(() => {
 				resolve(true);
-			}, 1000);
+			}, 300);
 		});
 		await this.run({ runMode: 'single' });
 		this.singleRunning = false;
