@@ -58,7 +58,9 @@ const resources = {
 				input: 'Please enter'
 			},
 			codeEditor: {
-				error: 'Code error'
+				error: 'Code error',
+				jsonError: 'JSON format error',
+				jsonErrorKey: 'JSON keys cannot contain backslashes',
 			},
 			selectVar: {
 				connectVarNode: 'Please connect a node with variables first',
@@ -273,7 +275,9 @@ const resources = {
 				input: '请输入'
 			},
 			codeEditor: {
-				error: '代码错误'
+				error: '代码错误',
+				jsonError: 'JSON 格式错误',
+				jsonErrorKey: 'JSON 键名不能包含斜杠',
 			},
 			selectVar: {
 				connectVarNode: '无变量来源',

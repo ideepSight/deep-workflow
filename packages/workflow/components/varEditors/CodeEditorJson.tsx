@@ -17,11 +17,25 @@ export const CodeEditorJson: React.FC<CodeEditorProps> = ({ value = '', onChange
 		(v: string) => {
 			setExpression(v);
 			try {
-				JSON.parse(v);
+				const parsedJson = JSON.parse(v);
+
+				// 检查JSON中的所有键是否包含反斜杠
+				const checkKeys = (obj: any): boolean => {
+					if (typeof obj !== 'object' || obj === null) return true;
+					if (Array.isArray(obj)) return obj.every(checkKeys);
+					return Object.keys(obj).every((key) => {
+						if (key.includes('\/')) {
+							throw new Error(`${t('workflow:codeEditor.jsonErrorKey')} ${key}`);
+						}
+						return checkKeys(obj[key]);
+					});
+				};
+
+				checkKeys(parsedJson);
 				setErrorMsg('');
 				onChange && onChange(v);
 			} catch (error) {
-				setErrorMsg(t('workflow:codeEditor.jsonError') || 'JSON 格式错误');
+				setErrorMsg(error instanceof Error ? error.message : t('workflow:codeEditor.jsonError'));
 			}
 		},
 		[onChange, t]
