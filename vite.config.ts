@@ -64,6 +64,7 @@ export default defineConfig((params: ConfigEnv): UserConfig => {
 				emptyOutDir: false, // 清空输出目录,
 				// 不混淆代码
 				minify: false,
+				sourcemap: true,
 				lib: {
 					entry: 'packages/workflow/index.ts',
 					name: 'DeepWorkflow',
