@@ -7,13 +7,15 @@ const isDev = process.env.myArg === 'development';
 console.log('isDev', isDev);
 
 const externalMap = {
-	react: 'React',
-	'react-dom': 'ReactDOM',
-	'react/jsx-runtime': 'ReactJSXRuntime',
-	...(!isDev && { '@arco-design/web-react': 'ArcoDesign' }),
+	...(!isDev && {
+		react: 'React',
+		'react-dom': 'ReactDOM',
+		'react/jsx-runtime': 'ReactJSXRuntime',
+		mobx: 'mobx',
+		'mobx-react-lite': 'mobxReactLite',
+		'@arco-design/web-react': 'ArcoDesign'
+	}),
 	'@xyflow/react': 'ReactFlow',
-	mobx: 'mobx',
-	'mobx-react-lite': 'mobxReactLite',
 	'@deep-sight/dp-event': 'DeepEvent',
 	'@deep-sight/dp-iconfont': 'DeepIconfont'
 };
@@ -58,7 +60,6 @@ export default defineConfig((params: ConfigEnv): UserConfig => {
 	if (params.mode === 'iife') {
 		return {
 			...baseConfig,
-			plugins: [],
 			build: {
 				emptyOutDir: false, // 清空输出目录,
 				// 不混淆代码
@@ -69,7 +70,7 @@ export default defineConfig((params: ConfigEnv): UserConfig => {
 					fileName: (format) => `deep-workflow.${format}.js`,
 					formats: ['iife'] // 输出为可挂载到 window 的格式
 				},
-				outDir: isDev ? '../dist/renderer/' : 'dist',
+				outDir: 'dist',
 				rollupOptions: {
 					external: [...Object.keys(externalMap)],
 					output: {
