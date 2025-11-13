@@ -2,12 +2,11 @@ import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { Handle, Position } from '@xyflow/react';
 import { Button, Descriptions, Empty, Space, Tag, Tooltip } from '@arco-design/web-react';
-import { InputAddModal } from './modal/InputAddModal';
 import './index.less';
 import { Icon } from '@deep-sight/dp-iconfont';
 import { IconDelete, IconEdit, IconPlus } from '@arco-design/web-react/icon';
 import { StartNode } from '.';
-import { DPVar, InputFieldData, NodeComponentProps } from '../../workflow';
+import { DPVar, InputAddModal, NodeComponentProps } from '../../workflow';
 import { useI18n } from '../../workflow/i18n';
 
 export const StartIcon = () => {
@@ -39,13 +38,13 @@ export const Start: React.FC<NodeComponentProps<StartNode>> = observer(({ node }
 export const StartSet: React.FC<NodeComponentProps<StartNode>> = observer(({ node }) => {
 	const { t } = useI18n();
 	const handleAdd = async () => {
-		const res = await InputAddModal(node);
+		const res = await InputAddModal((value) => node.vars.some((v) => v.key === value));
 		if (res) {
 			node.addInputFields(res);
 		}
 	};
 	const handleEdit = async (varItem: DPVar) => {
-		const res = await InputAddModal(node, {
+		const res = await InputAddModal((value) => node.vars.filter((v) => v.key !== varItem.key).some((v) => v.key === value), {
 			fieldName: varItem.key,
 			varType: varItem.type,
 			// options: varItem.formInfo.options,

@@ -25,7 +25,7 @@ const fileTypes = {
 	video: ['MP4', 'MOV', 'MPEG', 'WEBM']
 };
 
-export const InputAddModal = async (node: DPBaseNode, editValue?: InputFieldData) => {
+export const InputAddModal = async (checkRepeat: (value: string) => boolean, editValue?: InputFieldData) => {
 	const ModalInner: React.FC<DPModalWrapType> = ({ modalRef }) => {
 		const [form] = Form.useForm();
 		useImperativeHandle(modalRef, () => ({
@@ -62,7 +62,8 @@ export const InputAddModal = async (node: DPBaseNode, editValue?: InputFieldData
 								validator(value, callback) {
 									if (!/^[a-zA-Z_\u4e00-\u9fa5$][a-zA-Z0-9_\u4e00-\u9fa5$]*$/.test(value)) {
 										callback(t('workflow:start.inputModal.pattern'));
-									} else if (!node.vars.findIndex((v) => v.key === value)) {
+										// node?.vars?.findIndex((v) => v.key === value
+									} else if (checkRepeat(value)) {
 										callback(t('workflow:vars.noRepeat'));
 									} else {
 										callback();

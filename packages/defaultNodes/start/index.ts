@@ -30,7 +30,14 @@ export class StartNode extends DPBaseNode<StartNodeInnerData> {
 			key: inputData.fieldName,
 			name: inputData.label,
 			type: inputData.varType,
-			formInfo: { label: inputData.label, fieldType: inputData.fieldType, defaultValue: inputData.defaultValue }
+			formInfo: {
+				label: inputData.label,
+				fieldType: inputData.fieldType,
+				defaultValue: inputData.defaultValue,
+				options: inputData.options,
+				required: inputData.required,
+				filetypes: inputData.filetypes
+			}
 		});
 		new DPVar(this.data.inputFields[this.data.inputFields.length - 1], this);
 	}
@@ -39,7 +46,14 @@ export class StartNode extends DPBaseNode<StartNodeInnerData> {
 			key: inputData.fieldName,
 			name: inputData.label,
 			type: inputData.varType,
-			formInfo: { label: inputData.label, fieldType: inputData.fieldType, defaultValue: inputData.defaultValue }
+			formInfo: {
+				label: inputData.label,
+				fieldType: inputData.fieldType,
+				defaultValue: inputData.defaultValue,
+				options: inputData.options,
+				required: inputData.required,
+				filetypes: inputData.filetypes
+			}
 		};
 		// const input = this.data.inputFields.find((item) => item.key === item.key);
 		// Object.assign(input, inputData);
