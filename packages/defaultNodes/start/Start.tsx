@@ -64,7 +64,7 @@ export const StartSet: React.FC<NodeComponentProps<StartNode>> = observer(({ nod
 				{node.inputFields.map((input) => {
 					const varItem = node.vars.find((item) => item.key === input.key);
 					return (
-						<div key={input.key} className="var-item-block input-item">
+						<div key={input.key} className="var-item-block input-item dfb">
 							<Space size={4}>
 								<Icon className="var-fx" name="huanjingbianliang" />
 								<Tooltip
@@ -84,11 +84,11 @@ export const StartSet: React.FC<NodeComponentProps<StartNode>> = observer(({ nod
 												},
 												{
 													label: t('workflow:start.varName'),
-													value: <Tag>{input.name}</Tag>
+													value: <Tag>{input.key}</Tag>
 												},
 												{
 													label: t('workflow:start.label'),
-													value: <Tag>{input.formInfo.label}</Tag>
+													value: <Tag>{input.name}</Tag>
 												},
 												{
 													label: t('workflow:start.defaultValue'),
@@ -106,7 +106,7 @@ export const StartSet: React.FC<NodeComponentProps<StartNode>> = observer(({ nod
 										/>
 									}
 								>
-									<div>{input.name}</div>
+									<div>{input.key}</div>
 								</Tooltip>
 							</Space>
 							<Space className="btns" size={2}>

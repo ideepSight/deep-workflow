@@ -14,15 +14,6 @@ export const CodeIcon = () => {
 	return <Icon name="code" />;
 };
 
-export const Code: React.FC<NodeComponentProps<CodeNode>> = observer(({ node }) => {
-	return (
-		<div>
-			<Handle id={`${node.id}-target`} type="target" className="base-handle" position={Position.Left} />
-			<Handle id={`${node.id}-source`} type="source" className="base-handle" position={Position.Right} />
-		</div>
-	);
-});
-
 export const CodeSet: React.FC<NodeComponentProps<CodeNode>> = observer(({ node }) => {
 	const { t } = useI18n();
 	const enableVars = node.enableVars.reverse();

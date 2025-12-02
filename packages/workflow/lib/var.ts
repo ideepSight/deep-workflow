@@ -93,13 +93,24 @@ function createArrayProxy(rawArray: DPVarData[], vars: Set<DPVar>): DPVarData[] 
 
 export class DPVar extends DPEvent {
 	@observe
-	_data: DPVarData; // 改为内部可访问，供 syncVarsWithArray 使用
+	_data: DPVarData; // 改为内部可访问,供 syncVarsWithArray 使用
 	_owner?: DPBaseNode;
+	_sourceArray?: DPVarData[]; // 记录源数组引用
 
 	get data() {
 		return this._data;
 	}
 	set data(val) {
+		// 如果有源数组，自动同步更新数组中的对象
+		if (this._sourceArray) {
+			const index = this._sourceArray.indexOf(this._data);
+			if (index !== -1) {
+				// 使用 Object.assign 更新原对象属性，而不是替换引用
+				Object.assign(this._data, val);
+				return;
+			}
+		}
+		// 如果没找到源数组或索引无效，直接替换
 		this._data = val;
 	}
 	get fullKey() {
@@ -203,6 +214,8 @@ export class DPVar extends DPEvent {
 
 		// 注册当前 DPVar
 		proxyInfo.vars.add(this);
+		// 记录源数组引用，用于 data setter 自动同步
+		this._sourceArray = sourceArray;
 	}
 
 	toFormData(): InputFieldData {

@@ -1,6 +1,6 @@
 import { observe } from '@deep-sight/dp-event';
 import { DPBaseNode, BlockEnum, DPNodeInnerData, DPVar, DPVarType, t, DPVarData, toContext, toFlatEnableVars } from '../../workflow';
-import { Code, CodeIcon, CodeSet } from './Code';
+import { CodeIcon, CodeSet } from './Code';
 import * as acorn from 'acorn';
 import * as walk from 'acorn-walk';
 
@@ -112,7 +112,7 @@ export class CodeNode extends DPBaseNode<CodeNodeInnerData> {
 		const flatEnableVars = toFlatEnableVars(this.enableVars);
 		// 使用正则找出this.code所有flatEnableVars中varFullkey相等的变量名
 		function escapeRegExp(str: string) {
-		    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+			return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 		}
 		const reg = new RegExp(`(?<!\\w)(${flatEnableVars.map((v) => escapeRegExp(v.varFullkey)).join('|')})(?!\\w)`, 'g');
 		const matchs = this.code.match(reg);
@@ -158,7 +158,7 @@ DPBaseNode.registerType({
 	model: CodeNode,
 	icon: CodeIcon,
 	iconColor: '#296dff',
-	NodeComponent: Code,
+	NodeComponent: null,
 	SetComponent: CodeSet,
 	label: t('workflow:code.label'),
 	desc: t('workflow:code.desc'),

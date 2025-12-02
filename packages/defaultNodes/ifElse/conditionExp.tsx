@@ -58,7 +58,7 @@ export const ConditionExp: React.FC<ConditionExpProps> = ({ enableVars = [], val
 
 	const handleChangeOperator = (value: string) => {
 		setOperator(value);
-		onChange && onChange({ mode, left: varItemLeft ? `${varItemLeft.owner.title}.${varItemLeft.key}` : null, right: varItemRight, operator });
+		onChange && onChange({ mode, left: varItemLeft ? `${varItemLeft.owner.title}.${varItemLeft.key}` : null, right: varItemRight, operator: value });
 	};
 
 	return (

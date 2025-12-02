@@ -315,7 +315,7 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 		if (!this._disposer) {
 			this._disposer = deepObserve(this._nodeData, (change, path) => {
 				this.modified = true;
-				this.owner.emit('dataChange');
+				this.owner?.emit('dataChange');
 			});
 		}
 		this.init && this.init(this.data);

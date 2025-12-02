@@ -5,7 +5,7 @@ import { IconDelete, IconExclamationCircle, IconInfo, IconPlayCircle, IconRecord
 import './index.less';
 import { WorkfowContext } from './context';
 import { observer } from 'mobx-react-lite';
-import { Node } from '@xyflow/react';
+import { Handle, Node, Position } from '@xyflow/react';
 import { DPWorkflow, NodeRunningStatus } from '../lib';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
@@ -110,28 +110,17 @@ const BaseNode = (props: Node<DPNodeInnerData>) => {
 		return null;
 	}
 
-	if (!NodeComponent) {
-		Modal.error({
-			title: t('workflow:error.title'),
-			content: <ErrorReason reason={new Error(t('workflow:error.nodeTypeNotRegistered').replace('{{nodeType}}', nodeData.dpNodeType))} />,
-			okText: t('workflow:delNode'),
-			maskClosable: false,
-			cancelButtonProps: {
-				style: {
-					display: 'none'
-				}
-			},
-			onOk: () => {
-				workflowIns.delNode(props.id);
-			}
-		});
-		return null;
-	}
-
 	return (
 		<Fragment key={`base-node-wrap-${props.id}`}>
 			<BaseNodeInner nodeRef={nodeRef} {...props} node={node} workflowIns={workflowIns}>
-				<NodeComponent node={null} />
+				{NodeComponent ? (
+					<NodeComponent node={null} />
+				) : (
+					<div>
+						<Handle id={`${node.id}-target`} type="target" className="base-handle" position={Position.Left} />
+						<Handle id={`${node.id}-source`} type="source" className="base-handle" position={Position.Right} />
+					</div>
+				)}
 			</BaseNodeInner>
 		</Fragment>
 	);
