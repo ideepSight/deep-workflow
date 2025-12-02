@@ -165,9 +165,7 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 		// node里 new DPVar 会自动push到这
 		return this._vars;
 	}
-	set vars(val) {
-		this._vars = val;
-	}
+
 	get nodeData() {
 		return this._nodeData;
 	}
