@@ -2,7 +2,7 @@ import { DPNodeInnerData, DPBaseNode, BlockEnum, DPVar, InputFieldData, NodeRunn
 import { Start, StartIcon, StartSet } from './Start';
 import { RunInputModal } from '../../workflow/components/RunInputModal';
 
-export type StartNodeInnerData = DPNodeInnerData & { inputFields: DPVarData[] };
+export type StartNodeInnerData = DPNodeInnerData;
 
 export class StartNode extends DPBaseNode<StartNodeInnerData> {
 	get nodeData() {
@@ -15,18 +15,13 @@ export class StartNode extends DPBaseNode<StartNodeInnerData> {
 		return false;
 	}
 	get inputFields() {
-		return this.data.inputFields;
+		return this.data.inputs;
 	}
-	init(data: StartNodeInnerData) {
-		if (!data.inputFields) {
-			data.inputFields = [];
-		}
-		data.inputFields.forEach((inputVarData) => {
-			new DPVar(inputVarData, this);
-		});
-	}
+
+	init(data: StartNodeInnerData) {}
+
 	addInputFields(inputData: InputFieldData) {
-		this.data.inputFields.push({
+		this.addInput({
 			key: inputData.fieldName,
 			name: inputData.label,
 			type: inputData.varType,
@@ -37,12 +32,12 @@ export class StartNode extends DPBaseNode<StartNodeInnerData> {
 				options: inputData.options,
 				required: inputData.required,
 				filetypes: inputData.filetypes
-			}
+			},
 		});
-		new DPVar(this.data.inputFields[this.data.inputFields.length - 1], this);
 	}
-	updateInput(item: DPVar, inputData: InputFieldData) {
+	updateInputField(item: DPVar, inputData: InputFieldData) {
 		item.data = {
+			...item.data,
 			key: inputData.fieldName,
 			name: inputData.label,
 			type: inputData.varType,
@@ -55,14 +50,9 @@ export class StartNode extends DPBaseNode<StartNodeInnerData> {
 				filetypes: inputData.filetypes
 			}
 		};
-		// const input = this.data.inputFields.find((item) => item.key === item.key);
-		// Object.assign(input, inputData);
 	}
-	removeInputFields(input: DPVar): void {
-		const index = this.vars.findIndex((item) => item.key === input.key);
-		if (index !== -1) {
-			this.vars.splice(index, 1);
-		}
+	removeInputField(input: DPVar): void {
+		this.removeInput(input);
 	}
 	async runSelf(): Promise<void> {
 		if (this.inputFields.length) {

@@ -22,6 +22,7 @@ export type DPVarData = {
 	type: DPVarType;
 	formInfo?: FormItemProps & { fieldType: FormItemType; label?: string; options?: { id: string; label: string }[]; filetypes?: string[] };
 	expression?: string;
+	flag?: 'input' | 'output' | string;
 };
 
 // 使用 WeakMap 缓存每个数组的 Proxy 和关联的 DPVar
@@ -45,6 +46,7 @@ function syncVarsWithArray(rawArray: DPVarData[], vars: Set<DPVar>) {
 			// data 已不在数组中，删除对应的 DPVar
 			const idx = dpVar._owner.vars.indexOf(dpVar);
 			if (idx !== -1) dpVar._owner.vars.splice(idx, 1);
+			console.log('syncVarsWithArray DPVar deleted:', rawArray, dpVar);
 			vars.delete(dpVar);
 		}
 	});

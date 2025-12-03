@@ -47,12 +47,10 @@ export const StartSet: React.FC<NodeComponentProps<StartNode>> = observer(({ nod
 		const res = await InputAddModal((value) => node.vars.filter((v) => v.key !== varItem.key).some((v) => v.key === value), {
 			fieldName: varItem.key,
 			varType: varItem.type,
-			// options: varItem.formInfo.options,
-			// filetypes: varItem.formInfo.filetypes,
 			...varItem.formInfo
 		});
 		if (res) {
-			node.updateInput(varItem, res);
+			node.updateInputField(varItem, res);
 		}
 	};
 	return (
@@ -80,7 +78,7 @@ export const StartSet: React.FC<NodeComponentProps<StartNode>> = observer(({ nod
 												},
 												{
 													label: t('workflow:start.fieldType'),
-													value: <Tag>{input.formInfo.fieldType}</Tag>
+													value: <Tag>{t(`workflow:selectInputType.${input.formInfo.fieldType}`)}</Tag>
 												},
 												{
 													label: t('workflow:start.varName'),
@@ -106,7 +104,10 @@ export const StartSet: React.FC<NodeComponentProps<StartNode>> = observer(({ nod
 										/>
 									}
 								>
-									<div>{input.key}</div>
+									<div>
+										{input.key}
+										<span className="var-type-color">{input.type}</span>
+									</div>
 								</Tooltip>
 							</Space>
 							<Space className="btns" size={2}>
@@ -116,7 +117,7 @@ export const StartSet: React.FC<NodeComponentProps<StartNode>> = observer(({ nod
 									shape="round"
 									status="danger"
 									size="mini"
-									onClick={() => node.removeInputFields(varItem)}
+									onClick={() => node.removeInputField(varItem)}
 									icon={<IconDelete />}
 								/>
 							</Space>

@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { DPEvent, observe } from '@deep-sight/dp-event';
 import { deepObserve, IDisposer } from 'mobx-utils';
 import { Node } from '@xyflow/react';
-import { DPVar, DPVarType } from './var';
+import { DPVar, DPVarData, DPVarType } from './var';
 import type { DPWorkflow } from './workflow';
 import { RunInputModal } from '../components/RunInputModal';
 import { FormItemType, formToContext, t, toContext, toFlatEnableVars } from '../../workflow';
@@ -69,8 +69,8 @@ export type DPNodeInnerData = {
 	dpNodeType: BlockEnum | string;
 	title?: string;
 	desc?: string;
-	inputs?: { key: string; type: DPVarType }[];
-	outputs?: { key: string; type: DPVarType }[];
+	inputs?: DPVarData[];
+	outputs?: DPVarData[];
 	failRetryEnable?: boolean;
 	retryInterval?: number;
 	maxRetryTimes?: number;
@@ -134,20 +134,12 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 	public _nextRunNode: DPBaseNode = null;
 	@observe
 	public singleRunning = false;
-	@observe
-	private _outputs: DPVar[];
-	@observe
-	private _inputs: DPVar[];
 
 	get outputs() {
-		return this._outputs;
+		return this._vars.filter((v) => v.data.flag === 'output');
 	}
-	set outputs(val) {
-		this._outputs = val;
-	}
-
 	get inputs() {
-		return this._inputs;
+		return this._vars.filter((v) => v.data.flag === 'input');
 	}
 
 	set runlog(val: LogData) {
@@ -263,7 +255,7 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 		}
 		return toContext(this.enableVars);
 	}
-	// 节点自行决定独立运行时需要手动赋值的变量
+	// 节点可通过重写来自行决定独立运行时需要手动赋值的变量
 	get runSingleNeedAssignVars(): DPVar[] {
 		const needAssignVars: DPVar[] = [];
 		const flatEnableVars = toFlatEnableVars(this.enableVars);
@@ -306,11 +298,11 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 		if (!this.data.inputs) {
 			this.data.inputs = [];
 		}
-		this._inputs = this.data.inputs.map((v) => new DPVar(v, this));
+		this.data.inputs.map((v) => new DPVar(v, this));
 		if (!this.data.outputs) {
 			this.data.outputs = [];
 		}
-		this._outputs = this.data.outputs.map((v) => new DPVar(v, this));
+		this.data.outputs.map((v) => new DPVar(v, this));
 
 		if (!this._disposer) {
 			this._disposer = deepObserve(this._nodeData, (change, path) => {
@@ -322,33 +314,42 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 	}
 	init?(data: T): void;
 
-	addInput(params?: { key?: string; type?: DPVarType }) {
-		if (params?.key) {
-			this.data.inputs.push({ key: params.key, type: params.type || DPVarType.String });
+	addInput(params?: DPVarData) {
+		if (params && params?.key) {
+			this.data.inputs.push({ ...params, type: params.type || DPVarType.String });
 		} else {
 			this.data.inputs.push({ key: `var${this.data.inputs.length + 1}`, type: DPVarType.String });
 		}
-		this._inputs.push(new DPVar(this.data.inputs[this.data.inputs.length - 1], this));
+		new DPVar(this.data.inputs[this.data.inputs.length - 1], this);
 	}
-	removeInput(index: number) {
-		const varIndex = this._vars.findIndex((v) => v.key === this.data.inputs[index].key);
-		this._vars.splice(varIndex, 1);
-		this.data.inputs.splice(index, 1);
-		this._inputs.splice(index, 1);
+	removeInput(index: number | DPVar) {
+		let varIndex = -1;
+		if (typeof index === 'number') {
+			varIndex = this._vars.findIndex((v) => v.key === this.data.inputs[index].key);
+		} else {
+			varIndex = this._vars.findIndex((v) => v.key === index.key);
+		}
+
+		console.log(this._vars.length);
+		this.data.inputs.splice(varIndex, 1);
+		console.log(this._vars.length);
 	}
-	addOutput(params?: { key?: string; type?: DPVarType }) {
+	addOutput(params?: DPVarData) {
 		if (params?.key) {
-			this.data.outputs.push({ key: params.key, type: params.type || DPVarType.String });
+			this.data.outputs.push({ ...params, type: params.type || DPVarType.String });
 		} else {
 			this.data.outputs.push({ key: `var${this.data.outputs.length + 1}`, type: DPVarType.String });
 		}
-		this._outputs.push(new DPVar(this.data.outputs[this.data.outputs.length - 1], this));
+		new DPVar(this.data.outputs[this.data.outputs.length - 1], this);
 	}
-	removeOutput(index: number) {
-		const varIndex = this._vars.findIndex((v) => v.key === this.data.outputs[index].key);
-		this._vars.splice(varIndex, 1);
-		this.data.outputs.splice(index, 1);
-		this._outputs.splice(index, 1);
+	removeOutput(index: number | DPVar) {
+		let varIndex = -1;
+		if (typeof index === 'number') {
+			varIndex = this._vars.findIndex((v) => v.key === this.data.outputs[index].key);
+		} else {
+			varIndex = this._vars.findIndex((v) => v.key === index.key);
+		}
+		this.data.outputs.splice(varIndex, 1);
 	}
 
 	toCenter() {

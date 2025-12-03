@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import style from './SelectOptionSet.module.less';
 import { Button, Input } from '@arco-design/web-react';
 import { uuid } from 'short-uuid';
@@ -40,12 +40,16 @@ export const SelectOptionSet: React.FC<SelectOptionSetProps> = ({ value, onChang
 		<div className={style['select-option-set']}>
 			<div className={style['select-option-set-list']}>
 				{options.map((option) => (
-					<>
-						<div key={option.id} className={style['select-option-set-item']}>
-							<Input placeholder={t('workflow:start.selectOption.inputOption')} value={option.label} onChange={(v) => handleChange(option.id, v)} />
+					<Fragment key={option.id}>
+						<div className={style['select-option-set-item']}>
+							<Input
+								placeholder={t('workflow:start.selectOption.inputOption')}
+								value={option.label}
+								onChange={(v) => handleChange(option.id, v)}
+							/>
 						</div>
 						<Button size="small" className={style['select-option-set-delete-btn']} onClick={() => handleDelete(option.id)} icon={<IconDelete />} />
-					</>
+					</Fragment>
 				))}
 			</div>
 			<div className={style['select-option-set-btn']}>
