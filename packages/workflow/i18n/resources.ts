@@ -421,7 +421,8 @@ const resources = {
 				expRunError: '表达式执行错误:',
 				expRunFail: '表达式执行失败: {{msg}}',
 				elseDescription: '用于定义当 条件判断 不满足时应执行的逻辑。',
-				elseEdgeNotFound: '没有找到 否则 连线'
+				elseEdgeNotFound: '没有找到 否则 连线',
+				conditionSuccess: '条件成立',
 			},
 			vars: {
 				noChildOutputVar: '请先连接有变量的子节点',

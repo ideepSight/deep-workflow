@@ -59,6 +59,7 @@ export class IfElseNode extends DPBaseNode<IfElseNodeInnerData> {
 					this.runningStatus = NodeRunningStatus.Succeeded;
 					const edge = this.owner.dpEdges.find((edge) => edge.data.sourceHandle === c.id);
 					this._nextRunNode = this.owner.dpNodes.find((node) => node.id === edge.target);
+					this.runlog = { time: Date.now(), msg: `${t('workflow:ifElse.conditionSuccess')}: ${expression}`, type: 'info' };
 					return;
 				}
 			} else {
@@ -66,6 +67,7 @@ export class IfElseNode extends DPBaseNode<IfElseNodeInnerData> {
 				const edge = this.owner.dpEdges.find((edge) => edge.data.sourceHandle === c.id);
 				if (!edge) throw new Error(t('workflow:ifElse.elseEdgeNotFound'));
 				this._nextRunNode = this.owner.dpNodes.find((node) => node.id === edge.target);
+				this.runlog = { time: Date.now(), msg: t('workflow:ifElse.else'), type: 'info' };
 				return;
 			}
 		}
