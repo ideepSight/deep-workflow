@@ -93,7 +93,7 @@ export const CodeSet: React.FC<NodeComponentProps<CodeNode>> = observer(({ node 
 									status="danger"
 									shape="circle"
 									icon={<IconDelete />}
-									onClick={() => node.removeOutput(index)}
+									onClick={() => node.removeOutput(outVar)}
 								/>
 							</div>
 						);

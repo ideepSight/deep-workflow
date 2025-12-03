@@ -30,7 +30,6 @@ export const Loop: React.FC<NodeComponentProps<LoopNode>> = observer(({ node }) 
 				parentId: node.id,
 				extent: 'parent'
 			}) as LoopStartNode;
-			loopStartNode.parentNode = node;
 		}
 	}, []);
 
@@ -134,7 +133,7 @@ export const LoopSet: React.FC<NodeComponentProps<LoopNode>> = observer(({ node 
 												if (!value) {
 													cb(t('workflow:vars.noEmpty'));
 												}
-												if(node.outputs.find((v, i) => i !== index && v.key === value)) {
+												if (node.outputs.find((v, i) => i !== index && v.key === value)) {
 													cb(t('workflow:vars.noRepeat'));
 												}
 												return true;
@@ -153,7 +152,7 @@ export const LoopSet: React.FC<NodeComponentProps<LoopNode>> = observer(({ node 
 										status="danger"
 										shape="circle"
 										icon={<IconDelete />}
-										onClick={() => node.removeOutput(index)}
+										onClick={() => node.removeOutput(outVar)}
 									/>
 								</div>
 							);

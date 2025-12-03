@@ -100,7 +100,7 @@ export const UrlDownloadSet: React.FC<NodeComponentProps<UrlDownloadNode>> = obs
 									status="danger"
 									shape="circle"
 									icon={<IconDelete />}
-									onClick={() => node.removeOutput(index)}
+									onClick={() => node.removeOutput(outVar)}
 								/>
 							</div>
 						);

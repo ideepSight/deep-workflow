@@ -22,7 +22,7 @@ const resources = {
 			},
 			selectInputType: {
 				'text-input': 'Text',
-				paragraph: 'Paragraph',
+				radio: 'Radio',
 				select: 'Select',
 				number: 'Number',
 				file: 'File',
@@ -239,8 +239,8 @@ const resources = {
 			},
 			selectInputType: {
 				'text-input': '文本',
-				paragraph: '段落',
-				select: '下拉选项',
+				radio: '单选',
+				select: '下拉多选',
 				number: '数字',
 				file: '单文件',
 				'file-list': '文件列表'

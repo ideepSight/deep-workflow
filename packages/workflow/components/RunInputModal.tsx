@@ -1,8 +1,9 @@
 import React, { useEffect, useImperativeHandle } from 'react';
 import { DPModalRender, DPModalWrapType } from './DPModal';
-import { Form, Input, Select } from '@arco-design/web-react';
+import { Form, Input, Radio, Select } from '@arco-design/web-react';
 import { FormItemType, InputFieldData } from '../types';
 import { t } from '..';
+import { MultiFileInput } from './MultiFileInput';
 
 export const RunInputModal = async (inputDatas: InputFieldData[]) => {
 	const ModalInner: React.FC<DPModalWrapType> = ({ modalRef }) => {
@@ -32,9 +33,15 @@ export const RunInputModal = async (inputDatas: InputFieldData[]) => {
 									<Input placeholder={item.placeholder} maxLength={50} showWordLimit />
 								</Form.Item>
 							)}
-							{item.fieldType === FormItemType.paragraph && (
+							{item.fieldType === FormItemType.radio && (
 								<Form.Item label={item.label} field={item.fieldName} {...item}>
-									<Input.TextArea placeholder={item.placeholder} maxLength={500} showWordLimit />
+									<Radio.Group type="button">
+										{item.options.map((option) => (
+											<Radio key={option.label} value={option.label}>
+												{option.label}
+											</Radio>
+										))}
+									</Radio.Group>
 								</Form.Item>
 							)}
 							{item.fieldType === FormItemType.number && (
@@ -45,8 +52,10 @@ export const RunInputModal = async (inputDatas: InputFieldData[]) => {
 							{item.fieldType === FormItemType.select && (
 								<Form.Item label={item.label} field={item.fieldName} {...item}>
 									<Select
+										mode="multiple"
 										options={item.options.map((option) => ({ label: option.label, value: option.label }))}
 										placeholder={t('workflow:runInputModal.select')}
+										getPopupContainer={() => document.body}
 									/>
 								</Form.Item>
 							)}
@@ -61,11 +70,9 @@ export const RunInputModal = async (inputDatas: InputFieldData[]) => {
 							)}
 							{item.fieldType === FormItemType.multiFiles && (
 								<Form.Item label={item.label} field={item.fieldName} {...item}>
-									<Input
+									<MultiFileInput
 										placeholder={item.placeholder || t('workflow:runInputModal.selectFiles')}
-										type="file"
 										accept={item.filetypes.join(',')}
-										multiple
 									/>
 								</Form.Item>
 							)}

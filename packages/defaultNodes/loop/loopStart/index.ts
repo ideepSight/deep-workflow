@@ -10,17 +10,13 @@ export class LoopStartNode extends DPBaseNode {
 	get owner() {
 		return super.owner as DPWorkflow;
 	}
-	private _parentNode = this.owner?.dpNodes.find((node) => node.id === this.nodeData.parentId) as LoopNode;
 	get singleRunAble() {
 		return false;
 	}
 	private _tmpVars: DPVar[];
 
 	get parentNode() {
-		return this._parentNode;
-	}
-	set parentNode(v) {
-		this._parentNode = v;
+		return this.owner?.dpNodes.find((node) => node.id === this.nodeData.parentId) as LoopNode;
 	}
 
 	get vars() {

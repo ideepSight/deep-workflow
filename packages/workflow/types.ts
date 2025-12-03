@@ -3,7 +3,7 @@ import { DPVarType } from './lib';
 
 export enum FormItemType {
 	textInput = 'text-input',
-	paragraph = 'paragraph',
+	radio = 'radio',
 	select = 'select',
 	number = 'number',
 	singleFile = 'file',

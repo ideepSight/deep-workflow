@@ -26,7 +26,7 @@ export const SelectInputType: React.FC<{ value?: FormItemType; onChange?: (v: Fo
 
 	const inputTypes: FormItemType[] = [
 		FormItemType.textInput,
-		FormItemType.paragraph,
+		FormItemType.radio,
 		FormItemType.select,
 		FormItemType.number,
 		FormItemType.singleFile,

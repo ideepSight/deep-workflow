@@ -316,19 +316,14 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 
 	addInput(params?: DPVarData) {
 		if (params && params?.key) {
-			this.data.inputs.push({ ...params, type: params.type || DPVarType.String });
+			this.data.inputs.push({ ...params, type: params.type || DPVarType.String, flag: 'input' });
 		} else {
-			this.data.inputs.push({ key: `var${this.data.inputs.length + 1}`, type: DPVarType.String });
+			this.data.inputs.push({ key: `var${this.data.inputs.length + 1}`, type: DPVarType.String, flag: 'input' });
 		}
 		new DPVar(this.data.inputs[this.data.inputs.length - 1], this);
 	}
-	removeInput(index: number | DPVar) {
-		let varIndex = -1;
-		if (typeof index === 'number') {
-			varIndex = this._vars.findIndex((v) => v.key === this.data.inputs[index].key);
-		} else {
-			varIndex = this._vars.findIndex((v) => v.key === index.key);
-		}
+	removeInput(input: DPVar) {
+		const varIndex = this.data.inputs.findIndex((v) => v.key === input.key);
 
 		console.log(this._vars.length);
 		this.data.inputs.splice(varIndex, 1);
@@ -336,19 +331,14 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 	}
 	addOutput(params?: DPVarData) {
 		if (params?.key) {
-			this.data.outputs.push({ ...params, type: params.type || DPVarType.String });
+			this.data.outputs.push({ ...params, type: params.type || DPVarType.String, flag: 'output' });
 		} else {
-			this.data.outputs.push({ key: `var${this.data.outputs.length + 1}`, type: DPVarType.String });
+			this.data.outputs.push({ key: `var${this.data.outputs.length + 1}`, type: DPVarType.String, flag: 'output' });
 		}
 		new DPVar(this.data.outputs[this.data.outputs.length - 1], this);
 	}
-	removeOutput(index: number | DPVar) {
-		let varIndex = -1;
-		if (typeof index === 'number') {
-			varIndex = this._vars.findIndex((v) => v.key === this.data.outputs[index].key);
-		} else {
-			varIndex = this._vars.findIndex((v) => v.key === index.key);
-		}
+	removeOutput(output: DPVar) {
+		const varIndex = this.data.outputs.findIndex((v) => v.key === output.key);
 		this.data.outputs.splice(varIndex, 1);
 	}
 

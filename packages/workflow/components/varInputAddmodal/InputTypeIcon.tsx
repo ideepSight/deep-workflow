@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { FormItemType } from '../../../workflow';
-import { IconAlignLeft, IconCopy, IconDriveFile, IconFontColors, IconPlus, IconSelectAll } from '@arco-design/web-react/icon';
+import { IconCheckSquare, IconCopy, IconDriveFile, IconFontColors, IconPlus, IconSelectAll } from '@arco-design/web-react/icon';
 
 type Props = {
 	className?: string;
@@ -12,7 +12,7 @@ const getIcon = (type: FormItemType) => {
 		(
 			{
 				[FormItemType.textInput]: IconFontColors,
-				[FormItemType.paragraph]: IconAlignLeft,
+				[FormItemType.radio]: IconCheckSquare,
 				[FormItemType.select]: IconSelectAll,
 				[FormItemType.number]: IconPlus,
 				[FormItemType.singleFile]: IconDriveFile,

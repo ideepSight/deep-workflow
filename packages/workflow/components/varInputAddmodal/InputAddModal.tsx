@@ -11,6 +11,8 @@ const fieldTypeToVarType = (fieldType: FormItemType): DPVarType => {
 	switch (fieldType) {
 		case FormItemType.multiFiles:
 			return DPVarType.ArrayString;
+		case FormItemType.select:
+			return DPVarType.ArrayString;
 		case FormItemType.number:
 			return DPVarType.Number;
 		default:
@@ -77,7 +79,7 @@ export const InputAddModal = async (checkRepeat: (value: string) => boolean, edi
 					<Form.Item label={t('workflow:start.inputModal.label')} field="label" required>
 						<Input placeholder={t('workflow:start.inputModal.input')} maxLength={20} />
 					</Form.Item>
-					{(fieldType === FormItemType.textInput || fieldType === FormItemType.paragraph) && (
+					{fieldType === FormItemType.textInput && (
 						<>
 							<Form.Item label={t('workflow:start.inputModal.defaultValue')} field="defaultValue">
 								<Input placeholder={t('workflow:start.inputModal.optional')} maxLength={200} />
@@ -86,6 +88,11 @@ export const InputAddModal = async (checkRepeat: (value: string) => boolean, edi
 								<Input placeholder={t('workflow:start.inputModal.optional')} maxLength={200} />
 							</Form.Item>
 						</>
+					)}
+					{fieldType === FormItemType.radio && (
+						<Form.Item label={t('workflow:start.inputModal.options')} field="options">
+							<SelectOptionSet />
+						</Form.Item>
 					)}
 					{fieldType === FormItemType.select && (
 						<Form.Item label={t('workflow:start.inputModal.options')} field="options">
