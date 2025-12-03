@@ -46,7 +46,7 @@ function syncVarsWithArray(rawArray: DPVarData[], vars: Set<DPVar>) {
 			// data 已不在数组中，删除对应的 DPVar
 			const idx = dpVar._owner.vars.indexOf(dpVar);
 			if (idx !== -1) dpVar._owner.vars.splice(idx, 1);
-			console.log('syncVarsWithArray DPVar deleted:', rawArray, dpVar);
+			// console.log('syncVarsWithArray DPVar deleted:', rawArray, dpVar);
 			vars.delete(dpVar);
 		}
 	});

@@ -324,10 +324,7 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 	}
 	removeInput(input: DPVar) {
 		const varIndex = this.data.inputs.findIndex((v) => v.key === input.key);
-
-		console.log(this._vars.length);
 		this.data.inputs.splice(varIndex, 1);
-		console.log(this._vars.length);
 	}
 	addOutput(params?: DPVarData) {
 		if (params?.key) {

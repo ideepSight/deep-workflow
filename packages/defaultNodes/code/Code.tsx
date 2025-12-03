@@ -67,7 +67,7 @@ export const CodeSet: React.FC<NodeComponentProps<CodeNode>> = observer(({ node 
 						return (
 							<div key={outVar.key} className="var-item-wrap">
 								<DefineVar
-									enableVars={node.hasSelfEnableVars}
+									enableVars={node.enableVars}
 									value={outVar.data}
 									rule={{
 										validator: (_, value, cb) => {
