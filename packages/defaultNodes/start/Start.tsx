@@ -17,9 +17,9 @@ export const Start: React.FC<NodeComponentProps<StartNode>> = observer(({ node }
 	return (
 		<div className="start-node-wrap">
 			<Handle type="source" id="start" className="base-handle" position={Position.Right} />
-			{!!node.inputFields.length && (
+			{!!node.outputFields.length && (
 				<div className="var-list">
-					{node.inputFields.map((input) => {
+					{node.outputFields.map((input) => {
 						return (
 							<div key={input.key} className="var-item input-item">
 								<Space size={4}>
@@ -40,7 +40,7 @@ export const StartSet: React.FC<NodeComponentProps<StartNode>> = observer(({ nod
 	const handleAdd = async () => {
 		const res = await InputAddModal((value) => node.vars.some((v) => v.key === value));
 		if (res) {
-			node.addInputFields(res);
+			node.addOutputFields(res);
 		}
 	};
 	const handleEdit = async (varItem: DPVar) => {
@@ -50,7 +50,7 @@ export const StartSet: React.FC<NodeComponentProps<StartNode>> = observer(({ nod
 			...varItem.formInfo
 		});
 		if (res) {
-			node.updateInputField(varItem, res);
+			node.updateOutputField(varItem, res);
 		}
 	};
 	return (
@@ -59,7 +59,7 @@ export const StartSet: React.FC<NodeComponentProps<StartNode>> = observer(({ nod
 				<b>{t('workflow:start.inputField')}</b>
 			</Space>
 			<div className="out-var-list">
-				{node.inputFields.map((input) => {
+				{node.outputFields.map((input) => {
 					const varItem = node.vars.find((item) => item.key === input.key);
 					return (
 						<div key={input.key} className="var-item-block input-item dfb">
@@ -117,14 +117,14 @@ export const StartSet: React.FC<NodeComponentProps<StartNode>> = observer(({ nod
 									shape="round"
 									status="danger"
 									size="mini"
-									onClick={() => node.removeInputField(varItem)}
+									onClick={() => node.removeOutputField(varItem)}
 									icon={<IconDelete />}
 								/>
 							</Space>
 						</div>
 					);
 				})}
-				{node.inputFields.length === 0 ? (
+				{node.outputFields.length === 0 ? (
 					<Empty
 						description={
 							<Button onClick={handleAdd} icon={<IconPlus className="btn-gray-icon" />}>

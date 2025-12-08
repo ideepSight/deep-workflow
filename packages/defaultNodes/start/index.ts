@@ -14,48 +14,48 @@ export class StartNode extends DPBaseNode<StartNodeInnerData> {
 	get singleRunAble() {
 		return false;
 	}
-	get inputFields() {
-		return this.data.inputs;
+	get outputFields() {
+		return this.data.outputs;
 	}
 
 	init(data: StartNodeInnerData) {}
 
-	addInputFields(inputData: InputFieldData) {
-		this.addInput({
-			key: inputData.fieldName,
-			name: inputData.label,
-			type: inputData.varType,
+	addOutputFields(outputData: InputFieldData) {
+		this.addOutput({
+			key: outputData.fieldName,
+			name: outputData.label,
+			type: outputData.varType,
 			formInfo: {
-				label: inputData.label,
-				fieldType: inputData.fieldType,
-				defaultValue: inputData.defaultValue,
-				options: inputData.options,
-				required: inputData.required,
-				filetypes: inputData.filetypes
+				label: outputData.label,
+				fieldType: outputData.fieldType,
+				defaultValue: outputData.defaultValue,
+				options: outputData.options,
+				required: outputData.required,
+				filetypes: outputData.filetypes
 			},
 		});
 	}
-	updateInputField(item: DPVar, inputData: InputFieldData) {
+	updateOutputField(item: DPVar, outputData: InputFieldData) {
 		item.data = {
 			...item.data,
-			key: inputData.fieldName,
-			name: inputData.label,
-			type: inputData.varType,
+			key: outputData.fieldName,
+			name: outputData.label,
+			type: outputData.varType,
 			formInfo: {
-				label: inputData.label,
-				fieldType: inputData.fieldType,
-				defaultValue: inputData.defaultValue,
-				options: inputData.options,
-				required: inputData.required,
-				filetypes: inputData.filetypes
+				label: outputData.label,
+				fieldType: outputData.fieldType,
+				defaultValue: outputData.defaultValue,
+				options: outputData.options,
+				required: outputData.required,
+				filetypes: outputData.filetypes
 			}
 		};
 	}
-	removeInputField(input: DPVar): void {
-		this.removeInput(input);
+	removeOutputField(input: DPVar): void {
+		this.removeOutput(input);
 	}
 	async runSelf(): Promise<void> {
-		if (this.inputFields.length) {
+		if (this.outputFields.length) {
 			const res = await RunInputModal(this.vars.map((item) => item.toFormData()));
 			if (res) {
 				// 给后面node用到的变量赋值

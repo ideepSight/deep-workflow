@@ -217,7 +217,7 @@ export abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInnerData> ex
 		let enableVars: EnableVar[] = [];
 		const nodes = owner.dpNodes.filter((node) => node.nextNodes.find((n) => n === this));
 		nodes.forEach((node) => {
-			enableVars.push({ id: node.id, node, vars: node.vars });
+			enableVars.push({ id: node.id, node, vars: node.vars.filter((v) => v.data.flag !== 'input') });
 			enableVars = enableVars.concat(node.enableVars);
 		});
 		return enableVars;

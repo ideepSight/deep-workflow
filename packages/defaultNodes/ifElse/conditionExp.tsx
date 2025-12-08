@@ -105,6 +105,7 @@ export const ConditionExp: React.FC<ConditionExpProps> = ({ enableVars = [], val
 					size="mini"
 					type="text"
 					className="change-mode"
+					style={{ marginTop: 22 }}
 					onClick={() => {
 						if (!expression && mode === 'simple') {
 							setExpression(simpleStringValue);
