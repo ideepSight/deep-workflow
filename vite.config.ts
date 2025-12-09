@@ -7,15 +7,13 @@ const isDev = process.env.myArg === 'development';
 console.log('isDev', isDev);
 
 const externalMap = {
-	...(!isDev && {
-		react: 'React',
-		'react-dom': 'ReactDOM',
-		'react/jsx-runtime': 'ReactJSXRuntime',
-		mobx: 'mobx',
-		'mobx-react-lite': 'mobxReactLite',
-		'@arco-design/web-react': 'ArcoDesign'
-	}),
+	react: 'React',
+	'react-dom': 'ReactDOM',
+	'react/jsx-runtime': 'ReactJSXRuntime',
+	...(!isDev && { '@arco-design/web-react': 'ArcoDesign' }),
 	'@xyflow/react': 'ReactFlow',
+	mobx: 'mobx',
+	'mobx-react-lite': 'mobxReactLite',
 	'@deep-sight/dp-event': 'DeepEvent',
 	'@deep-sight/dp-iconfont': 'DeepIconfont'
 };
