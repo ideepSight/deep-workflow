@@ -1,7 +1,7 @@
 import { FC } from 'react';
-import { DPEvent } from '../../base';
+import { DPEvent } from '../../dp-event';
 import { Node } from '@xyflow/react';
-import { DPVar, DPVarType } from './var';
+import { DPVar, DPVarData } from './var';
 import { DPWorkflow } from './workflow';
 export declare enum BlockEnum {
     Start = "start",
@@ -45,13 +45,15 @@ export type DPRegisterNode = {
     desc: string;
     icon: FC;
     iconColor?: string;
-    type: BlockEnum;
-    model: new (owner: DPWorkflow, data?: DPNodeData) => DPBaseNode;
+    type: BlockEnum | string;
+    model: new (owner: DPWorkflow | INodeOwner, data?: DPNodeData | INodeData) => DPBaseNode;
     NodeComponent: FC<NodeComponentProps>;
     SetComponent?: FC<NodeComponentProps>;
     group: 'hide' | 'sys' | 'ai' | 'autoTool' | 'platformApi' | 'custom';
     width?: number;
     height?: number;
+    supportMCP?: boolean;
+    localPath?: string;
 };
 export type LogData = {
     time: number;
@@ -64,17 +66,11 @@ export type EnableVar = {
     vars: DPVar[];
 };
 export type DPNodeInnerData = {
-    dpNodeType: BlockEnum;
+    dpNodeType: BlockEnum | string;
     title?: string;
     desc?: string;
-    inputs?: {
-        key: string;
-        type: DPVarType;
-    }[];
-    outputs?: {
-        key: string;
-        type: DPVarType;
-    }[];
+    inputs?: DPVarData[];
+    outputs?: DPVarData[];
     failRetryEnable?: boolean;
     retryInterval?: number;
     maxRetryTimes?: number;
@@ -82,6 +78,24 @@ export type DPNodeInnerData = {
 export type DPNodeData<T extends DPNodeInnerData = DPNodeInnerData> = Omit<Node<T>, 'id'> & {
     id?: string;
 };
+export interface INodeOwner {
+    classType: 'DPWorkflow' | string;
+    runlogs?: LogData[];
+    NodeTypeItemTypes: {
+        [type: string]: DPRegisterNode;
+    };
+    emit: (event: string, ...args: any[]) => void;
+}
+export interface INodeData<T extends DPNodeInnerData = DPNodeInnerData> {
+    id?: string;
+    position?: {
+        x: number;
+        y: number;
+    };
+    parentId?: string;
+    data: T;
+    [key: string]: any;
+}
 type DPBaseNodeEvent = {
     stoping: () => void;
 };
@@ -90,8 +104,13 @@ export declare abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInner
         [type: string]: DPRegisterNode;
     };
     static registerType(item: DPRegisterNode): void;
-    owner: DPWorkflow;
+    private _disposer;
+    private _owner;
+    isInMCP: boolean;
+    get owner(): DPWorkflow | INodeOwner;
+    set owner(val: DPWorkflow | INodeOwner);
     private _nodeData;
+    modified: boolean;
     active: boolean;
     runningStatus: NodeRunningStatus;
     errorHandleMode: ErrorHandleMode;
@@ -99,17 +118,13 @@ export declare abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInner
     private _vars;
     _nextRunNode: DPBaseNode;
     singleRunning: boolean;
-    private _outputs;
-    private _inputs;
     get outputs(): DPVar[];
-    set outputs(val: DPVar[]);
     get inputs(): DPVar[];
     set runlog(val: LogData);
     get runlogs(): LogData[];
     set runlogs(val: LogData[]);
     get vars(): DPVar[];
-    set vars(val: DPVar[]);
-    get nodeData(): DPNodeData<T>;
+    get nodeData(): DPNodeData<T> | INodeData<T>;
     get parentId(): string;
     get parentNode(): DPBaseNode<DPNodeInnerData>;
     get data(): T;
@@ -121,26 +136,21 @@ export declare abstract class DPBaseNode<T extends DPNodeInnerData = DPNodeInner
     get nextRunNode(): DPBaseNode<DPNodeInnerData>;
     get enableVars(): EnableVar[];
     abstract get singleRunAble(): boolean;
-    getContext(): Promise<{}>;
+    getContext(): Promise<Record<string, string | number> | Record<string, DPVar>>;
     get runSingleNeedAssignVars(): DPVar[];
-    constructor(owner: DPWorkflow, nodeData: DPNodeData<T>);
+    constructor(owner: DPWorkflow | INodeOwner, nodeData: DPNodeData<T> | INodeData<T>);
     init?(data: T): void;
-    addInput(params?: {
-        key?: string;
-        type?: DPVarType;
-    }): void;
-    removeInput(index: number): void;
-    addOutput(params?: {
-        key?: string;
-        type?: DPVarType;
-    }): void;
-    removeOutput(index: number): void;
+    addInput(params?: DPVarData): void;
+    removeInput(input: DPVar): void;
+    addOutput(params?: DPVarData): void;
+    removeOutput(output: DPVar): void;
     toCenter(): void;
     runSingle(): Promise<void>;
     stop(): Promise<void>;
     run(params?: {
         runMode: 'single';
     }): Promise<void>;
-    abstract runSelf(): Promise<void>;
+    runExpression(expression: string, context?: Record<string, any>): any;
+    abstract runSelf(): Promise<any>;
 }
 export {};

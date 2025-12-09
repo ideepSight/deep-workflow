@@ -1,6 +1,11 @@
 declare const resources: {
     en: {
         workflow: {
+            error: {
+                title: string;
+                nodeTypeNotRegistered: string;
+            };
+            cancelRun: string;
             save: string;
             run: string;
             node: {
@@ -17,7 +22,7 @@ declare const resources: {
             };
             selectInputType: {
                 'text-input': string;
-                paragraph: string;
+                radio: string;
                 select: string;
                 number: string;
                 file: string;
@@ -54,6 +59,8 @@ declare const resources: {
             };
             codeEditor: {
                 error: string;
+                jsonError: string;
+                jsonErrorKey: string;
             };
             selectVar: {
                 connectVarNode: string;
@@ -158,6 +165,7 @@ declare const resources: {
                 outputVar: string;
                 outputTip: string;
                 noOutput: string;
+                outputReadonlyTip: string;
             };
             loop: {
                 varNotExist: string;
@@ -189,13 +197,32 @@ declare const resources: {
                 condition: string;
                 addCondition: string;
                 deleteCondition: string;
+                expConfigError: string;
+                expRunError: string;
+                expRunFail: string;
                 elseDescription: string;
+                elseEdgeNotFound: string;
+            };
+            vars: {
+                noChildOutputVar: string;
+                connectVarNode: string;
+                noEmpty: string;
+                noRepeat: string;
+                selectOption: string;
+                selectVar: string;
+                selectInput: string;
             };
         };
     };
     zh: {
         workflow: {
+            error: {
+                title: string;
+                nodeTypeNotRegistered: string;
+            };
+            cancelRun: string;
             save: string;
+            delNode: string;
             run: string;
             node: {
                 startOnlyOne: string;
@@ -211,7 +238,7 @@ declare const resources: {
             };
             selectInputType: {
                 'text-input': string;
-                paragraph: string;
+                radio: string;
                 select: string;
                 number: string;
                 file: string;
@@ -248,6 +275,8 @@ declare const resources: {
             };
             codeEditor: {
                 error: string;
+                jsonError: string;
+                jsonErrorKey: string;
             };
             selectVar: {
                 connectVarNode: string;
@@ -267,6 +296,8 @@ declare const resources: {
             baseNode: {
                 cannotRunSingle: string;
                 startRun: string;
+                stop: string;
+                confirmDelete: string;
                 runSuccess: string;
                 runFail: string;
                 errorMsg: string;
@@ -352,6 +383,7 @@ declare const resources: {
                 outputVar: string;
                 outputTip: string;
                 noOutput: string;
+                outputReadonlyTip: string;
             };
             loop: {
                 varNotExist: string;
@@ -383,7 +415,21 @@ declare const resources: {
                 condition: string;
                 addCondition: string;
                 deleteCondition: string;
+                expConfigError: string;
+                expRunError: string;
+                expRunFail: string;
                 elseDescription: string;
+                elseEdgeNotFound: string;
+                conditionSuccess: string;
+            };
+            vars: {
+                noChildOutputVar: string;
+                connectVarNode: string;
+                noEmpty: string;
+                noRepeat: string;
+                selectOption: string;
+                selectVar: string;
+                selectInput: string;
             };
         };
     };

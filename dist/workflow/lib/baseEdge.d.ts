@@ -1,4 +1,4 @@
-import { DPEvent } from '../../base';
+import { DPEvent } from '../../dp-event';
 import { Edge } from '@xyflow/react';
 export type DPBaseEdgeInnerData = {
     isInIteration?: boolean;

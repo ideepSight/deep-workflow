@@ -1,23 +1,22 @@
+import { FormItemProps } from '@arco-design/web-react';
 import { DPVarType } from './lib';
 export declare enum FormItemType {
     textInput = "text-input",
-    paragraph = "paragraph",
+    radio = "radio",
     select = "select",
     number = "number",
     singleFile = "file",
-    multiFiles = "file-list"
+    multiFiles = "file-list",
+    dir = "dir"
 }
-export type InputFieldData = {
+export type InputFieldData = Omit<FormItemProps, 'label'> & {
     fieldType: FormItemType;
     fieldName: string;
-    label: string;
     varType: DPVarType;
-    defaultValue?: string;
-    placeholder?: string;
-    required: boolean;
     options?: {
         id: string;
         label: string;
     }[];
     filetypes?: string[];
+    label?: string;
 };

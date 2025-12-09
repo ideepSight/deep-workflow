@@ -1,38 +1,38 @@
-import { DPEvent } from '../../base';
+import { DPEvent } from '../../dp-event';
 import { Connection, ReactFlowInstance } from '@xyflow/react';
 import { DPBaseNode, DPNodeData, LogData } from './baseNode';
 import { DPBaseEdge, DPEdgeData } from './baseEdge';
-import { DPVarData, DPVar } from './var';
 import { DPHistory } from './history';
 export declare enum ControlMode {
     Pointer = "pointer",
     Hand = "hand"
 }
 export type DPWorkflowData = {
-    id: string;
+    id?: string;
     title?: string;
-    nodes: DPNodeData[];
-    edges: DPEdgeData[];
-    vars?: DPVarData[];
+    nodes?: DPNodeData[];
+    edges?: DPEdgeData[];
 };
 type DPWorkflowEvent = {
     save: (data: DPWorkflowData) => void;
     running: () => void;
+    dataChange: () => void;
 };
 export declare class DPWorkflow extends DPEvent<DPWorkflowEvent> {
+    classType: string;
+    NodeTypeItemTypes: {
+        [type: string]: import('./baseNode').DPRegisterNode;
+    };
     id: string;
     title: string;
     private _dpNodes;
     private _dpEdges;
-    private _vars;
     controlMode: 'pointer' | 'hand';
     running: boolean;
     stoping: boolean;
     private _runlogs;
-    private _prevData;
-    autoSaveInterval: number;
     private _autoSave;
-    private _autoSaveIng;
+    private _prevData;
     reactFlowIns: ReactFlowInstance;
     history: DPHistory;
     get runlogs(): (LogData & {
@@ -46,29 +46,25 @@ export declare class DPWorkflow extends DPEvent<DPWorkflowEvent> {
     get data(): {
         id: string;
         title: string;
-        nodes: DPNodeData<import('./baseNode').DPNodeInnerData>[];
+        nodes: (DPNodeData<import('./baseNode').DPNodeInnerData> | import('./baseNode').INodeData<import('./baseNode').DPNodeInnerData>)[];
         edges: DPEdgeData[];
-        vars: DPVarData[];
     };
     get dpNodes(): DPBaseNode[];
     set dpNodes(val: DPBaseNode[]);
     get dpEdges(): DPBaseEdge[];
     set dpEdges(val: DPBaseEdge[]);
-    get vars(): DPVar[];
     setNodes(nodes: DPNodeData[]): void;
     setEdges(edges: DPEdgeData[]): void;
     private _updateNodes;
     private _updateEdges;
     updateNodes(noHistory?: boolean): void;
     updateEdges(noHistory?: boolean): void;
-    private getI18nT;
-    constructor(data: DPWorkflowData);
-    private autoSaveFunc;
-    save(): void;
+    constructor(data?: DPWorkflowData);
+    load(data?: DPWorkflowData): void;
+    private _handleAutoSave;
+    save(cloneData?: DPWorkflowData): void;
     run(): Promise<void>;
     stop(): Promise<void>;
-    addVar(varData: DPVarData): void;
-    delVar(key: string): void;
     addNode(nodeData: DPNodeData): DPBaseNode<import('./baseNode').DPNodeInnerData>;
     delNode(idOrItem: string | DPBaseNode): void;
     onConnect(params: Connection): boolean;

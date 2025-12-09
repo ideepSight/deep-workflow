@@ -1,5 +1,5 @@
 import { DPWorkflow } from '.';
-import { DPEvent } from '../../base';
+import { DPEvent } from '../../dp-event';
 import { DPBaseNode } from './baseNode';
 import { DPBaseEdge } from './baseEdge';
 interface HistoryStep {
